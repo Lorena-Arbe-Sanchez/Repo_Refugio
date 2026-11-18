@@ -26,3 +26,14 @@ public class Main {
         }
     }
 }
+
+// RESULTADO:
+/*
+Conexión con MongoDB establecida
+Base de datos: bd_refugio
+Colecciones:
+- animales
+- adopciones
+- adoptantes
+- refugio
+ */
