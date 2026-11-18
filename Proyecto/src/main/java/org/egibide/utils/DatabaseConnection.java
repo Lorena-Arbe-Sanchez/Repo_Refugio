@@ -1,38 +1,44 @@
 package org.egibide.utils;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
 
 public class DatabaseConnection {
 
     private static DatabaseConnection instance;
-    private Connection connection;
+    private MongoClient mongoClient;
+    private MongoDatabase database;
 
-    private DatabaseConnection() throws SQLException {
-        try {
-            String driver = "org.mariadb.jdbc.Driver";
-            Class.forName(driver);
-            // Normalmente el puerto será "3306" (dependiendo de la configuración de XAMPP puede ser "3307")
-            String url = "jdbc:mariadb://localhost:3306/juegos";
-            String user = "root";
-            String password = "";
-            this.connection = DriverManager.getConnection(url, user, password);
-        } catch (ClassNotFoundException e) {
-            throw new SQLException("No se ha encontrado el driver de MariaDB.", e);
-        }
+    private DatabaseConnection() {
+        String uri = "mongodb://localhost:27017";
+        String databaseName = "bd_refugio";
+
+        mongoClient = MongoClients.create(uri);
+        database = mongoClient.getDatabase(databaseName);
     }
 
-    public Connection getConnection() {
-        return connection;
-    }
-
-    public static DatabaseConnection getInstance() throws SQLException {
+    public static DatabaseConnection getInstance() {
         if (instance == null) {
-            instance = new DatabaseConnection();
-        } else if (instance.getConnection().isClosed()) {
             instance = new DatabaseConnection();
         }
         return instance;
+    }
+
+    public MongoDatabase getDatabase() {
+        return database;
+    }
+
+    public MongoCollection<Document> getCollection(String collectionName) {
+        return database.getCollection(collectionName);
+    }
+
+    public void close() {
+        if (mongoClient != null) {
+            mongoClient.close();
+            instance = null;
+        }
     }
 }
