@@ -3,6 +3,7 @@ package org.egibide.services;
 import org.bson.types.ObjectId;
 import org.egibide.dao.AnimalDao;
 import org.egibide.models.Animal;
+import org.egibide.utils.Validaciones;
 
 import java.util.List;
 import java.util.Set;
@@ -77,17 +78,26 @@ public class AnimalService {
             throw new IllegalArgumentException("El animal no puede ser nulo");
         }
 
-        if (animal.getNombre() == null || animal.getNombre().isBlank()) {
-            throw new IllegalArgumentException("El nombre es obligatorio");
+        Validaciones.validarTexto(animal.getNombre(), "El nombre");
+        Validaciones.validarLongitud(animal.getNombre(), "El nombre", 100);
+
+        Validaciones.validarTexto(animal.getEspecie(), "La especie");
+
+        Validaciones.validarLongitud(animal.getRaza(), "La raza", 100);
+        Validaciones.validarLongitud(animal.getDescripcion(), "La descripción", 1000);
+
+        if (animal.getEdad() == null || animal.getEdad() < 0) {
+            throw new IllegalArgumentException("La edad debe ser igual o superior a cero");
         }
 
-        if (animal.getEspecie() == null || animal.getEspecie().isBlank()) {
-            throw new IllegalArgumentException("La especie es obligatoria");
+        if (animal.getSexo() == null ||
+                !Set.of("macho", "hembra", "desconocido")
+                        .contains(animal.getSexo().toLowerCase())) {
+
+            throw new IllegalArgumentException("El sexo no es válido");
         }
 
-        if (animal.getEdad() != null && animal.getEdad() < 0) {
-            throw new IllegalArgumentException("La edad no puede ser negativa");
-        }
+        Validaciones.validarFecha(animal.getFechaIngreso(), "La fecha de ingreso");
     }
 
     // Validar el estado del animal

@@ -2,7 +2,9 @@ package org.egibide.services;
 
 import org.egibide.dao.AdoptanteDao;
 import org.egibide.models.Adoptante;
+import org.egibide.utils.Validaciones;
 
+import java.util.Date;
 import java.util.List;
 
 public class AdoptanteService {
@@ -22,6 +24,7 @@ public class AdoptanteService {
             throw new IllegalArgumentException("Ya existe un adoptante con ese DNI");
         }
 
+        adoptante.setFechaRegistro(new Date());
         adoptante.setEliminado(false);
 
         adoptanteDao.insertar(adoptante);
@@ -63,15 +66,20 @@ public class AdoptanteService {
             throw new IllegalArgumentException("El adoptante no puede ser nulo");
         }
 
-        validarDni(adoptante.getDni());
+        // Normalizar y validar DNI
+        adoptante.setDni(Validaciones.validarDni(adoptante.getDni()));
 
-        if (adoptante.getNombre() == null || adoptante.getNombre().isBlank()) {
-            throw new IllegalArgumentException("El nombre es obligatorio");
-        }
+        Validaciones.validarTexto(adoptante.getNombre(), "El nombre");
+        Validaciones.validarTexto(adoptante.getApellido1(), "El primer apellido");
+        Validaciones.validarTexto(adoptante.getTelefono(), "El teléfono");
+        Validaciones.validarTelefono(adoptante.getTelefono());
+        Validaciones.validarTexto(adoptante.getDireccion(), "La dirección");
+        Validaciones.validarTexto(adoptante.getEmail(), "El email");
+        Validaciones.validarEmail(adoptante.getEmail());
 
-        if (adoptante.getApellido1() == null || adoptante.getApellido1().isBlank()) {
-            throw new IllegalArgumentException("El primer apellido es obligatorio");
-        }
+        Validaciones.validarLongitud(adoptante.getNombre(), "El nombre", 100);
+        Validaciones.validarLongitud(adoptante.getApellido1(), "El primer apellido", 100);
+        Validaciones.validarLongitud(adoptante.getApellido2(), "El segundo apellido", 100);
     }
 
     // Validar el DNI
