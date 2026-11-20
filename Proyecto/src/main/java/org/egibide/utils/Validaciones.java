@@ -1,6 +1,7 @@
 package org.egibide.utils;
 
 import java.util.Date;
+import java.util.Locale;
 
 public class Validaciones {
 
@@ -11,7 +12,7 @@ public class Validaciones {
             throw new IllegalArgumentException("El DNI es obligatorio");
         }
 
-        dni = dni.trim().toUpperCase();
+        dni = dni.trim().toUpperCase(Locale.ROOT);
 
         if (!dni.matches("[0-9]{8}[A-Z]")) {
             throw new IllegalArgumentException(
@@ -31,42 +32,96 @@ public class Validaciones {
         return dni;
     }
 
-    // Validar el teléfono español
-    public static void validarTelefono(String telefono) {
+    // Validar y normalizar el teléfono español
+    public static String validarTelefono(String telefono) {
 
         if (telefono == null || telefono.isBlank()) {
             throw new IllegalArgumentException("El teléfono es obligatorio");
         }
 
+        telefono = telefono.trim().replaceAll("[\\s-]", "");
+
         if (!telefono.matches("(\\+34)?[6789][0-9]{8}")) {
-            throw new IllegalArgumentException("El teléfono no tiene un formato válido");
+            throw new IllegalArgumentException(
+                    "El teléfono no tiene un formato válido"
+            );
         }
+
+        return telefono;
     }
 
-    // Validar el correo electrónico
-    public static void validarEmail(String email) {
+    // Validar y normalizar el correo electrónico
+    public static String validarEmail(String email) {
 
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("El correo electrónico es obligatorio");
         }
 
-        if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
-            throw new IllegalArgumentException("El correo electrónico no tiene un formato válido");
+        email = email.trim().toLowerCase(Locale.ROOT);
+
+        if (email.length() > 254 ||
+                !email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+
+            throw new IllegalArgumentException(
+                    "El correo electrónico no tiene un formato válido"
+            );
         }
+
+        return email;
     }
 
-    // Validar el CIF
-    public static void validarCif(String cif) {
+    // Validar y normalizar el CIF
+    public static String validarCif(String cif) {
 
         if (cif == null || cif.isBlank()) {
             throw new IllegalArgumentException("El CIF es obligatorio");
         }
 
-        cif = cif.trim().toUpperCase();
+        cif = cif.trim().toUpperCase(Locale.ROOT);
 
         if (!cif.matches("[ABCDEFGHJNPQRSUVW][0-9]{7}[0-9A-J]")) {
             throw new IllegalArgumentException("El CIF no tiene un formato válido");
         }
+
+        int suma = 0;
+
+        for (int i = 0; i < 7; i++) {
+
+            int numero = Character.getNumericValue(cif.charAt(i + 1));
+
+            if (i % 2 == 0) {
+                int doble = numero * 2;
+                suma += doble / 10 + doble % 10;
+            } else {
+                suma += numero;
+            }
+        }
+
+        int control = (10 - suma % 10) % 10;
+        char controlNumerico = (char) ('0' + control);
+        char controlLetra = "JABCDEFGHI".charAt(control);
+
+        char tipo = cif.charAt(0);
+        char ultimo = cif.charAt(8);
+
+        boolean debeSerNumero = "ABEH".indexOf(tipo) >= 0;
+        boolean debeSerLetra = "KPQS".indexOf(tipo) >= 0;
+
+        boolean correcto;
+
+        if (debeSerNumero) {
+            correcto = ultimo == controlNumerico;
+        } else if (debeSerLetra) {
+            correcto = ultimo == controlLetra;
+        } else {
+            correcto = ultimo == controlNumerico || ultimo == controlLetra;
+        }
+
+        if (!correcto) {
+            throw new IllegalArgumentException("El carácter de control del CIF no es correcto");
+        }
+
+        return cif;
     }
 
     // Validar una fecha obligatoria y que no sea futura

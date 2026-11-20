@@ -2,6 +2,7 @@ package org.egibide.services;
 
 import org.egibide.dao.RefugioDao;
 import org.egibide.models.Refugio;
+import org.egibide.utils.Validaciones;
 
 public class RefugioService {
 
@@ -24,6 +25,7 @@ public class RefugioService {
         refugioDao.guardar(refugio);
     }
 
+    // TODO : Y comprobaciones de longitud? Y en los demás servicios?
     // Validar los datos del refugio
     private void validar(Refugio refugio) {
 
@@ -35,8 +37,22 @@ public class RefugioService {
             throw new IllegalArgumentException("El nombre es obligatorio");
         }
 
-        if (refugio.getCif() == null || refugio.getCif().isBlank()) {
-            throw new IllegalArgumentException("El CIF es obligatorio");
-        }
+        refugio.setCif(Validaciones.validarCif(refugio.getCif()));
+
+        refugio.setTelefono(
+                Validaciones.validarTelefono(refugio.getTelefono())
+        );
+
+        refugio.setCorreo(
+                Validaciones.validarEmail(refugio.getCorreo())
+        );
+
+        Validaciones.validarTexto(refugio.getRazonSocial(), "La razón social");
+        Validaciones.validarTexto(refugio.getDireccion(), "La dirección");
+
+        Validaciones.validarFecha(
+                refugio.getFechaApertura(),
+                "La fecha de apertura"
+        );
     }
 }

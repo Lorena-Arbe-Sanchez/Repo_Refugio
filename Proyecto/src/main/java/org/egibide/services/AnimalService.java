@@ -56,11 +56,12 @@ public class AnimalService {
             throw new IllegalArgumentException("El ID del animal es obligatorio");
         }
 
-        validarEstado(animal.getEstado());
+        // El estado se podrá actualizar desde adopciones
 
         return animalDao.actualizar(animal);
     }
 
+    // TODO : Comprobar las adopciones pendientes/aprobadas (aunque es verdad q un animal podria fallecer antes de ser adoptado esté en el estado q esté; entonces se debería de poder marcar como eliminado por aquí, y entonces se le cambiaría "automáticamente" el estado mediante los otros servicios/daos y así)
     // Dar de baja un animal
     public boolean darDeBaja(ObjectId id) {
 
@@ -97,11 +98,19 @@ public class AnimalService {
             throw new IllegalArgumentException("El sexo no es válido");
         }
 
+        animal.setSexo(animal.getSexo().trim().toLowerCase());
+
         Validaciones.validarFecha(animal.getFechaIngreso(), "La fecha de ingreso");
     }
 
     // Validar el estado del animal
-    private void validarEstado(String estado) {
+    private String validarEstado(String estado) {
+
+        if (estado == null || estado.isBlank()) {
+            throw new IllegalArgumentException("El estado es obligatorio");
+        }
+
+        estado = estado.trim().toLowerCase();
 
         Set<String> estados = Set.of(
                 "disponible",
@@ -110,8 +119,10 @@ public class AnimalService {
                 "tratamiento"
         );
 
-        if (estado == null || !estados.contains(estado.toLowerCase())) {
+        if (!estados.contains(estado)) {
             throw new IllegalArgumentException("El estado del animal no es válido");
         }
+
+        return estado;
     }
 }

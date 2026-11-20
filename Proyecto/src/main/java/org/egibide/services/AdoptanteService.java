@@ -33,7 +33,7 @@ public class AdoptanteService {
     // Buscar un adoptante por DNI
     public Adoptante buscarPorDni(String dni) {
 
-        validarDni(dni);
+        dni = Validaciones.validarDni(dni);
 
         return adoptanteDao.buscarPorDni(dni);
     }
@@ -43,6 +43,7 @@ public class AdoptanteService {
         return adoptanteDao.listar();
     }
 
+    // TODO : No se debe poder actualizar el DNI + También impediría dar de baja a un adoptante que tenga solicitudes pendientes. Las adopciones históricas deberían conservar su referencia.
     // Actualizar un adoptante
     public boolean actualizar(Adoptante adoptante) {
 
@@ -54,7 +55,7 @@ public class AdoptanteService {
     // Dar de baja un adoptante
     public boolean darDeBaja(String dni) {
 
-        validarDni(dni);
+        dni = Validaciones.validarDni(dni);
 
         return adoptanteDao.darDeBaja(dni);
     }
@@ -71,22 +72,15 @@ public class AdoptanteService {
 
         Validaciones.validarTexto(adoptante.getNombre(), "El nombre");
         Validaciones.validarTexto(adoptante.getApellido1(), "El primer apellido");
-        Validaciones.validarTexto(adoptante.getTelefono(), "El teléfono");
-        Validaciones.validarTelefono(adoptante.getTelefono());
+        adoptante.setTelefono(
+                Validaciones.validarTelefono(adoptante.getTelefono())
+        );
         Validaciones.validarTexto(adoptante.getDireccion(), "La dirección");
-        Validaciones.validarTexto(adoptante.getEmail(), "El email");
-        Validaciones.validarEmail(adoptante.getEmail());
-
+        adoptante.setEmail(
+                Validaciones.validarEmail(adoptante.getEmail())
+        );
         Validaciones.validarLongitud(adoptante.getNombre(), "El nombre", 100);
         Validaciones.validarLongitud(adoptante.getApellido1(), "El primer apellido", 100);
         Validaciones.validarLongitud(adoptante.getApellido2(), "El segundo apellido", 100);
-    }
-
-    // Validar el DNI
-    private void validarDni(String dni) {
-
-        if (dni == null || dni.isBlank()) {
-            throw new IllegalArgumentException("El DNI es obligatorio");
-        }
     }
 }

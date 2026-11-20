@@ -23,6 +23,12 @@ public class AdopcionService {
         adoptanteDao = new AdoptanteDao();
     }
 
+    /* TODO
+        Hay un detalle que debemos respetar: cuando se aprueba una solicitud, las demás solicitudes pendientes
+        de ese animal ya no pueden seguir siendo aprobables. Mi recomendación es rechazarlas automáticamente
+        con una observación como «El animal ha sido adoptado por otra solicitud» y registrar la misma fecha
+        de resolución.
+     */
     // Crear una adopción
     public void crear(Adopcion adopcion) {
 
@@ -94,7 +100,7 @@ public class AdopcionService {
         return adopcionDao.buscarPorAdoptante(dni);
     }
 
-    // TODO : Tener cuidado con lo de actualizar el estado
+    // TODO : Tener cuidado con lo de actualizar el estado (hay que hacer varias comprobaciones previamente, no?)
     // Actualizar una adopción
     public boolean actualizar(Adopcion adopcion) {
 
