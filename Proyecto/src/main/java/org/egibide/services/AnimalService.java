@@ -1,19 +1,25 @@
 package org.egibide.services;
 
 import org.bson.types.ObjectId;
+import org.egibide.dao.AdopcionDao;
 import org.egibide.dao.AnimalDao;
+import org.egibide.models.Adopcion;
 import org.egibide.models.Animal;
 import org.egibide.utils.Validaciones;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class AnimalService {
 
     private final AnimalDao animalDao;
+    private final AdopcionDao adopcionDao;
 
     public AnimalService() {
         animalDao = new AnimalDao();
+        adopcionDao = new AdopcionDao();
     }
 
     // Crear un animal
@@ -27,7 +33,7 @@ public class AnimalService {
             animal.setEstado("disponible");
         }
 
-        validarEstado(animal.getEstado());
+        animal.setEstado(validarEstado(animal.getEstado()));
 
         animalDao.insertar(animal);
     }
@@ -47,7 +53,7 @@ public class AnimalService {
         return animalDao.listar();
     }
 
-    // Actualizar un animal
+    // Actualizar un animal sin modificar su estado
     public boolean actualizar(Animal animal) {
 
         validar(animal);
@@ -56,7 +62,13 @@ public class AnimalService {
             throw new IllegalArgumentException("El ID del animal es obligatorio");
         }
 
-        // El estado se podrá actualizar desde adopciones
+        Animal actual = animalDao.buscarPorId(animal.getId());
+
+        if (actual == null) {
+            throw new IllegalArgumentException("El animal no existe o está eliminado");
+        }
+
+        animal.setEstado(actual.getEstado());
 
         return animalDao.actualizar(animal);
     }
@@ -67,6 +79,51 @@ public class AnimalService {
 
         if (id == null) {
             throw new IllegalArgumentException("El ID del animal es obligatorio");
+        }
+
+        Animal animal = animalDao.buscarPorId(id);
+
+        if (animal == null) {
+            throw new IllegalArgumentException("El animal no existe o está eliminado");
+        }
+
+        List<Adopcion> solicitudes = adopcionDao.buscarPorAnimal(id);
+        Date fechaResolucion = new Date();
+
+        // No permitir dar de baja a un animal que ya ha sido adoptado
+        for (Adopcion adopcion : solicitudes) {
+
+            if ("aprobada".equalsIgnoreCase(adopcion.getEstado())) {
+                throw new IllegalArgumentException(
+                        "No se puede dar de baja un animal con una adopción aprobada"
+                );
+            }
+        }
+
+        // Rechazar las solicitudes pendientes antes de dar de baja al animal
+        for (Adopcion adopcion : solicitudes) {
+
+            if ("pendiente".equalsIgnoreCase(adopcion.getEstado())) {
+
+                adopcion.setEstado("rechazada");
+                adopcion.setFechaResolucion(fechaResolucion);
+
+                String observaciones = adopcion.getObservaciones();
+
+                if (observaciones == null || observaciones.isBlank()) {
+                    observaciones = "Animal dado de baja";
+                } else {
+                    observaciones += " | Animal dado de baja";
+                }
+
+                adopcion.setObservaciones(observaciones);
+
+                if (!adopcionDao.actualizar(adopcion)) {
+                    throw new IllegalStateException(
+                            "No se han podido cancelar todas las solicitudes del animal"
+                    );
+                }
+            }
         }
 
         return animalDao.darDeBaja(id);
@@ -83,6 +140,7 @@ public class AnimalService {
         Validaciones.validarLongitud(animal.getNombre(), "El nombre", 100);
 
         Validaciones.validarTexto(animal.getEspecie(), "La especie");
+        Validaciones.validarLongitud(animal.getEspecie(), "La especie", 50);
 
         Validaciones.validarLongitud(animal.getRaza(), "La raza", 100);
         Validaciones.validarLongitud(animal.getDescripcion(), "La descripción", 1000);
@@ -93,12 +151,12 @@ public class AnimalService {
 
         if (animal.getSexo() == null ||
                 !Set.of("macho", "hembra", "desconocido")
-                        .contains(animal.getSexo().toLowerCase())) {
+                        .contains(animal.getSexo().trim().toLowerCase(Locale.ROOT))) {
 
             throw new IllegalArgumentException("El sexo no es válido");
         }
 
-        animal.setSexo(animal.getSexo().trim().toLowerCase());
+        animal.setSexo(animal.getSexo().trim().toLowerCase(Locale.ROOT));
 
         Validaciones.validarFecha(animal.getFechaIngreso(), "La fecha de ingreso");
     }
@@ -110,7 +168,7 @@ public class AnimalService {
             throw new IllegalArgumentException("El estado es obligatorio");
         }
 
-        estado = estado.trim().toLowerCase();
+        estado = estado.trim().toLowerCase(Locale.ROOT);
 
         Set<String> estados = Set.of(
                 "disponible",

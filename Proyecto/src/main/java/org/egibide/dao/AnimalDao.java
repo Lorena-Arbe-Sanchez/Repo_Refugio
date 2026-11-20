@@ -9,7 +9,9 @@ import org.egibide.utils.DatabaseConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.ne;
 
 public class AnimalDao {
 
@@ -31,10 +33,13 @@ public class AnimalDao {
         coleccion.insertOne(documento);
     }
 
-    // Buscar un animal por su ID
+    // Buscar un animal activo por su ID
     public Animal buscarPorId(ObjectId id) {
 
-        Document documento = coleccion.find(eq("_id", id)).first();
+        Document documento = coleccion.find(and(
+                eq("_id", id),
+                ne("eliminado", true)
+        )).first();
 
         if (documento == null) {
             return null;
@@ -48,14 +53,14 @@ public class AnimalDao {
 
         List<Animal> animales = new ArrayList<>();
 
-        for (Document documento : coleccion.find(eq("eliminado", false))) {
+        for (Document documento : coleccion.find(ne("eliminado", true))) {
             animales.add(convertirAnimal(documento));
         }
 
         return animales;
     }
 
-    // Actualizar un animal
+    // Actualizar un animal activo
     public boolean actualizar(Animal animal) {
 
         if (animal.getId() == null) {
@@ -65,7 +70,11 @@ public class AnimalDao {
         Document documento = convertirDocumento(animal);
 
         return coleccion.replaceOne(
-                eq("_id", animal.getId()), documento
+                and(
+                        eq("_id", animal.getId()),
+                        ne("eliminado", true)
+                ),
+                documento
         ).getMatchedCount() > 0;
     }
 
@@ -73,7 +82,10 @@ public class AnimalDao {
     public boolean darDeBaja(ObjectId id) {
 
         return coleccion.updateOne(
-                eq("_id", id),
+                and(
+                        eq("_id", id),
+                        ne("eliminado", true)
+                ),
                 new Document("$set", new Document("eliminado", true))
         ).getModifiedCount() > 0;
     }

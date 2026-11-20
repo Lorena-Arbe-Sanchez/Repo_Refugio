@@ -7,9 +7,11 @@ import org.egibide.dao.AnimalDao;
 import org.egibide.models.Adopcion;
 import org.egibide.models.Adoptante;
 import org.egibide.models.Animal;
+import org.egibide.utils.Validaciones;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AdopcionService {
 
@@ -29,7 +31,7 @@ public class AdopcionService {
         con una observación como «El animal ha sido adoptado por otra solicitud» y registrar la misma fecha
         de resolución.
      */
-    // Crear una adopción
+    // Crear una solicitud de adopción
     public void crear(Adopcion adopcion) {
 
         validar(adopcion);
@@ -38,19 +40,44 @@ public class AdopcionService {
         Adoptante adoptante = adoptanteDao.buscarPorDni(adopcion.getDniAdoptante());
 
         if (animal == null) {
-            throw new IllegalArgumentException("El animal no existe");
+            throw new IllegalArgumentException("El animal no existe o está eliminado");
         }
 
-        if (adoptante == null) {
-            throw new IllegalArgumentException("El adoptante no existe");
+        if (adoptante == null || Boolean.TRUE.equals(adoptante.getEliminado())) {
+            throw new IllegalArgumentException("El adoptante no existe o está eliminado");
         }
 
-        if ("adoptado".equalsIgnoreCase(animal.getEstado())) {
-            throw new IllegalArgumentException("El animal ya está adoptado");
+        String estadoAnimal = animal.getEstado() == null
+                ? ""
+                : animal.getEstado().trim().toLowerCase(Locale.ROOT);
+
+        if (!estadoAnimal.equals("disponible") &&
+                !estadoAnimal.equals("reservado")) {
+
+            throw new IllegalArgumentException(
+                    "El animal no está disponible para recibir solicitudes"
+            );
         }
 
-        if ("tratamiento".equalsIgnoreCase(animal.getEstado())) {
-            throw new IllegalArgumentException("El animal está en tratamiento");
+        List<Adopcion> solicitudes = adopcionDao.buscarPorAnimal(
+                adopcion.getAnimalId()
+        );
+
+        for (Adopcion otra : solicitudes) {
+
+            if (otra.getDniAdoptante().equals(adopcion.getDniAdoptante()) &&
+                    "pendiente".equalsIgnoreCase(otra.getEstado())) {
+
+                throw new IllegalArgumentException(
+                        "El adoptante ya tiene una solicitud pendiente para este animal"
+                );
+            }
+
+            if ("aprobada".equalsIgnoreCase(otra.getEstado())) {
+                throw new IllegalArgumentException(
+                        "El animal ya tiene una adopción aprobada"
+                );
+            }
         }
 
         adopcion.setFechaSolicitud(new Date());
@@ -60,9 +87,30 @@ public class AdopcionService {
 
         adopcionDao.insertar(adopcion);
 
-        // Reservar el animal mientras tiene solicitudes pendientes
+        // Reservar el animal después de registrar la solicitud
         animal.setEstado("reservado");
-        animalDao.actualizar(animal);
+
+        try {
+
+            if (!animalDao.actualizar(animal)) {
+                throw new IllegalStateException("No se ha podido reservar el animal");
+            }
+
+        } catch (RuntimeException e) {
+
+            // Cancelar la solicitud si no se ha podido reservar el animal
+            try {
+                if (!adopcionDao.darDeBaja(adopcion.getId())) {
+                    e.addSuppressed(new IllegalStateException(
+                            "Tampoco se ha podido cancelar la solicitud"
+                    ));
+                }
+            } catch (RuntimeException errorBaja) {
+                e.addSuppressed(errorBaja);
+            }
+
+            throw e;
+        }
     }
 
     // Buscar una adopción por ID
@@ -93,33 +141,45 @@ public class AdopcionService {
     // Buscar adopciones de un adoptante
     public List<Adopcion> buscarPorAdoptante(String dni) {
 
-        if (dni == null || dni.isBlank()) {
-            throw new IllegalArgumentException("El DNI es obligatorio");
-        }
+        dni = Validaciones.validarDni(dni);
 
         return adopcionDao.buscarPorAdoptante(dni);
     }
 
     // TODO : Tener cuidado con lo de actualizar el estado (hay que hacer varias comprobaciones previamente, no?)
-    // Actualizar una adopción
+    // Actualizar observaciones y seguimiento de una adopción
     public boolean actualizar(Adopcion adopcion) {
 
-        validar(adopcion);
-
-        if (adopcion.getId() == null) {
-            throw new IllegalArgumentException("El ID de la adopción es obligatorio");
+        if (adopcion == null || adopcion.getId() == null) {
+            throw new IllegalArgumentException("La adopción y su ID son obligatorios");
         }
 
-        return adopcionDao.actualizar(adopcion);
+        Adopcion actual = adopcionDao.buscarPorId(adopcion.getId());
+
+        if (actual == null) {
+            throw new IllegalArgumentException("La adopción no existe o está eliminada");
+        }
+
+        Validaciones.validarLongitud(
+                adopcion.getObservaciones(),
+                "Las observaciones",
+                1000
+        );
+
+        // Mantener los datos que solo cambian mediante las operaciones correspondientes
+        actual.setObservaciones(adopcion.getObservaciones());
+        actual.setSeguimiento(adopcion.getSeguimiento());
+
+        return adopcionDao.actualizar(actual);
     }
 
-    // Aprobar una adopción
+    // Aprobar una solicitud de adopción
     public boolean aprobar(ObjectId id) {
 
         Adopcion adopcion = buscarPorId(id);
 
         if (adopcion == null) {
-            throw new IllegalArgumentException("La adopción no existe");
+            throw new IllegalArgumentException("La adopción no existe o está eliminada");
         }
 
         if (!"pendiente".equalsIgnoreCase(adopcion.getEstado())) {
@@ -129,22 +189,27 @@ public class AdopcionService {
         Animal animal = animalDao.buscarPorId(adopcion.getAnimalId());
 
         if (animal == null) {
-            throw new IllegalArgumentException("El animal no existe");
+            throw new IllegalArgumentException("El animal no existe o está eliminado");
         }
 
-        if ("adoptado".equalsIgnoreCase(animal.getEstado())) {
-            throw new IllegalArgumentException("El animal ya está adoptado");
+        Adoptante adoptante = adoptanteDao.buscarPorDni(adopcion.getDniAdoptante());
+
+        if (adoptante == null || Boolean.TRUE.equals(adoptante.getEliminado())) {
+            throw new IllegalArgumentException("El adoptante no existe o está eliminado");
         }
 
         if (!"reservado".equalsIgnoreCase(animal.getEstado())) {
             throw new IllegalArgumentException("El animal no está reservado");
         }
 
-        // Comprobar que no exista otra adopción aprobada
-        for (Adopcion otra : adopcionDao.buscarPorAnimal(adopcion.getAnimalId())) {
+        List<Adopcion> solicitudes = adopcionDao.buscarPorAnimal(
+                adopcion.getAnimalId()
+        );
 
-            if (!otra.getId().equals(adopcion.getId())
-                    && "aprobada".equalsIgnoreCase(otra.getEstado())) {
+        for (Adopcion otra : solicitudes) {
+
+            if (!otra.getId().equals(adopcion.getId()) &&
+                    "aprobada".equalsIgnoreCase(otra.getEstado())) {
 
                 throw new IllegalArgumentException(
                         "El animal ya tiene otra adopción aprobada"
@@ -152,44 +217,80 @@ public class AdopcionService {
             }
         }
 
+        Date fechaResolucion = new Date();
         String estadoAnterior = animal.getEstado();
 
-        // Actualizar primero el animal
+        // Cambiar el estado del animal
         animal.setEstado("adoptado");
 
         if (!animalDao.actualizar(animal)) {
             throw new IllegalStateException("No se ha podido actualizar el animal");
         }
 
-        // Actualizar la adopción
+        // Aprobar la solicitud
         adopcion.setEstado("aprobada");
-        adopcion.setFechaResolucion(new Date());
+        adopcion.setFechaResolucion(fechaResolucion);
 
         if (!adopcionDao.actualizar(adopcion)) {
 
-            // Intentar recuperar el estado anterior del animal
             animal.setEstado(estadoAnterior);
-            animalDao.actualizar(animal);
 
-            throw new IllegalStateException(
-                    "No se ha podido aprobar la adopción"
-            );
+            if (!animalDao.actualizar(animal)) {
+                throw new IllegalStateException(
+                        "No se ha podido aprobar la adopción ni restaurar el estado del animal"
+                );
+            }
+
+            throw new IllegalStateException("No se ha podido aprobar la adopción");
+        }
+
+        // Rechazar las demás solicitudes pendientes del mismo animal
+        for (Adopcion otra : solicitudes) {
+
+            if (!otra.getId().equals(adopcion.getId()) &&
+                    "pendiente".equalsIgnoreCase(otra.getEstado())) {
+
+                otra.setEstado("rechazada");
+                otra.setFechaResolucion(fechaResolucion);
+
+                String observaciones = otra.getObservaciones();
+
+                if (observaciones == null || observaciones.isBlank()) {
+                    observaciones = "El animal ha sido adoptado mediante otra solicitud";
+                } else {
+                    observaciones += " | El animal ha sido adoptado mediante otra solicitud";
+                }
+
+                otra.setObservaciones(observaciones);
+
+                if (!adopcionDao.actualizar(otra)) {
+                    throw new IllegalStateException(
+                            "La adopción se ha aprobado, pero no se han podido actualizar todas las solicitudes restantes"
+                    );
+                }
+            }
         }
 
         return true;
     }
 
-    // Rechazar una adopción
+    // Rechazar una solicitud de adopción
     public boolean rechazar(ObjectId id) {
 
         Adopcion adopcion = buscarPorId(id);
 
         if (adopcion == null) {
-            throw new IllegalArgumentException("La adopción no existe");
+            throw new IllegalArgumentException("La adopción no existe o está eliminada");
         }
 
         if (!"pendiente".equalsIgnoreCase(adopcion.getEstado())) {
             throw new IllegalArgumentException("La adopción no está pendiente");
+        }
+
+        Animal animal = animalDao.buscarPorId(adopcion.getAnimalId());
+
+        if (animal == null) {
+            throw new IllegalStateException("El animal asociado no existe o está eliminado");
         }
 
         adopcion.setEstado("rechazada");
@@ -200,44 +301,62 @@ public class AdopcionService {
         }
 
         // Comprobar si quedan otras solicitudes pendientes
-        List<Adopcion> adopciones = adopcionDao.buscarPorAnimal(
+        List<Adopcion> solicitudes = adopcionDao.buscarPorAnimal(
                 adopcion.getAnimalId()
         );
 
-        boolean quedanPendientes = adopciones.stream()
+        boolean quedanPendientes = solicitudes.stream()
                 .anyMatch(a -> "pendiente".equalsIgnoreCase(a.getEstado()));
 
-        if (!quedanPendientes) {
+        if (!quedanPendientes &&
+                "reservado".equalsIgnoreCase(animal.getEstado())) {
 
-            Animal animal = animalDao.buscarPorId(adopcion.getAnimalId());
+            animal.setEstado("disponible");
 
-            if (animal != null
-                    && "reservado".equalsIgnoreCase(animal.getEstado())) {
+            if (!animalDao.actualizar(animal)) {
 
-                animal.setEstado("disponible");
+                // Intentar recuperar la solicitud pendiente
+                adopcion.setEstado("pendiente");
+                adopcion.setFechaResolucion(null);
 
-                if (!animalDao.actualizar(animal)) {
+                if (!adopcionDao.actualizar(adopcion)) {
                     throw new IllegalStateException(
-                            "La adopción se ha rechazado, pero no se ha podido liberar el animal"
+                            "No se ha podido liberar el animal ni recuperar la solicitud"
                     );
                 }
+
+                throw new IllegalStateException("No se ha podido liberar el animal");
             }
         }
 
         return true;
     }
 
-    // Dar de baja una adopción
+    // Dar de baja una solicitud de adopción
     public boolean darDeBaja(ObjectId id) {
 
-        if (id == null) {
-            throw new IllegalArgumentException("El ID de la adopción es obligatorio");
+        Adopcion adopcion = buscarPorId(id);
+
+        if (adopcion == null) {
+            throw new IllegalArgumentException("La adopción no existe o está eliminada");
+        }
+
+        if ("pendiente".equalsIgnoreCase(adopcion.getEstado())) {
+            throw new IllegalArgumentException(
+                    "Debes rechazar la solicitud antes de darla de baja"
+            );
+        }
+
+        if ("aprobada".equalsIgnoreCase(adopcion.getEstado())) {
+            throw new IllegalArgumentException(
+                    "No se puede dar de baja una adopción aprobada"
+            );
         }
 
         return adopcionDao.darDeBaja(id);
     }
 
-    // Validar los datos de la adopción
+    // Validar los datos de una adopción
     private void validar(Adopcion adopcion) {
 
         if (adopcion == null) {
@@ -248,10 +367,8 @@ public class AdopcionService {
             throw new IllegalArgumentException("El animal es obligatorio");
         }
 
-        if (adopcion.getDniAdoptante() == null
-                || adopcion.getDniAdoptante().isBlank()) {
-
-            throw new IllegalArgumentException("El adoptante es obligatorio");
-        }
+        adopcion.setDniAdoptante(
+                Validaciones.validarDni(adopcion.getDniAdoptante())
+        );
     }
 }

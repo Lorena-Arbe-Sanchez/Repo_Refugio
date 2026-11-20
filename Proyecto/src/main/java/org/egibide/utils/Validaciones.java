@@ -15,9 +15,7 @@ public class Validaciones {
         dni = dni.trim().toUpperCase(Locale.ROOT);
 
         if (!dni.matches("[0-9]{8}[A-Z]")) {
-            throw new IllegalArgumentException(
-                    "El DNI debe tener 8 números y una letra"
-            );
+            throw new IllegalArgumentException("El DNI debe tener 8 números y una letra");
         }
 
         // Comprobar la letra correspondiente al número
@@ -42,9 +40,7 @@ public class Validaciones {
         telefono = telefono.trim().replaceAll("[\\s-]", "");
 
         if (!telefono.matches("(\\+34)?[6789][0-9]{8}")) {
-            throw new IllegalArgumentException(
-                    "El teléfono no tiene un formato válido"
-            );
+            throw new IllegalArgumentException("El teléfono no tiene un formato válido");
         }
 
         return telefono;

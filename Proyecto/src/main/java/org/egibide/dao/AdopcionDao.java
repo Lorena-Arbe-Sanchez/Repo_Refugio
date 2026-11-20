@@ -9,7 +9,9 @@ import org.egibide.utils.DatabaseConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.ne;
 
 public class AdopcionDao {
 
@@ -31,10 +33,13 @@ public class AdopcionDao {
         coleccion.insertOne(documento);
     }
 
-    // Buscar una adopción por ID
+    // Buscar una adopción activa por ID
     public Adopcion buscarPorId(ObjectId id) {
 
-        Document documento = coleccion.find(eq("_id", id)).first();
+        Document documento = coleccion.find(and(
+                eq("_id", id),
+                ne("eliminado", true)
+        )).first();
 
         if (documento == null) {
             return null;
@@ -48,42 +53,44 @@ public class AdopcionDao {
 
         List<Adopcion> adopciones = new ArrayList<>();
 
-        for (Document documento : coleccion.find(eq("eliminado", false))) {
+        for (Document documento : coleccion.find(ne("eliminado", true))) {
             adopciones.add(convertirAdopcion(documento));
         }
 
         return adopciones;
     }
 
-    // Buscar adopciones de un animal
+    // Buscar adopciones activas de un animal
     public List<Adopcion> buscarPorAnimal(ObjectId animalId) {
 
         List<Adopcion> adopciones = new ArrayList<>();
 
-        for (Document documento : coleccion.find(
-                eq("animalId", animalId)
-        )) {
+        for (Document documento : coleccion.find(and(
+                eq("animalId", animalId),
+                ne("eliminado", true)
+        ))) {
             adopciones.add(convertirAdopcion(documento));
         }
 
         return adopciones;
     }
 
-    // Buscar adopciones de un adoptante
+    // Buscar adopciones activas de un adoptante
     public List<Adopcion> buscarPorAdoptante(String dni) {
 
         List<Adopcion> adopciones = new ArrayList<>();
 
-        for (Document documento : coleccion.find(
-                eq("dniAdoptante", dni)
-        )) {
+        for (Document documento : coleccion.find(and(
+                eq("dniAdoptante", dni),
+                ne("eliminado", true)
+        ))) {
             adopciones.add(convertirAdopcion(documento));
         }
 
         return adopciones;
     }
 
-    // Actualizar una adopción
+    // Actualizar una adopción activa
     public boolean actualizar(Adopcion adopcion) {
 
         if (adopcion.getId() == null) {
@@ -93,7 +100,11 @@ public class AdopcionDao {
         Document documento = convertirDocumento(adopcion);
 
         return coleccion.replaceOne(
-                eq("_id", adopcion.getId()), documento
+                and(
+                        eq("_id", adopcion.getId()),
+                        ne("eliminado", true)
+                ),
+                documento
         ).getMatchedCount() > 0;
     }
 
@@ -101,7 +112,10 @@ public class AdopcionDao {
     public boolean darDeBaja(ObjectId id) {
 
         return coleccion.updateOne(
-                eq("_id", id),
+                and(
+                        eq("_id", id),
+                        ne("eliminado", true)
+                ),
                 new Document("$set", new Document("eliminado", true))
         ).getModifiedCount() > 0;
     }

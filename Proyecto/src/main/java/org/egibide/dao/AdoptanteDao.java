@@ -8,7 +8,9 @@ import org.egibide.utils.DatabaseConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.ne;
 
 public class AdoptanteDao {
 
@@ -43,20 +45,24 @@ public class AdoptanteDao {
 
         List<Adoptante> adoptantes = new ArrayList<>();
 
-        for (Document documento : coleccion.find(eq("eliminado", false))) {
+        for (Document documento : coleccion.find(ne("eliminado", true))) {
             adoptantes.add(convertirAdoptante(documento));
         }
 
         return adoptantes;
     }
 
-    // Actualizar un adoptante
+    // Actualizar un adoptante activo
     public boolean actualizar(Adoptante adoptante) {
 
         Document documento = convertirDocumento(adoptante);
 
         return coleccion.replaceOne(
-                eq("_id", adoptante.getDni()), documento
+                and(
+                        eq("_id", adoptante.getDni()),
+                        ne("eliminado", true)
+                ),
+                documento
         ).getMatchedCount() > 0;
     }
 
@@ -64,7 +70,10 @@ public class AdoptanteDao {
     public boolean darDeBaja(String dni) {
 
         return coleccion.updateOne(
-                eq("_id", dni),
+                and(
+                        eq("_id", dni),
+                        ne("eliminado", true)
+                ),
                 new Document("$set", new Document("eliminado", true))
         ).getModifiedCount() > 0;
     }

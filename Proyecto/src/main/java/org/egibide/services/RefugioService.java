@@ -33,9 +33,14 @@ public class RefugioService {
             throw new IllegalArgumentException("El refugio no puede ser nulo");
         }
 
-        if (refugio.getNombre() == null || refugio.getNombre().isBlank()) {
-            throw new IllegalArgumentException("El nombre es obligatorio");
-        }
+        Validaciones.validarTexto(refugio.getNombre(), "El nombre");
+        Validaciones.validarLongitud(refugio.getNombre(), "El nombre", 100);
+
+        Validaciones.validarTexto(refugio.getRazonSocial(), "La razón social");
+        Validaciones.validarLongitud(refugio.getRazonSocial(), "La razón social", 150);
+
+        Validaciones.validarTexto(refugio.getDireccion(), "La dirección");
+        Validaciones.validarLongitud(refugio.getDireccion(), "La dirección", 200);
 
         refugio.setCif(Validaciones.validarCif(refugio.getCif()));
 
@@ -46,9 +51,6 @@ public class RefugioService {
         refugio.setCorreo(
                 Validaciones.validarEmail(refugio.getCorreo())
         );
-
-        Validaciones.validarTexto(refugio.getRazonSocial(), "La razón social");
-        Validaciones.validarTexto(refugio.getDireccion(), "La dirección");
 
         Validaciones.validarFecha(
                 refugio.getFechaApertura(),

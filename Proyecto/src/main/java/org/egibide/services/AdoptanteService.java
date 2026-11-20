@@ -1,6 +1,8 @@
 package org.egibide.services;
 
+import org.egibide.dao.AdopcionDao;
 import org.egibide.dao.AdoptanteDao;
+import org.egibide.models.Adopcion;
 import org.egibide.models.Adoptante;
 import org.egibide.utils.Validaciones;
 
@@ -10,9 +12,11 @@ import java.util.List;
 public class AdoptanteService {
 
     private final AdoptanteDao adoptanteDao;
+    private final AdopcionDao adopcionDao;
 
     public AdoptanteService() {
         adoptanteDao = new AdoptanteDao();
+        adopcionDao = new AdopcionDao();
     }
 
     // Crear un adoptante
@@ -35,7 +39,13 @@ public class AdoptanteService {
 
         dni = Validaciones.validarDni(dni);
 
-        return adoptanteDao.buscarPorDni(dni);
+        Adoptante adoptante = adoptanteDao.buscarPorDni(dni);
+
+        if (adoptante != null && Boolean.TRUE.equals(adoptante.getEliminado())) {
+            return null;
+        }
+
+        return adoptante;
     }
 
     // Listar los adoptantes
@@ -44,10 +54,24 @@ public class AdoptanteService {
     }
 
     // TODO : No se debe poder actualizar el DNI + También impediría dar de baja a un adoptante que tenga solicitudes pendientes. Las adopciones históricas deberían conservar su referencia.
-    // Actualizar un adoptante
-    public boolean actualizar(Adoptante adoptante) {
+    // Actualizar un adoptante sin modificar su DNI
+    public boolean actualizar(String dniOriginal, Adoptante adoptante) {
 
+        dniOriginal = Validaciones.validarDni(dniOriginal);
         validar(adoptante);
+
+        if (!dniOriginal.equals(adoptante.getDni())) {
+            throw new IllegalArgumentException("No se puede modificar el DNI del adoptante");
+        }
+
+        Adoptante actual = adoptanteDao.buscarPorDni(dniOriginal);
+
+        if (actual == null || Boolean.TRUE.equals(actual.getEliminado())) {
+            throw new IllegalArgumentException("El adoptante no existe o está eliminado");
+        }
+
+        adoptante.setFechaRegistro(actual.getFechaRegistro());
+        adoptante.setEliminado(false);
 
         return adoptanteDao.actualizar(adoptante);
     }
@@ -56,6 +80,24 @@ public class AdoptanteService {
     public boolean darDeBaja(String dni) {
 
         dni = Validaciones.validarDni(dni);
+
+        Adoptante adoptante = adoptanteDao.buscarPorDni(dni);
+
+        if (adoptante == null || Boolean.TRUE.equals(adoptante.getEliminado())) {
+            return false;
+        }
+
+        List<Adopcion> solicitudes = adopcionDao.buscarPorAdoptante(dni);
+
+        // No permitir dar de baja si tiene solicitudes pendientes
+        boolean tienePendientes = solicitudes.stream()
+                .anyMatch(a -> "pendiente".equalsIgnoreCase(a.getEstado()));
+
+        if (tienePendientes) {
+            throw new IllegalArgumentException(
+                    "No se puede dar de baja un adoptante con solicitudes pendientes"
+            );
+        }
 
         return adoptanteDao.darDeBaja(dni);
     }
@@ -67,20 +109,24 @@ public class AdoptanteService {
             throw new IllegalArgumentException("El adoptante no puede ser nulo");
         }
 
-        // Normalizar y validar DNI
         adoptante.setDni(Validaciones.validarDni(adoptante.getDni()));
 
         Validaciones.validarTexto(adoptante.getNombre(), "El nombre");
         Validaciones.validarTexto(adoptante.getApellido1(), "El primer apellido");
+
         adoptante.setTelefono(
                 Validaciones.validarTelefono(adoptante.getTelefono())
         );
+
         Validaciones.validarTexto(adoptante.getDireccion(), "La dirección");
+
         adoptante.setEmail(
                 Validaciones.validarEmail(adoptante.getEmail())
         );
+
         Validaciones.validarLongitud(adoptante.getNombre(), "El nombre", 100);
         Validaciones.validarLongitud(adoptante.getApellido1(), "El primer apellido", 100);
         Validaciones.validarLongitud(adoptante.getApellido2(), "El segundo apellido", 100);
+        Validaciones.validarLongitud(adoptante.getDireccion(), "La dirección", 200);
     }
 }
