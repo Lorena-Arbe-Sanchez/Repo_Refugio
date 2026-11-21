@@ -1,7 +1,21 @@
 package org.egibide;
 
+import org.bson.types.ObjectId;
+import org.egibide.dao.AdopcionDao;
+import org.egibide.dao.AdoptanteDao;
+import org.egibide.dao.AnimalDao;
+import org.egibide.dao.RefugioDao;
+import org.egibide.models.Animal;
+import org.egibide.services.AdopcionService;
+import org.egibide.services.AdoptanteService;
+import org.egibide.services.AnimalService;
+import org.egibide.services.RefugioService;
 import org.egibide.utils.DatabaseConnection;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -13,6 +27,11 @@ public class Main {
     public static void main(String[] args) {
 
         DatabaseConnection conexion = null;
+
+        AnimalService animalService = new AnimalService();
+        AdoptanteService adoptanteService = new AdoptanteService();
+        AdopcionService adopcionService = new AdopcionService();
+        RefugioService refugioService = new RefugioService();
 
         try (Scanner sc = new Scanner(System.in)) {
 
@@ -74,19 +93,19 @@ public class Main {
                 switch (opcion) {
 
                     case 1:
-                        menuAnimales(sc);
+                        menuAnimales(sc, animalService);
                         break;
 
                     case 2:
-                        menuAdoptantes(sc);
+                        menuAdoptantes(sc, adoptanteService);
                         break;
 
                     case 3:
-                        menuAdopciones(sc);
+                        menuAdopciones(sc, adopcionService);
                         break;
 
                     case 4:
-                        menuRefugio(sc);
+                        menuRefugio(sc, refugioService);
                         break;
 
                     case 5:
@@ -130,7 +149,7 @@ public class Main {
     }
 
     // Menú de animales
-    private static void menuAnimales(Scanner sc) {
+    private static void menuAnimales(Scanner sc, AnimalService animalService) {
 
         int opcion;
 
@@ -149,11 +168,23 @@ public class Main {
             switch (opcion) {
 
                 case 1:
+                    listarAnimales(animalService);
+                    break;
+
                 case 2:
+                    crearAnimal(sc, animalService);
+                    break;
+
                 case 3:
+                    modificarAnimal(sc, animalService);
+                    break;
+
                 case 4:
+                    darDeBajaAnimal(sc, animalService);
+                    break;
+
                 case 5:
-                    System.out.println("Funcionalidad pendiente de implementar");
+                    buscarAnimal(sc, animalService);
                     break;
 
                 case 0:
@@ -166,8 +197,197 @@ public class Main {
         } while (opcion != 0);
     }
 
+    private static void listarAnimales(AnimalService animalService) {
+
+        List<Animal> animales = animalService.listar();
+
+        if (animales.isEmpty()) {
+            System.out.println("\nNo hay animales registrados");
+            return;
+        }
+
+        System.out.println("\n===== LISTADO DE ANIMALES =====");
+
+        for (Animal animal : animales) {
+            mostrarAnimal(animal);
+        }
+    }
+
+    private static void crearAnimal(Scanner sc, AnimalService animalService) {
+
+        try {
+
+            Animal animal = new Animal();
+
+            System.out.println("\n===== ALTA DE ANIMAL =====");
+
+            System.out.print("Nombre: ");
+            animal.setNombre(sc.nextLine().trim());
+
+            System.out.print("Especie: ");
+            animal.setEspecie(sc.nextLine().trim());
+
+            System.out.print("Raza: ");
+            animal.setRaza(sc.nextLine().trim());
+
+            animal.setEdad(leerEdad(sc));
+
+            System.out.print("Sexo (macho/hembra/desconocido): ");
+            animal.setSexo(sc.nextLine().trim());
+
+            System.out.print("Descripción: ");
+            animal.setDescripcion(sc.nextLine().trim());
+
+            animal.setFechaIngreso(leerFecha(sc));
+
+            // El servicio asigna el estado disponible por defecto
+            animal.setHistorialMedico(new java.util.ArrayList<>());
+
+            animalService.crear(animal);
+
+            System.out.println("\n✅ Animal registrado correctamente");
+            System.out.println("ID asignado: " + animal.getId());
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se ha podido registrar el animal: " + e.getMessage());
+        }
+    }
+
+    private static void modificarAnimal(Scanner sc, AnimalService animalService) {
+
+        try {
+
+            System.out.println("\n===== MODIFICAR ANIMAL =====");
+
+            System.out.print("Introduce el ID del animal: ");
+            ObjectId id = new ObjectId(sc.nextLine().trim());
+
+            Animal animal = animalService.buscarPorId(id);
+
+            if (animal == null) {
+                System.out.println("\nNo existe ningún animal con ese ID");
+                return;
+            }
+
+            System.out.println("\nDatos actuales:");
+            mostrarAnimal(animal);
+
+            System.out.println("\nIntroduce los nuevos datos:");
+
+            System.out.print("Nombre: ");
+            animal.setNombre(sc.nextLine().trim());
+
+            System.out.print("Especie: ");
+            animal.setEspecie(sc.nextLine().trim());
+
+            System.out.print("Raza: ");
+            animal.setRaza(sc.nextLine().trim());
+
+            animal.setEdad(leerEdad(sc));
+
+            System.out.print("Sexo (macho/hembra/desconocido): ");
+            animal.setSexo(sc.nextLine().trim());
+
+            System.out.print("Descripción: ");
+            animal.setDescripcion(sc.nextLine().trim());
+
+            animal.setFechaIngreso(leerFecha(sc));
+
+            if (animalService.actualizar(animal)) {
+                System.out.println("\n✅ Animal modificado correctamente");
+            } else {
+                System.out.println("\n⚠️ No se ha podido modificar el animal");
+            }
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se ha podido modificar el animal: " + e.getMessage());
+        }
+    }
+
+    private static void darDeBajaAnimal(Scanner sc, AnimalService animalService) {
+
+        try {
+
+            System.out.println("\n===== DAR DE BAJA UN ANIMAL =====");
+
+            System.out.print("Introduce el ID del animal: ");
+            ObjectId id = new ObjectId(sc.nextLine().trim());
+
+            Animal animal = animalService.buscarPorId(id);
+
+            if (animal == null) {
+                System.out.println("\nNo existe ningún animal con ese ID");
+                return;
+            }
+
+            mostrarAnimal(animal);
+
+            System.out.print("\n¿Quieres dar de baja este animal? (s/n): ");
+            String confirmacion = sc.nextLine().trim();
+
+            if (confirmacion.equalsIgnoreCase("s")) {
+
+                if (animalService.darDeBaja(id)) {
+                    System.out.println("\n✅ Animal dado de baja correctamente");
+                } else {
+                    System.out.println("\n⚠️ No se ha podido dar de baja el animal");
+                }
+
+            } else {
+                System.out.println("\nOperación cancelada");
+            }
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se ha podido dar de baja el animal: " + e.getMessage());
+        }
+    }
+
+    private static void buscarAnimal(Scanner sc, AnimalService animalService) {
+
+        try {
+
+            System.out.println("\n===== BUSCAR ANIMAL =====");
+
+            System.out.print("Introduce el ID del animal: ");
+            ObjectId id = new ObjectId(sc.nextLine().trim());
+
+            Animal animal = animalService.buscarPorId(id);
+
+            if (animal == null) {
+                System.out.println("\nNo existe ningún animal con ese ID");
+            } else {
+                mostrarAnimal(animal);
+            }
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se ha podido buscar el animal: " + e.getMessage());
+        }
+    }
+
+    private static void mostrarAnimal(Animal animal) {
+
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+
+        System.out.println("\n------------------------------");
+        System.out.println("ID: " + animal.getId());
+        System.out.println("Nombre: " + animal.getNombre());
+        System.out.println("Especie: " + animal.getEspecie());
+        System.out.println("Raza: " + animal.getRaza());
+        System.out.println("Edad: " + animal.getEdad());
+        System.out.println("Sexo: " + animal.getSexo());
+        System.out.println("Descripción: " + animal.getDescripcion());
+
+        if (animal.getFechaIngreso() != null) {
+            System.out.println("Fecha de ingreso: " +
+                    formato.format(animal.getFechaIngreso()));
+        }
+
+        System.out.println("Estado: " + animal.getEstado());
+        System.out.println("------------------------------");
+    }
+
     // Menú de adoptantes
-    private static void menuAdoptantes(Scanner sc) {
+    private static void menuAdoptantes(Scanner sc, AdoptanteService adoptanteService) {
 
         int opcion;
 
@@ -204,7 +424,7 @@ public class Main {
     }
 
     // Menú de adopciones
-    private static void menuAdopciones(Scanner sc) {
+    private static void menuAdopciones(Scanner sc, AdopcionService adopcionService) {
 
         int opcion;
 
@@ -241,7 +461,7 @@ public class Main {
     }
 
     // Menú del refugio
-    private static void menuRefugio(Scanner sc) {
+    private static void menuRefugio(Scanner sc, RefugioService refugioService) {
 
         int opcion;
 
@@ -285,6 +505,10 @@ public class Main {
         System.out.println("0. Salir de la aplicación");
     }
 
+    /* TODO
+    FUNCIONES AUXILIARES
+     */
+
     // Leer una opción del menú
     private static int leerOpcion(Scanner sc) {
 
@@ -296,5 +520,21 @@ public class Main {
         } catch (NumberFormatException e) {
             return -1;
         }
+    }
+
+    private static Integer leerEdad(Scanner sc) {
+
+        System.out.print("Edad: ");
+        return Integer.parseInt(sc.nextLine().trim());
+    }
+
+    private static Date leerFecha(Scanner sc) throws ParseException {
+
+        System.out.print("Fecha de ingreso (dd/MM/yyyy): ");
+
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        formato.setLenient(false);
+
+        return formato.parse(sc.nextLine().trim());
     }
 }
