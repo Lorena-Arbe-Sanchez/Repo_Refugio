@@ -6,6 +6,10 @@ import java.util.Scanner;
 
 public class Main {
 
+    // Constantes para establecer colores a los mensajes por consola
+    private static final String COLOR_AMARILLO = "\u001B[93m";
+    private static final String RESET_COLOR = "\u001B[0m";
+
     public static void main(String[] args) {
 
         DatabaseConnection conexion = null;
@@ -15,7 +19,7 @@ public class Main {
             // Inicializar la conexión con MongoDB
             conexion = DatabaseConnection.getInstance();
 
-            System.out.println("🔌 Conexión con MongoDB establecida");
+            System.out.println(COLOR_AMARILLO + "🔌 Conexión con MongoDB establecida");
             System.out.println("Base de datos: " +
                     conexion.getDatabase().getName());
 
@@ -25,7 +29,29 @@ public class Main {
                 System.out.println("- " + nombre);
             }
 
-            System.out.println("\n✅ Aplicación inicializada correctamente");
+            System.out.println("\n✅ Aplicación inicializada correctamente" + RESET_COLOR);
+
+            /*
+            // Colores ANSI básicos
+            System.out.println("\u001B[30mNegro\u001B[0m");
+            System.out.println("\u001B[31mRojo\u001B[0m");
+            System.out.println("\u001B[32mVerde\u001B[0m");
+            System.out.println("\u001B[33mAmarillo\u001B[0m");
+            System.out.println("\u001B[34mAzul\u001B[0m");
+            System.out.println("\u001B[35mMorado\u001B[0m");
+            System.out.println("\u001B[36mCian\u001B[0m");
+            System.out.println("\u001B[37mBlanco\u001B[0m");
+
+            // Tonalidades claras e intensas
+            System.out.println("\u001B[90mGris\u001B[0m");
+            System.out.println("\u001B[91mRojo brillante\u001B[0m");
+            System.out.println("\u001B[92mVerde brillante\u001B[0m");
+            System.out.println("\u001B[93mAmarillo brillante\u001B[0m");
+            System.out.println("\u001B[94mAzul brillante\u001B[0m");
+            System.out.println("\u001B[95mMorado brillante\u001B[0m");
+            System.out.println("\u001B[96mCian brillante\u001B[0m");
+            System.out.println("\u001B[97mBlanco brillante\u001B[0m");
+            */
 
             // Menú principal
             int opcion;
@@ -98,7 +124,7 @@ public class Main {
             // Cerrar la conexión con MongoDB
             if (conexion != null) {
                 conexion.close();
-                System.out.println("Conexión con MongoDB cerrada");
+                System.out.println(COLOR_AMARILLO + "Conexión con MongoDB cerrada" + RESET_COLOR);
             }
         }
     }

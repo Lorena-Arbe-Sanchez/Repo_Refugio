@@ -37,7 +37,7 @@
             <artifactId>mongodb-driver-sync</artifactId>
         </dependency>
 
-        <!-- JavaFX -->
+        <!-- Interfaz: JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -50,12 +50,32 @@
             <version>${javafx.version}</version>
         </dependency>
 
-        <!-- JUnit 5 -->
+        <!-- Suite de tests: JUnit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Logging: SLF4J -->
+        <!--<dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.17</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.18</version>
+        </dependency>-->
+
+        <!-- JSON: GSON -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.1</version>
         </dependency>
 
     </dependencies>
@@ -86,7 +106,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>org.egibide.App</mainClass>
+                    <mainClass>org.egibide.gui.MenuPrincipal</mainClass>
                 </configuration>
             </plugin>
 
