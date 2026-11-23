@@ -1,10 +1,6 @@
 package org.egibide;
 
 import org.bson.types.ObjectId;
-import org.egibide.dao.AdopcionDao;
-import org.egibide.dao.AdoptanteDao;
-import org.egibide.dao.AnimalDao;
-import org.egibide.dao.RefugioDao;
 import org.egibide.models.Animal;
 import org.egibide.services.AdopcionService;
 import org.egibide.services.AdoptanteService;
@@ -109,6 +105,7 @@ public class Main {
                         break;
 
                     case 5:
+                        // TODO : Hacer lo que tenga "pendiente"
                         System.out.println("\nFuncionalidad pendiente de implementar");
                         break;
 
@@ -197,6 +194,7 @@ public class Main {
         } while (opcion != 0);
     }
 
+    // TODO : Revisar y probar a partir de aquí
     private static void listarAnimales(AnimalService animalService) {
 
         List<Animal> animales = animalService.listar();
@@ -249,10 +247,11 @@ public class Main {
             System.out.println("ID asignado: " + animal.getId());
 
         } catch (Exception e) {
-            System.out.println("\n❌ No se ha podido registrar el animal: " + e.getMessage());
+            System.out.println("\n❌ Error. No se ha podido registrar el animal: " + e.getMessage());
         }
     }
 
+    // TODO : En las funciones de modificar hacer q saque la info actual + Lo de q si se da al Enter q se queden los datos actuales
     private static void modificarAnimal(Scanner sc, AnimalService animalService) {
 
         try {
@@ -300,7 +299,7 @@ public class Main {
             }
 
         } catch (Exception e) {
-            System.out.println("\n❌ No se ha podido modificar el animal: " + e.getMessage());
+            System.out.println("\n❌ Error. No se ha podido modificar el animal: " + e.getMessage());
         }
     }
 
@@ -338,7 +337,7 @@ public class Main {
             }
 
         } catch (Exception e) {
-            System.out.println("\n❌ No se ha podido dar de baja el animal: " + e.getMessage());
+            System.out.println("\n❌ Error. No se ha podido dar de baja el animal: " + e.getMessage());
         }
     }
 
@@ -360,7 +359,7 @@ public class Main {
             }
 
         } catch (Exception e) {
-            System.out.println("\n❌ No se ha podido buscar el animal: " + e.getMessage());
+            System.out.println("\n❌ Error. No se ha podido buscar el animal: " + e.getMessage());
         }
     }
 
@@ -368,7 +367,6 @@ public class Main {
 
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
-        System.out.println("\n------------------------------");
         System.out.println("ID: " + animal.getId());
         System.out.println("Nombre: " + animal.getNombre());
         System.out.println("Especie: " + animal.getEspecie());
@@ -505,7 +503,7 @@ public class Main {
         System.out.println("0. Salir de la aplicación");
     }
 
-    /* TODO
+    /* TODO : Poner más, y las q hay ponerles bucle y de todo bien
     FUNCIONES AUXILIARES
      */
 
