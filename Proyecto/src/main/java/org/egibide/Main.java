@@ -1,6 +1,8 @@
 package org.egibide;
 
+import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.egibide.models.Adoptante;
 import org.egibide.models.Animal;
 import org.egibide.services.AdopcionService;
 import org.egibide.services.AdoptanteService;
@@ -404,11 +406,23 @@ public class Main {
             switch (opcion) {
 
                 case 1:
+                    listarAdoptantes(adoptanteService);
+                    break;
+
                 case 2:
+                    crearAdoptante(sc, adoptanteService);
+                    break;
+
                 case 3:
+                    modificarAdoptante(sc, adoptanteService);
+                    break;
+
                 case 4:
+                    darDeBajaAdoptante(sc, adoptanteService);
+                    break;
+
                 case 5:
-                    System.out.println("Funcionalidad pendiente de implementar");
+                    buscarAdoptante(sc, adoptanteService);
                     break;
 
                 case 0:
@@ -419,6 +433,213 @@ public class Main {
             }
 
         } while (opcion != 0);
+    }
+
+    private static void listarAdoptantes(AdoptanteService adoptanteService) {
+
+        List<Adoptante> adoptantes = adoptanteService.listar();
+
+        if (adoptantes.isEmpty()) {
+            System.out.println("\nNo hay adoptantes registrados");
+            return;
+        }
+
+        System.out.println("\n===== LISTADO DE ADOPTANTES =====");
+
+        for (Adoptante adoptante : adoptantes) {
+            mostrarAdoptante(adoptante);
+        }
+    }
+
+    private static void crearAdoptante(Scanner sc, AdoptanteService adoptanteService) {
+
+        try {
+
+            Adoptante adoptante = new Adoptante();
+
+            System.out.println("\n===== REGISTRAR ADOPTANTE =====");
+
+            System.out.print("DNI: ");
+            adoptante.setDni(sc.nextLine().trim());
+
+            System.out.print("Nombre: ");
+            adoptante.setNombre(sc.nextLine().trim());
+
+            System.out.print("Primer apellido: ");
+            adoptante.setApellido1(sc.nextLine().trim());
+
+            System.out.print("Segundo apellido: ");
+            adoptante.setApellido2(sc.nextLine().trim());
+
+            System.out.print("Teléfono: ");
+            adoptante.setTelefono(sc.nextLine().trim());
+
+            System.out.print("Dirección: ");
+            adoptante.setDireccion(sc.nextLine().trim());
+
+            System.out.print("Correo electrónico: ");
+            adoptante.setEmail(sc.nextLine().trim());
+
+            System.out.print("Tipo de animal preferido: ");
+            String tipoAnimal = sc.nextLine().trim();
+
+            System.out.print("Tamaño preferido: ");
+            String tamanoPreferido = sc.nextLine().trim();
+
+            Document preferencias = new Document()
+                    .append("tipoAnimal", tipoAnimal)
+                    .append("tamanoPreferido", tamanoPreferido);
+
+            adoptante.setPreferenciasAdopcion(preferencias);
+
+            adoptanteService.crear(adoptante);
+
+            System.out.println("\n✅ Adoptante registrado correctamente");
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se ha podido registrar el adoptante: " + e.getMessage());
+        }
+    }
+
+    private static void modificarAdoptante(Scanner sc, AdoptanteService adoptanteService) {
+
+        try {
+
+            System.out.println("\n===== MODIFICAR ADOPTANTE =====");
+
+            System.out.print("Introduce el DNI del adoptante: ");
+            String dni = sc.nextLine().trim();
+
+            Adoptante adoptante = adoptanteService.buscarPorDni(dni);
+
+            if (adoptante == null) {
+                System.out.println("\nNo existe ningún adoptante con ese DNI");
+                return;
+            }
+
+            mostrarAdoptante(adoptante);
+
+            System.out.println("\nIntroduce los nuevos datos:");
+
+            System.out.print("Nombre: ");
+            adoptante.setNombre(sc.nextLine().trim());
+
+            System.out.print("Primer apellido: ");
+            adoptante.setApellido1(sc.nextLine().trim());
+
+            System.out.print("Segundo apellido: ");
+            adoptante.setApellido2(sc.nextLine().trim());
+
+            System.out.print("Teléfono: ");
+            adoptante.setTelefono(sc.nextLine().trim());
+
+            System.out.print("Dirección: ");
+            adoptante.setDireccion(sc.nextLine().trim());
+
+            System.out.print("Correo electrónico: ");
+            adoptante.setEmail(sc.nextLine().trim());
+
+            System.out.print("Tipo de animal preferido: ");
+            String tipoAnimal = sc.nextLine().trim();
+
+            System.out.print("Tamaño preferido: ");
+            String tamanoPreferido = sc.nextLine().trim();
+
+            Document preferencias = new Document()
+                    .append("tipoAnimal", tipoAnimal)
+                    .append("tamanoPreferido", tamanoPreferido);
+
+            adoptante.setPreferenciasAdopcion(preferencias);
+
+            if (adoptanteService.actualizar(dni, adoptante)) {
+                System.out.println("\n✅ Adoptante modificado correctamente");
+            } else {
+                System.out.println("\n⚠️ No se ha podido modificar el adoptante");
+            }
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se ha podido modificar el adoptante: " + e.getMessage());
+        }
+    }
+
+    private static void darDeBajaAdoptante(Scanner sc, AdoptanteService adoptanteService) {
+
+        try {
+
+            System.out.println("\n===== DAR DE BAJA ADOPTANTE =====");
+
+            System.out.print("Introduce el DNI del adoptante: ");
+            String dni = sc.nextLine().trim();
+
+            Adoptante adoptante = adoptanteService.buscarPorDni(dni);
+
+            if (adoptante == null) {
+                System.out.println("\nNo existe ningún adoptante con ese DNI");
+                return;
+            }
+
+            mostrarAdoptante(adoptante);
+
+            System.out.print("\n¿Quieres dar de baja este adoptante? (s/n): ");
+            String confirmacion = sc.nextLine().trim();
+
+            if (confirmacion.equalsIgnoreCase("s")) {
+
+                if (adoptanteService.darDeBaja(dni)) {
+                    System.out.println("\n✅ Adoptante dado de baja correctamente");
+                } else {
+                    System.out.println("\n⚠️ No se ha podido dar de baja el adoptante");
+                }
+
+            } else {
+                System.out.println("\nOperación cancelada");
+            }
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se ha podido dar de baja el adoptante: " + e.getMessage());
+        }
+    }
+
+    private static void buscarAdoptante(Scanner sc, AdoptanteService adoptanteService) {
+
+        try {
+
+            System.out.println("\n===== BUSCAR ADOPTANTE =====");
+
+            System.out.print("Introduce el DNI: ");
+            String dni = sc.nextLine().trim();
+
+            Adoptante adoptante = adoptanteService.buscarPorDni(dni);
+
+            if (adoptante == null) {
+                System.out.println("\nNo existe ningún adoptante con ese DNI");
+            } else {
+                mostrarAdoptante(adoptante);
+            }
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se ha podido buscar el adoptante: " + e.getMessage());
+        }
+    }
+
+    private static void mostrarAdoptante(Adoptante adoptante) {
+
+        System.out.println("\n------------------------------");
+        System.out.println("DNI: " + adoptante.getDni());
+        System.out.println("Nombre: " + adoptante.getNombre());
+        System.out.println("Primer apellido: " + adoptante.getApellido1());
+        System.out.println("Segundo apellido: " + adoptante.getApellido2());
+        System.out.println("Teléfono: " + adoptante.getTelefono());
+        System.out.println("Dirección: " + adoptante.getDireccion());
+        System.out.println("Correo: " + adoptante.getEmail());
+
+        if (adoptante.getFechaRegistro() != null) {
+            System.out.println("Fecha de registro: " +
+                    new SimpleDateFormat("dd/MM/yyyy").format(adoptante.getFechaRegistro()));
+        }
+
+        System.out.println("Preferencias: " + adoptante.getPreferenciasAdopcion());
+        System.out.println("------------------------------");
     }
 
     // Menú de adopciones
