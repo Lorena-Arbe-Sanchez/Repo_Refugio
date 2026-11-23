@@ -2,8 +2,10 @@ package org.egibide;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.egibide.models.Adopcion;
 import org.egibide.models.Adoptante;
 import org.egibide.models.Animal;
+import org.egibide.models.Refugio;
 import org.egibide.services.AdopcionService;
 import org.egibide.services.AdoptanteService;
 import org.egibide.services.AnimalService;
@@ -12,6 +14,7 @@ import org.egibide.utils.DatabaseConnection;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -651,10 +654,14 @@ public class Main {
 
             System.out.println("\n===== GESTIÓN DE ADOPCIONES =====");
             System.out.println("1. Listar adopciones");
-            System.out.println("2. Registrar una solicitud de adopción");
-            System.out.println("3. Aprobar una adopción");
-            System.out.println("4. Rechazar una adopción");
-            System.out.println("5. Buscar adopciones");
+            System.out.println("2. Crear solicitud de adopción");
+            System.out.println("3. Buscar adopción por ID");
+            System.out.println("4. Buscar adopciones por animal");
+            System.out.println("5. Buscar adopciones por adoptante");
+            System.out.println("6. Aprobar solicitud");
+            System.out.println("7. Rechazar solicitud");
+            System.out.println("8. Modificar observaciones");
+            System.out.println("9. Dar de baja una solicitud rechazada");
             System.out.println("0. Volver al menú principal");
 
             opcion = leerOpcion(sc);
@@ -662,11 +669,39 @@ public class Main {
             switch (opcion) {
 
                 case 1:
+                    listarAdopciones(adopcionService);
+                    break;
+
                 case 2:
+                    crearAdopcion(sc, adopcionService);
+                    break;
+
                 case 3:
+                    buscarAdopcion(sc, adopcionService);
+                    break;
+
                 case 4:
+                    buscarAdopcionesPorAnimal(sc, adopcionService);
+                    break;
+
                 case 5:
-                    System.out.println("Funcionalidad pendiente de implementar");
+                    buscarAdopcionesPorAdoptante(sc, adopcionService);
+                    break;
+
+                case 6:
+                    aprobarAdopcion(sc, adopcionService);
+                    break;
+
+                case 7:
+                    rechazarAdopcion(sc, adopcionService);
+                    break;
+
+                case 8:
+                    modificarObservacionesAdopcion(sc, adopcionService);
+                    break;
+
+                case 9:
+                    darDeBajaAdopcion(sc, adopcionService);
                     break;
 
                 case 0:
@@ -677,6 +712,305 @@ public class Main {
             }
 
         } while (opcion != 0);
+    }
+
+    private static void listarAdopciones(AdopcionService adopcionService) {
+
+        List<Adopcion> adopciones = adopcionService.listar();
+
+        if (adopciones.isEmpty()) {
+            System.out.println("\nNo hay adopciones registradas");
+            return;
+        }
+
+        System.out.println("\n===== LISTADO DE ADOPCIONES =====");
+
+        for (Adopcion adopcion : adopciones) {
+            mostrarAdopcion(adopcion);
+        }
+    }
+
+    private static void crearAdopcion(Scanner sc, AdopcionService adopcionService) {
+
+        try {
+
+            Adopcion adopcion = new Adopcion();
+
+            System.out.println("\n===== NUEVA SOLICITUD DE ADOPCIÓN =====");
+
+            System.out.print("ID del animal: ");
+            adopcion.setAnimalId(new ObjectId(sc.nextLine().trim()));
+
+            System.out.print("DNI del adoptante: ");
+            adopcion.setDniAdoptante(sc.nextLine().trim());
+
+            System.out.print("Observaciones: ");
+            adopcion.setObservaciones(sc.nextLine().trim());
+
+            adopcion.setSeguimiento(new ArrayList<>());
+
+            adopcionService.crear(adopcion);
+
+            System.out.println("\n✅ Solicitud registrada correctamente");
+            System.out.println("ID de la solicitud: " + adopcion.getId());
+            System.out.println("Estado: pendiente");
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se ha podido crear la solicitud: " + e.getMessage());
+        }
+    }
+
+    private static void buscarAdopcion(Scanner sc, AdopcionService adopcionService) {
+
+        try {
+
+            System.out.println("\n===== BUSCAR ADOPCIÓN =====");
+
+            System.out.print("ID de la adopción: ");
+            ObjectId id = new ObjectId(sc.nextLine().trim());
+
+            Adopcion adopcion = adopcionService.buscarPorId(id);
+
+            if (adopcion == null) {
+                System.out.println("\nNo existe ninguna adopción con ese ID");
+            } else {
+                mostrarAdopcion(adopcion);
+            }
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se ha podido buscar la adopción: " + e.getMessage());
+        }
+    }
+
+    private static void buscarAdopcionesPorAnimal(
+            Scanner sc,
+            AdopcionService adopcionService) {
+
+        try {
+
+            System.out.println("\n===== ADOPCIONES DE UN ANIMAL =====");
+
+            System.out.print("ID del animal: ");
+            ObjectId id = new ObjectId(sc.nextLine().trim());
+
+            List<Adopcion> adopciones = adopcionService.buscarPorAnimal(id);
+
+            if (adopciones.isEmpty()) {
+                System.out.println("\nEl animal no tiene solicitudes de adopción");
+                return;
+            }
+
+            for (Adopcion adopcion : adopciones) {
+                mostrarAdopcion(adopcion);
+            }
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se han podido consultar las adopciones: " + e.getMessage());
+        }
+    }
+
+    private static void buscarAdopcionesPorAdoptante(
+            Scanner sc,
+            AdopcionService adopcionService) {
+
+        try {
+
+            System.out.println("\n===== ADOPCIONES DE UN ADOPTANTE =====");
+
+            System.out.print("DNI del adoptante: ");
+            String dni = sc.nextLine().trim();
+
+            List<Adopcion> adopciones = adopcionService.buscarPorAdoptante(dni);
+
+            if (adopciones.isEmpty()) {
+                System.out.println("\nEl adoptante no tiene solicitudes de adopción");
+                return;
+            }
+
+            for (Adopcion adopcion : adopciones) {
+                mostrarAdopcion(adopcion);
+            }
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se han podido consultar las adopciones: " + e.getMessage());
+        }
+    }
+
+    private static void aprobarAdopcion(Scanner sc, AdopcionService adopcionService) {
+
+        try {
+
+            System.out.println("\n===== APROBAR SOLICITUD =====");
+
+            System.out.print("ID de la adopción: ");
+            ObjectId id = new ObjectId(sc.nextLine().trim());
+
+            Adopcion adopcion = adopcionService.buscarPorId(id);
+
+            if (adopcion == null) {
+                System.out.println("\nNo existe ninguna adopción con ese ID");
+                return;
+            }
+
+            mostrarAdopcion(adopcion);
+
+            System.out.print("\n¿Quieres aprobar esta solicitud? (s/n): ");
+            String confirmacion = sc.nextLine().trim();
+
+            if (confirmacion.equalsIgnoreCase("s")) {
+
+                if (adopcionService.aprobar(id)) {
+                    System.out.println("\n✅ Solicitud aprobada correctamente");
+                    System.out.println("El animal pasa a estar adoptado");
+                    System.out.println("Las demás solicitudes pendientes se rechazan automáticamente");
+                } else {
+                    System.out.println("\n⚠️ No se ha podido aprobar la solicitud");
+                }
+
+            } else {
+                System.out.println("\nOperación cancelada");
+            }
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se ha podido aprobar la solicitud: " + e.getMessage());
+        }
+    }
+
+    private static void rechazarAdopcion(Scanner sc, AdopcionService adopcionService) {
+
+        try {
+
+            System.out.println("\n===== RECHAZAR SOLICITUD =====");
+
+            System.out.print("ID de la adopción: ");
+            ObjectId id = new ObjectId(sc.nextLine().trim());
+
+            Adopcion adopcion = adopcionService.buscarPorId(id);
+
+            if (adopcion == null) {
+                System.out.println("\nNo existe ninguna adopción con ese ID");
+                return;
+            }
+
+            mostrarAdopcion(adopcion);
+
+            System.out.print("\n¿Quieres rechazar esta solicitud? (s/n): ");
+            String confirmacion = sc.nextLine().trim();
+
+            if (confirmacion.equalsIgnoreCase("s")) {
+
+                if (adopcionService.rechazar(id)) {
+                    System.out.println("\n✅ Solicitud rechazada correctamente");
+                    System.out.println("Si no quedan más solicitudes pendientes, el animal vuelve a estar disponible");
+                } else {
+                    System.out.println("\n⚠️ No se ha podido rechazar la solicitud");
+                }
+
+            } else {
+                System.out.println("\nOperación cancelada");
+            }
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se ha podido rechazar la solicitud: " + e.getMessage());
+        }
+    }
+
+    private static void modificarObservacionesAdopcion(
+            Scanner sc,
+            AdopcionService adopcionService) {
+
+        try {
+
+            System.out.println("\n===== MODIFICAR OBSERVACIONES =====");
+
+            System.out.print("ID de la adopción: ");
+            ObjectId id = new ObjectId(sc.nextLine().trim());
+
+            Adopcion adopcion = adopcionService.buscarPorId(id);
+
+            if (adopcion == null) {
+                System.out.println("\nNo existe ninguna adopción con ese ID");
+                return;
+            }
+
+            mostrarAdopcion(adopcion);
+
+            System.out.print("\nNuevas observaciones: ");
+            adopcion.setObservaciones(sc.nextLine().trim());
+
+            if (adopcionService.actualizar(adopcion)) {
+                System.out.println("\n✅ Observaciones modificadas correctamente");
+            } else {
+                System.out.println("\n⚠️ No se han podido modificar las observaciones");
+            }
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se han podido modificar las observaciones: " + e.getMessage());
+        }
+    }
+
+    private static void darDeBajaAdopcion(
+            Scanner sc,
+            AdopcionService adopcionService) {
+
+        try {
+
+            System.out.println("\n===== DAR DE BAJA UNA ADOPCIÓN =====");
+
+            System.out.print("ID de la adopción: ");
+            ObjectId id = new ObjectId(sc.nextLine().trim());
+
+            Adopcion adopcion = adopcionService.buscarPorId(id);
+
+            if (adopcion == null) {
+                System.out.println("\nNo existe ninguna adopción con ese ID");
+                return;
+            }
+
+            mostrarAdopcion(adopcion);
+
+            System.out.print("\n¿Quieres dar de baja esta solicitud? (s/n): ");
+            String confirmacion = sc.nextLine().trim();
+
+            if (confirmacion.equalsIgnoreCase("s")) {
+
+                if (adopcionService.darDeBaja(id)) {
+                    System.out.println("\n✅ Solicitud dada de baja correctamente");
+                } else {
+                    System.out.println("\n⚠️ No se ha podido dar de baja la solicitud");
+                }
+
+            } else {
+                System.out.println("\nOperación cancelada");
+            }
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se ha podido dar de baja la solicitud: " + e.getMessage());
+        }
+    }
+
+    private static void mostrarAdopcion(Adopcion adopcion) {
+
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+
+        System.out.println("\n------------------------------");
+        System.out.println("ID de adopción: " + adopcion.getId());
+        System.out.println("ID del animal: " + adopcion.getAnimalId());
+        System.out.println("DNI del adoptante: " + adopcion.getDniAdoptante());
+
+        if (adopcion.getFechaSolicitud() != null) {
+            System.out.println("Fecha de solicitud: " +
+                    formato.format(adopcion.getFechaSolicitud()));
+        }
+
+        if (adopcion.getFechaResolucion() != null) {
+            System.out.println("Fecha de resolución: " +
+                    formato.format(adopcion.getFechaResolucion()));
+        }
+
+        System.out.println("Estado: " + adopcion.getEstado());
+        System.out.println("Observaciones: " + adopcion.getObservaciones());
+        System.out.println("------------------------------");
     }
 
     // Menú del refugio
