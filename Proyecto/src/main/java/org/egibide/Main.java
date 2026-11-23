@@ -1030,8 +1030,11 @@ public class Main {
             switch (opcion) {
 
                 case 1:
+                    consultarRefugio(refugioService);
+                    break;
+
                 case 2:
-                    System.out.println("Funcionalidad pendiente de implementar");
+                    modificarRefugio(sc, refugioService);
                     break;
 
                 case 0:
@@ -1042,6 +1045,91 @@ public class Main {
             }
 
         } while (opcion != 0);
+    }
+
+    private static void consultarRefugio(RefugioService refugioService) {
+
+        try {
+
+            Refugio refugio = refugioService.buscar();
+
+            if (refugio == null) {
+                System.out.println("\nNo hay datos registrados del refugio");
+                return;
+            }
+
+            mostrarRefugio(refugio);
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se han podido consultar los datos: " + e.getMessage());
+        }
+    }
+
+    private static void modificarRefugio(Scanner sc, RefugioService refugioService) {
+
+        try {
+
+            System.out.println("\n===== MODIFICAR DATOS DEL REFUGIO =====");
+
+            Refugio refugio = refugioService.buscar();
+
+            if (refugio == null) {
+                System.out.println("\nNo hay datos del refugio que modificar");
+                return;
+            }
+
+            mostrarRefugio(refugio);
+
+            System.out.println("\nIntroduce los nuevos datos:");
+
+            System.out.print("Nombre: ");
+            refugio.setNombre(sc.nextLine().trim());
+
+            System.out.print("Razón social: ");
+            refugio.setRazonSocial(sc.nextLine().trim());
+
+            refugio.setFechaApertura(leerFecha(sc));
+
+            System.out.print("Dirección: ");
+            refugio.setDireccion(sc.nextLine().trim());
+
+            System.out.print("CIF: ");
+            refugio.setCif(sc.nextLine().trim());
+
+            System.out.print("Teléfono: ");
+            refugio.setTelefono(sc.nextLine().trim());
+
+            System.out.print("Correo electrónico: ");
+            refugio.setCorreo(sc.nextLine().trim());
+
+            refugioService.guardar(refugio);
+
+            System.out.println("\n✅ Datos del refugio modificados correctamente");
+
+        } catch (Exception e) {
+            System.out.println("\n❌ No se han podido modificar los datos: " + e.getMessage());
+        }
+    }
+
+    private static void mostrarRefugio(Refugio refugio) {
+
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+
+        System.out.println("\n===== DATOS DEL REFUGIO =====");
+        System.out.println("ID: " + refugio.getId());
+        System.out.println("Nombre: " + refugio.getNombre());
+        System.out.println("Razón social: " + refugio.getRazonSocial());
+
+        if (refugio.getFechaApertura() != null) {
+            System.out.println("Fecha de apertura: " +
+                    formato.format(refugio.getFechaApertura()));
+        }
+
+        System.out.println("Dirección: " + refugio.getDireccion());
+        System.out.println("CIF: " + refugio.getCif());
+        System.out.println("Teléfono: " + refugio.getTelefono());
+        System.out.println("Correo: " + refugio.getCorreo());
+        System.out.println("==============================");
     }
 
     // Mostrar ayuda
