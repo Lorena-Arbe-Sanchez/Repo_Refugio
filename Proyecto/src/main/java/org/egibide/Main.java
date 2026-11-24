@@ -29,11 +29,6 @@ public class Main {
 
         DatabaseConnection conexion = null;
 
-        AnimalService animalService = new AnimalService();
-        AdoptanteService adoptanteService = new AdoptanteService();
-        AdopcionService adopcionService = new AdopcionService();
-        RefugioService refugioService = new RefugioService();
-
         try (Scanner sc = new Scanner(System.in)) {
 
             // Inicializar la conexión con MongoDB
@@ -51,7 +46,7 @@ public class Main {
 
             System.out.println("\n✅ Aplicación inicializada correctamente" + RESET_COLOR);
 
-            /*
+            /* todo : poner colores y quitar esto
             // Colores ANSI básicos
             System.out.println("\u001B[30mNegro\u001B[0m");
             System.out.println("\u001B[31mRojo\u001B[0m");
@@ -72,6 +67,13 @@ public class Main {
             System.out.println("\u001B[96mCian brillante\u001B[0m");
             System.out.println("\u001B[97mBlanco brillante\u001B[0m");
             */
+
+            AnimalService animalService = new AnimalService();
+            AdoptanteService adoptanteService = new AdoptanteService();
+            AdopcionService adopcionService = new AdopcionService();
+            RefugioService refugioService = new RefugioService();
+
+            mostrarDatosRefugio(refugioService);
 
             // Menú principal
             int opcion;
@@ -150,6 +152,34 @@ public class Main {
         }
     }
 
+    private static void mostrarDatosRefugio(RefugioService refugioService) {
+
+        System.out.println("\n========== DATOS DEL REFUGIO ==========");
+
+        try {
+            Refugio refugio = refugioService.buscar();
+
+            if (refugio == null) {
+                System.out.println("No hay datos del refugio registrados.");
+                return;
+            }
+
+            System.out.println("Nombre: " + refugio.getNombre());
+            System.out.println("Razón social: " + refugio.getRazonSocial());
+            System.out.println("Fecha de apertura: " +
+                    new SimpleDateFormat("dd/MM/yyyy").format(refugio.getFechaApertura()));
+            System.out.println("Dirección: " + refugio.getDireccion());
+            System.out.println("CIF: " + refugio.getCif());
+            System.out.println("Teléfono: " + refugio.getTelefono());
+            System.out.println("Correo electrónico: " + refugio.getCorreo());
+
+        } catch (Exception e) {
+            System.out.println("Error al consultar los datos del refugio: " + e.getMessage());
+        }
+
+        System.out.println("=======================================\n");
+    }
+
     // Menú de animales
     private static void menuAnimales(Scanner sc, AnimalService animalService) {
 
@@ -205,7 +235,7 @@ public class Main {
         List<Animal> animales = animalService.listar();
 
         if (animales.isEmpty()) {
-            System.out.println("\nNo hay animales registrados");
+            System.out.println("\nNo hay animales registrados.");
             return;
         }
 
@@ -443,7 +473,7 @@ public class Main {
         List<Adoptante> adoptantes = adoptanteService.listar();
 
         if (adoptantes.isEmpty()) {
-            System.out.println("\nNo hay adoptantes registrados");
+            System.out.println("\nNo hay adoptantes registrados.");
             return;
         }
 
@@ -719,7 +749,7 @@ public class Main {
         List<Adopcion> adopciones = adopcionService.listar();
 
         if (adopciones.isEmpty()) {
-            System.out.println("\nNo hay adopciones registradas");
+            System.out.println("\nNo hay adopciones registradas.");
             return;
         }
 
@@ -1054,7 +1084,7 @@ public class Main {
             Refugio refugio = refugioService.buscar();
 
             if (refugio == null) {
-                System.out.println("\nNo hay datos registrados del refugio");
+                System.out.println("\nNo hay datos registrados del refugio.");
                 return;
             }
 
@@ -1074,7 +1104,7 @@ public class Main {
             Refugio refugio = refugioService.buscar();
 
             if (refugio == null) {
-                System.out.println("\nNo hay datos del refugio que modificar");
+                System.out.println("\nNo hay datos del refugio que modificar.");
                 return;
             }
 
