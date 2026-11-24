@@ -182,6 +182,7 @@ public class ExportarDatos {
                 escritor.close();
             }
 
+            // TODO : Poner icono tick
             System.out.println("Archivo XML exportado: " + archivo);
 
         } catch (Exception e) {
@@ -209,6 +210,7 @@ public class ExportarDatos {
 
             Files.writeString(archivo, contenido);
 
+            // TODO : Poner icono tick
             System.out.println("Archivo JSON exportado: " + archivo);
 
         } catch (Exception e) {

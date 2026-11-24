@@ -1,0 +1,77 @@
+[
+  {
+    "_id": "67890123B",
+    "nombre": "David",
+    "apellido1": "Ruiz",
+    "apellido2": "Martín",
+    "telefono": "600678901",
+    "direccion": "Calle Florida 19, Vitoria-Gasteiz",
+    "email": "david@email.com",
+    "fechaRegistro": "2026-01-09T23:00:00Z",
+    "preferenciasAdopcion": {
+      "tipoAnimal": "Perro",
+      "tamanoPreferido": "Grande"
+    },
+    "eliminado": false
+  },
+  {
+    "_id": "78901234X",
+    "nombre": "Andrea",
+    "apellido1": "Gómez",
+    "apellido2": "Díaz",
+    "telefono": "600789012",
+    "direccion": "Calle Francia 40, Vitoria-Gasteiz",
+    "email": "andrea@email.com",
+    "fechaRegistro": "2026-01-09T23:00:00Z",
+    "preferenciasAdopcion": {
+      "tipoAnimal": "Gato",
+      "tamanoPreferido": "Pequeño"
+    },
+    "eliminado": false
+  },
+  {
+    "_id": "89012345E",
+    "nombre": "Pablo",
+    "apellido1": "Díaz",
+    "apellido2": "Moreno",
+    "telefono": "600890123",
+    "direccion": "Calle San Prudencio 5, Vitoria-Gasteiz",
+    "email": "pablo@email.com",
+    "fechaRegistro": "2026-01-09T23:00:00Z",
+    "preferenciasAdopcion": {
+      "tipoAnimal": "Perro",
+      "tamanoPreferido": "Mediano"
+    },
+    "eliminado": false
+  },
+  {
+    "_id": "90123456A",
+    "nombre": "Sara",
+    "apellido1": "Moreno",
+    "apellido2": "Alonso",
+    "telefono": "600901234",
+    "direccion": "Calle Portal del Rey 16, Vitoria-Gasteiz",
+    "email": "sara@email.com",
+    "fechaRegistro": "2026-01-09T23:00:00Z",
+    "preferenciasAdopcion": {
+      "tipoAnimal": "Conejo",
+      "tamanoPreferido": "Pequeño"
+    },
+    "eliminado": false
+  },
+  {
+    "_id": "11223344B",
+    "nombre": "Alberto",
+    "apellido1": "Alonso",
+    "apellido2": "Castro",
+    "telefono": "600112233",
+    "direccion": "Calle Dato 22, Vitoria-Gasteiz",
+    "email": "alberto@email.com",
+    "fechaRegistro": "2026-01-09T23:00:00Z",
+    "preferenciasAdopcion": {
+      "tipoAnimal": "Perro",
+      "tamanoPreferido": "Cualquiera"
+    },
+    "eliminado": false
+  }
+]

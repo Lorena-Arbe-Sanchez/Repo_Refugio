@@ -11,6 +11,7 @@ import org.egibide.services.AdoptanteService;
 import org.egibide.services.AnimalService;
 import org.egibide.services.RefugioService;
 import org.egibide.utils.DatabaseConnection;
+import org.egibide.utils.ExportarDatos;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -112,11 +113,12 @@ public class Main {
                         break;
 
                     case 5:
-                        // TODO : Hacer lo que tenga "pendiente"
-                        System.out.println("\nFuncionalidad pendiente de implementar");
+                        menuExportaciones(sc);
                         break;
 
                     case 6:
+                        // TODO : Hacer lo que tenga "pendiente"
+                        // TODO : Poner lo de "↩️ " en las opciones de "Volver..."
                         System.out.println("\nFuncionalidad pendiente de implementar");
                         break;
 
@@ -1160,6 +1162,85 @@ public class Main {
         System.out.println("Teléfono: " + refugio.getTelefono());
         System.out.println("Correo: " + refugio.getCorreo());
         System.out.println("==============================");
+    }
+
+    // Menú de exportaciones
+    private static void menuExportaciones(Scanner sc) {
+
+        int opcion;
+
+        do {
+
+            System.out.println("\n\n===== EXPORTAR DATOS =====");
+            System.out.println("1. Exportar animales a XML");
+            System.out.println("2. Exportar animales a JSON");
+            System.out.println("3. Exportar adoptantes a XML");
+            System.out.println("4. Exportar adoptantes a JSON");
+            System.out.println("5. Exportar adopciones a XML");
+            System.out.println("6. Exportar adopciones a JSON");
+            System.out.println("7. Exportar refugio a XML");
+            System.out.println("8. Exportar refugio a JSON");
+            System.out.println("9. Exportar todo a XML");
+            System.out.println("10. Exportar todo a JSON");
+            System.out.println("11. Exportar todo a XML y JSON");
+            System.out.println("0. ↩️ Volver al menú principal");
+
+            opcion = leerOpcion(sc);
+
+            switch (opcion) {
+
+                case 1:
+                    ExportarDatos.exportarAnimalesXML();
+                    break;
+
+                case 2:
+                    ExportarDatos.exportarAnimalesJSON();
+                    break;
+
+                case 3:
+                    ExportarDatos.exportarAdoptantesXML();
+                    break;
+
+                case 4:
+                    ExportarDatos.exportarAdoptantesJSON();
+                    break;
+
+                case 5:
+                    ExportarDatos.exportarAdopcionesXML();
+                    break;
+
+                case 6:
+                    ExportarDatos.exportarAdopcionesJSON();
+                    break;
+
+                case 7:
+                    ExportarDatos.exportarRefugioXML();
+                    break;
+
+                case 8:
+                    ExportarDatos.exportarRefugioJSON();
+                    break;
+
+                case 9:
+                    ExportarDatos.exportarTodoXML();
+                    break;
+
+                case 10:
+                    ExportarDatos.exportarTodoJSON();
+                    break;
+
+                case 11:
+                    ExportarDatos.exportarTodoXMLyJSON();
+                    break;
+
+                case 0:
+                    break;
+
+                default:
+                    System.out.println("⚠️ Opción no válida");
+            }
+
+        } while (opcion != 0);
     }
 
     // Mostrar ayuda

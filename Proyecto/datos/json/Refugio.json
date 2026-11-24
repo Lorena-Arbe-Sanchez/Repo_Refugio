@@ -1,0 +1,12 @@
+[
+  {
+    "_id": "1",
+    "nombre": "Refugio Huellas Felices",
+    "razonSocial": "Asociación Protectora Huellas Felices",
+    "fechaApertura": "2015-05-11T22:00:00Z",
+    "direccion": "Calle Los Animales 15, Vitoria-Gasteiz",
+    "cif": "G01020304",
+    "telefono": "945123456",
+    "correo": "contacto@huellasfelices.com"
+  }
+]

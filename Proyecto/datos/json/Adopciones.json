@@ -1,0 +1,57 @@
+[
+  {
+    "_id": "6b01c7619f6d6ac06e75eecf",
+    "animalId": "6b01c7619f6d6ac06e75eec0",
+    "dniAdoptante": "67890123B",
+    "fechaSolicitud": "2026-10-19T22:00:00Z",
+    "fechaResolucion": null,
+    "estado": "pendiente",
+    "observaciones": "Pendiente de visita al refugio",
+    "seguimiento": [],
+    "eliminado": false
+  },
+  {
+    "_id": "6b01c7619f6d6ac06e75eed0",
+    "animalId": "6b01c7619f6d6ac06e75eec1",
+    "dniAdoptante": "78901234X",
+    "fechaSolicitud": "2026-10-31T23:00:00Z",
+    "fechaResolucion": null,
+    "estado": "pendiente",
+    "observaciones": "Solicitud pendiente de revisión",
+    "seguimiento": [],
+    "eliminado": false
+  },
+  {
+    "_id": "6b01c7619f6d6ac06e75eed1",
+    "animalId": "6b01c7619f6d6ac06e75eec2",
+    "dniAdoptante": "89012345E",
+    "fechaSolicitud": "2026-07-31T22:00:00Z",
+    "fechaResolucion": "2026-08-09T22:00:00Z",
+    "estado": "rechazada",
+    "observaciones": "No cumple los requisitos de adopción",
+    "seguimiento": [],
+    "eliminado": false
+  },
+  {
+    "_id": "6b01c7619f6d6ac06e75eed2",
+    "animalId": "6b01c7619f6d6ac06e75eec3",
+    "dniAdoptante": "90123456A",
+    "fechaSolicitud": "2026-08-14T22:00:00Z",
+    "fechaResolucion": "2026-08-19T22:00:00Z",
+    "estado": "rechazada",
+    "observaciones": "Solicitud rechazada tras la entrevista",
+    "seguimiento": [],
+    "eliminado": false
+  },
+  {
+    "_id": "6b01c7619f6d6ac06e75eed3",
+    "animalId": "6b01c7619f6d6ac06e75eec4",
+    "dniAdoptante": "11223344B",
+    "fechaSolicitud": "2026-08-31T22:00:00Z",
+    "fechaResolucion": "2026-09-04T22:00:00Z",
+    "estado": "rechazada",
+    "observaciones": "El adoptante ha retirado su solicitud",
+    "seguimiento": [],
+    "eliminado": false
+  }
+]
