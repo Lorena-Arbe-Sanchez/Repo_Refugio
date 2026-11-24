@@ -248,6 +248,7 @@ public class Main {
         }
     }
 
+    // TODO : En las funciones de crear (en la de "Crear solicitud de adopción" ya está implementado) hay q mostrar el ID del objeto recién creado para poder buscarlo luego
     private static void crearAnimal(Scanner sc, AnimalService animalService) {
 
         try {
@@ -267,6 +268,7 @@ public class Main {
 
             animal.setEdad(leerEdad(sc));
 
+            // En todas las veces q haya q ponerlo, q se guarde en CamelCase
             System.out.print("Sexo (macho/hembra/desconocido): ");
             animal.setSexo(sc.nextLine().trim());
 
@@ -295,13 +297,14 @@ public class Main {
 
             System.out.println("\n===== MODIFICAR ANIMAL =====");
 
+            // TODO : Antes de pedir el ID, que saque un listado de los IDs con sus nombres+especies+razas
             System.out.print("Introduce el ID del animal: ");
             ObjectId id = new ObjectId(sc.nextLine().trim());
 
             Animal animal = animalService.buscarPorId(id);
 
             if (animal == null) {
-                System.out.println("\nNo existe ningún animal con ese ID");
+                System.out.println("\nNo existe ningún animal con ese ID.");
                 return;
             }
 
@@ -352,7 +355,7 @@ public class Main {
             Animal animal = animalService.buscarPorId(id);
 
             if (animal == null) {
-                System.out.println("\nNo existe ningún animal con ese ID");
+                System.out.println("\nNo existe ningún animal con ese ID.");
                 return;
             }
 
@@ -370,7 +373,7 @@ public class Main {
                 }
 
             } else {
-                System.out.println("\nOperación cancelada");
+                System.out.println("\nOperación cancelada.");
             }
 
         } catch (Exception e) {
@@ -390,7 +393,7 @@ public class Main {
             Animal animal = animalService.buscarPorId(id);
 
             if (animal == null) {
-                System.out.println("\nNo existe ningún animal con ese ID");
+                System.out.println("\nNo existe ningún animal con ese ID.");
             } else {
                 mostrarAnimal(animal);
             }
@@ -548,7 +551,7 @@ public class Main {
             Adoptante adoptante = adoptanteService.buscarPorDni(dni);
 
             if (adoptante == null) {
-                System.out.println("\nNo existe ningún adoptante con ese DNI");
+                System.out.println("\nNo existe ningún adoptante con ese DNI.");
                 return;
             }
 
@@ -609,7 +612,7 @@ public class Main {
             Adoptante adoptante = adoptanteService.buscarPorDni(dni);
 
             if (adoptante == null) {
-                System.out.println("\nNo existe ningún adoptante con ese DNI");
+                System.out.println("\nNo existe ningún adoptante con ese DNI.");
                 return;
             }
 
@@ -627,7 +630,7 @@ public class Main {
                 }
 
             } else {
-                System.out.println("\nOperación cancelada");
+                System.out.println("\nOperación cancelada.");
             }
 
         } catch (Exception e) {
@@ -647,7 +650,7 @@ public class Main {
             Adoptante adoptante = adoptanteService.buscarPorDni(dni);
 
             if (adoptante == null) {
-                System.out.println("\nNo existe ningún adoptante con ese DNI");
+                System.out.println("\nNo existe ningún adoptante con ese DNI.");
             } else {
                 mostrarAdoptante(adoptante);
             }
@@ -659,7 +662,6 @@ public class Main {
 
     private static void mostrarAdoptante(Adoptante adoptante) {
 
-        System.out.println("\n------------------------------");
         System.out.println("DNI: " + adoptante.getDni());
         System.out.println("Nombre: " + adoptante.getNombre());
         System.out.println("Primer apellido: " + adoptante.getApellido1());
@@ -804,7 +806,7 @@ public class Main {
             Adopcion adopcion = adopcionService.buscarPorId(id);
 
             if (adopcion == null) {
-                System.out.println("\nNo existe ninguna adopción con ese ID");
+                System.out.println("\nNo existe ninguna adopción con ese ID.");
             } else {
                 mostrarAdopcion(adopcion);
             }
@@ -880,7 +882,7 @@ public class Main {
             Adopcion adopcion = adopcionService.buscarPorId(id);
 
             if (adopcion == null) {
-                System.out.println("\nNo existe ninguna adopción con ese ID");
+                System.out.println("\nNo existe ninguna adopción con ese ID.");
                 return;
             }
 
@@ -900,7 +902,7 @@ public class Main {
                 }
 
             } else {
-                System.out.println("\nOperación cancelada");
+                System.out.println("\nOperación cancelada.");
             }
 
         } catch (Exception e) {
@@ -920,7 +922,7 @@ public class Main {
             Adopcion adopcion = adopcionService.buscarPorId(id);
 
             if (adopcion == null) {
-                System.out.println("\nNo existe ninguna adopción con ese ID");
+                System.out.println("\nNo existe ninguna adopción con ese ID.");
                 return;
             }
 
@@ -939,7 +941,7 @@ public class Main {
                 }
 
             } else {
-                System.out.println("\nOperación cancelada");
+                System.out.println("\nOperación cancelada.");
             }
 
         } catch (Exception e) {
@@ -961,7 +963,7 @@ public class Main {
             Adopcion adopcion = adopcionService.buscarPorId(id);
 
             if (adopcion == null) {
-                System.out.println("\nNo existe ninguna adopción con ese ID");
+                System.out.println("\nNo existe ninguna adopción con ese ID.");
                 return;
             }
 
@@ -995,7 +997,7 @@ public class Main {
             Adopcion adopcion = adopcionService.buscarPorId(id);
 
             if (adopcion == null) {
-                System.out.println("\nNo existe ninguna adopción con ese ID");
+                System.out.println("\nNo existe ninguna adopción con ese ID.");
                 return;
             }
 
@@ -1013,7 +1015,7 @@ public class Main {
                 }
 
             } else {
-                System.out.println("\nOperación cancelada");
+                System.out.println("\nOperación cancelada.");
             }
 
         } catch (Exception e) {
@@ -1025,8 +1027,8 @@ public class Main {
 
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
-        System.out.println("\n------------------------------");
         System.out.println("ID de adopción: " + adopcion.getId());
+        // TODO : A parte de sacar el ID del animal, sería mejor sacra tambn el nombre, especie y raza
         System.out.println("ID del animal: " + adopcion.getAnimalId());
         System.out.println("DNI del adoptante: " + adopcion.getDniAdoptante());
 
@@ -1257,7 +1259,7 @@ public class Main {
         System.out.println("0. Salir de la aplicación");
     }
 
-    /* TODO : Poner más, y las q hay ponerles bucle y de todo bien
+    /* TODO : Poner más, y las q hay ponerles bucle y de todo bien (buscar por "sc.next")
     FUNCIONES AUXILIARES
      */
 
@@ -1274,6 +1276,7 @@ public class Main {
         }
     }
 
+    // TODO : Tiene q ser positivo
     private static Integer leerEdad(Scanner sc) {
 
         System.out.print("Edad: ");
