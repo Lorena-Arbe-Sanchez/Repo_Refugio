@@ -32,14 +32,14 @@ public class AppTest {
     private static final String PREFIJO = "TEST_";
 
     private static final List<String> TEST_DNIS = List.of(
-            "87654321X",
-            "12345678Z",
-            "23456789D",
-            "34567890V",
-            "45678901G",
-            "56789012B",
-            "56789013N",
-            "56789014J"
+            "11111111H",
+            "22222222J",
+            "33333333P",
+            "44444444A",
+            "55555555K",
+            "66666666Q",
+            "77777777B",
+            "88888888Y"
     );
 
     private AnimalDao animalDao;
@@ -90,7 +90,10 @@ public class AppTest {
         animales.deleteMany(regex("nombre", "^" + PREFIJO));
 
         // Eliminar los adoptantes de prueba
-        adoptantes.deleteMany(in("_id", TEST_DNIS));
+        adoptantes.deleteMany(and(
+                in("_id", TEST_DNIS),
+                regex("email", "^test_")
+        ));
 
         // Restaurar los datos anteriores del refugio
         if (refugioAnterior != null) {
@@ -580,6 +583,187 @@ public class AppTest {
 
         assertThrows(IllegalArgumentException.class, () ->
                 Validaciones.validarCif("A58818502")
+        );
+    }
+
+    @Test
+    public void testValidacionesAnimal() {
+
+        AnimalService servicio = new AnimalService();
+
+        Animal sinNombre = crearAnimal("TEST_SIN_NOMBRE");
+        sinNombre.setNombre("");
+
+        assertThrows(IllegalArgumentException.class, () ->
+                servicio.crear(sinNombre)
+        );
+
+        Animal edadNegativa = crearAnimal("TEST_EDAD_NEGATIVA");
+        edadNegativa.setEdad(-1);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                servicio.crear(edadNegativa)
+        );
+
+        Animal sexoIncorrecto = crearAnimalConSexo(
+                "TEST_SEXO_INCORRECTO", "otro"
+        );
+
+        assertThrows(IllegalArgumentException.class, () ->
+                servicio.crear(sexoIncorrecto)
+        );
+    }
+
+    @Test
+    public void testValidacionesYDuplicadoAdoptante() {
+
+        AdoptanteService servicio = new AdoptanteService();
+
+        Adoptante adoptante = crearAdoptante(TEST_DNIS.get(6));
+
+        servicio.crear(adoptante);
+
+        // No permitir DNI duplicado
+        assertThrows(IllegalArgumentException.class, () ->
+                servicio.crear(crearAdoptante(TEST_DNIS.get(6)))
+        );
+
+        // No permitir teléfonos incorrectos
+        Adoptante telefonoIncorrecto = crearAdoptante(TEST_DNIS.get(7));
+        telefonoIncorrecto.setTelefono("123456789");
+
+        assertThrows(IllegalArgumentException.class, () ->
+                servicio.crear(telefonoIncorrecto)
+        );
+
+        // No permitir correos incorrectos
+        Adoptante correoIncorrecto = crearAdoptante(TEST_DNIS.get(7));
+        correoIncorrecto.setEmail("correo-invalido");
+
+        assertThrows(IllegalArgumentException.class, () ->
+                servicio.crear(correoIncorrecto)
+        );
+    }
+
+    @Test
+    public void testBajaAnimalConAdopcionAprobada() {
+
+        AnimalService animalService = new AnimalService();
+        AdoptanteService adoptanteService = new AdoptanteService();
+        AdopcionService adopcionService = new AdopcionService();
+
+        Animal animal = crearAnimal("TEST_ANIMAL_ADOPTADO");
+        animalService.crear(animal);
+
+        Adoptante adoptante = crearAdoptante(TEST_DNIS.get(6));
+        adoptanteService.crear(adoptante);
+
+        Adopcion adopcion = crearAdopcion(animal, adoptante);
+        adopcionService.crear(adopcion);
+
+        assertTrue(adopcionService.aprobar(adopcion.getId()));
+
+        // No se debe poder dar de baja un animal adoptado
+        assertThrows(IllegalArgumentException.class, () ->
+                animalService.darDeBaja(animal.getId())
+        );
+
+        assertNotNull(animalService.buscarPorId(animal.getId()));
+
+        assertEquals(
+                "adoptado",
+                animalService.buscarPorId(animal.getId()).getEstado()
+        );
+    }
+
+    @Test
+    public void testRechazarSolicitudMantieneReserva() {
+
+        AnimalService animalService = new AnimalService();
+        AdoptanteService adoptanteService = new AdoptanteService();
+        AdopcionService adopcionService = new AdopcionService();
+
+        Animal animal = crearAnimal("TEST_DOS_SOLICITUDES");
+        animalService.crear(animal);
+
+        Adoptante adoptante1 = crearAdoptante(TEST_DNIS.get(6));
+        Adoptante adoptante2 = crearAdoptante(TEST_DNIS.get(7));
+
+        adoptanteService.crear(adoptante1);
+        adoptanteService.crear(adoptante2);
+
+        Adopcion adopcion1 = crearAdopcion(animal, adoptante1);
+        Adopcion adopcion2 = crearAdopcion(animal, adoptante2);
+
+        adopcionService.crear(adopcion1);
+        adopcionService.crear(adopcion2);
+
+        // Rechazar la primera solicitud
+        assertTrue(adopcionService.rechazar(adopcion1.getId()));
+
+        // El animal debe seguir reservado
+        assertEquals(
+                "reservado",
+                animalService.buscarPorId(animal.getId()).getEstado()
+        );
+
+        // Rechazar la segunda solicitud
+        assertTrue(adopcionService.rechazar(adopcion2.getId()));
+
+        // Ahora el animal debe volver a estar disponible
+        assertEquals(
+                "disponible",
+                animalService.buscarPorId(animal.getId()).getEstado()
+        );
+    }
+
+    @Test
+    public void testBajaAdopcionSegunEstado() {
+
+        AnimalService animalService = new AnimalService();
+        AdoptanteService adoptanteService = new AdoptanteService();
+        AdopcionService adopcionService = new AdopcionService();
+
+        Animal animal = crearAnimal("TEST_BAJA_ADOPCION");
+        animalService.crear(animal);
+
+        Adoptante adoptante = crearAdoptante(TEST_DNIS.get(6));
+        adoptanteService.crear(adoptante);
+
+        Adopcion adopcion = crearAdopcion(animal, adoptante);
+        adopcionService.crear(adopcion);
+
+        // No se puede eliminar una solicitud pendiente
+        assertThrows(IllegalArgumentException.class, () ->
+                adopcionService.darDeBaja(adopcion.getId())
+        );
+
+        // Primero hay que rechazarla
+        assertTrue(adopcionService.rechazar(adopcion.getId()));
+
+        // Ahora sí se puede dar de baja
+        assertTrue(adopcionService.darDeBaja(adopcion.getId()));
+
+        assertNull(adopcionService.buscarPorId(adopcion.getId()));
+    }
+
+    @Test
+    public void testValidacionesRefugio() {
+
+        RefugioService servicio = new RefugioService();
+
+        Refugio cifIncorrecto = crearRefugio();
+        cifIncorrecto.setCif("A58818502");
+
+        assertThrows(IllegalArgumentException.class, () ->
+                servicio.guardar(cifIncorrecto)
+        );
+
+        Refugio correoIncorrecto = crearRefugio();
+        correoIncorrecto.setCorreo("correo-invalido");
+
+        assertThrows(IllegalArgumentException.class, () ->
+                servicio.guardar(correoIncorrecto)
         );
     }
 
