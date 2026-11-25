@@ -94,7 +94,7 @@ public class Main {
                 System.out.println("8. Ayuda");
                 System.out.println("0. Salir");
 
-                opcion = leerOpcion(sc);
+                opcion = leerEntero(sc, "\nElige una opción: ");
 
                 switch (opcion) {
 
@@ -201,7 +201,7 @@ public class Main {
             System.out.println("5. Buscar animales");
             System.out.println("0. Volver al menú principal");
 
-            opcion = leerOpcion(sc);
+            opcion = leerEntero(sc, "\nElige una opción: ");
 
             switch (opcion) {
 
@@ -261,25 +261,14 @@ public class Main {
 
             System.out.println("\n===== ALTA DE ANIMAL =====");
 
-            System.out.print("Nombre: ");
-            animal.setNombre(sc.nextLine().trim());
-
-            System.out.print("Especie: ");
-            animal.setEspecie(sc.nextLine().trim());
-
-            System.out.print("Raza: ");
-            animal.setRaza(sc.nextLine().trim());
-
+            animal.setNombre(leerTexto(sc, "Nombre: "));
+            animal.setEspecie(leerTexto(sc, "Especie: "));
+            animal.setRaza(leerTexto(sc, "Raza: "));
             animal.setEdad(leerEdad(sc));
-
-            // En todas las veces q haya q ponerlo, q se guarde en CamelCase
-            System.out.print("Sexo (macho/hembra/desconocido): ");
-            animal.setSexo(sc.nextLine().trim());
-
-            System.out.print("Descripción: ");
-            animal.setDescripcion(sc.nextLine().trim());
-
-            animal.setFechaIngreso(leerFecha(sc));
+            // TODO : En todas las veces q haya q ponerlo, q se guarde en CamelCase
+            animal.setSexo(leerTexto(sc, "Sexo (macho/hembra/desconocido): "));
+            animal.setDescripcion(leerTexto(sc, "Descripción: "));
+            animal.setFechaIngreso(leerFecha(sc, "Fecha de ingreso (dd/MM/yyyy): "));
 
             // El servicio asigna el estado disponible por defecto
             animal.setHistorialMedico(new java.util.ArrayList<>());
@@ -302,8 +291,7 @@ public class Main {
             System.out.println("\n===== MODIFICAR ANIMAL =====");
 
             // TODO : Antes de pedir el ID, que saque un listado de los IDs con sus nombres+especies+razas
-            System.out.print("Introduce el ID del animal: ");
-            ObjectId id = new ObjectId(sc.nextLine().trim());
+            ObjectId id = leerObjectId(sc, "Introduce el ID del animal: ");
 
             Animal animal = animalService.buscarPorId(id);
 
@@ -443,7 +431,7 @@ public class Main {
             System.out.println("5. Buscar adoptantes");
             System.out.println("0. Volver al menú principal");
 
-            opcion = leerOpcion(sc);
+            opcion = leerEntero(sc, "\nElige una opción: ");
 
             switch (opcion) {
 
@@ -702,7 +690,7 @@ public class Main {
             System.out.println("9. Dar de baja una solicitud rechazada");
             System.out.println("0. Volver al menú principal");
 
-            opcion = leerOpcion(sc);
+            opcion = leerEntero(sc, "\nElige una opción: ");
 
             switch (opcion) {
 
@@ -1063,7 +1051,7 @@ public class Main {
             System.out.println("2. Modificar datos del refugio");
             System.out.println("0. Volver al menú principal");
 
-            opcion = leerOpcion(sc);
+            opcion = leerEntero(sc, "\nElige una opción: ");
 
             switch (opcion) {
 
@@ -1191,7 +1179,7 @@ public class Main {
             System.out.println("11. Exportar todo a XML y JSON");
             System.out.println("0. ↩️ Volver al menú principal");
 
-            opcion = leerOpcion(sc);
+            opcion = leerEntero(sc, "\nElige una opción: ");
 
             switch (opcion) {
 
@@ -1263,37 +1251,113 @@ public class Main {
         System.out.println("0. Salir de la aplicación");
     }
 
-    /* TODO : Poner más, y las q hay ponerles bucle y de todo bien (buscar por "sc.next")
+    // TODO : Poner más, y las q hay ponerles bucle y de todo bien (buscar por "sc.next")
+    /*
     FUNCIONES AUXILIARES
      */
 
-    // Leer una opción del menú
-    private static int leerOpcion(Scanner sc) {
+    // Leer un número entero
+    private static int leerEntero(Scanner sc, String mensaje) {
 
-        System.out.print("\nElige una opción: ");
+        while (true) {
 
-        try {
-            return Integer.parseInt(sc.nextLine().trim());
+            System.out.print(mensaje);
 
-        } catch (NumberFormatException e) {
-            return -1;
+            try {
+                return Integer.parseInt(sc.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("❌ Error: debes introducir un número entero válido");
+            }
         }
     }
 
-    // TODO : Tiene q ser positivo
+    // Leer una edad igual o mayor que 0
     private static Integer leerEdad(Scanner sc) {
 
-        System.out.print("Edad: ");
-        return Integer.parseInt(sc.nextLine().trim());
+        while (true) {
+
+            int edad = leerEntero(sc, "Edad: ");
+
+            if (edad >= 0) {
+                return edad;
+            }
+
+            System.out.println("❌ Error: la edad no puede ser negativa.");
+        }
     }
 
-    private static Date leerFecha(Scanner sc) throws ParseException {
+    // Leer un texto obligatorio
+    private static String leerTexto(Scanner sc, String mensaje) {
 
-        System.out.print("Fecha de ingreso (dd/MM/yyyy): ");
+        while (true) {
+
+            System.out.print(mensaje);
+
+            String texto = sc.nextLine().trim();
+
+            if (!texto.isEmpty()) {
+                return texto;
+            }
+
+            System.out.println("❌ Error: este campo no puede estar vacío.");
+        }
+    }
+
+    // Leer un ObjectId válido de MongoDB
+    private static ObjectId leerObjectId(Scanner sc, String mensaje) {
+
+        while (true) {
+
+            System.out.print(mensaje);
+
+            String texto = sc.nextLine().trim();
+
+            try {
+                return new ObjectId(texto);
+            } catch (IllegalArgumentException e) {
+                System.out.println("❌ Error: introduce un ID de MongoDB válido.");
+            }
+        }
+    }
+
+    // Leer una fecha válida
+    private static Date leerFecha(Scanner sc, String mensaje) {
 
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         formato.setLenient(false);
 
-        return formato.parse(sc.nextLine().trim());
+        while (true) {
+
+            System.out.print(mensaje);
+
+            String texto = sc.nextLine().trim();
+
+            try {
+                return formato.parse(texto);
+            } catch (ParseException e) {
+                System.out.println("❌ Error: introduce una fecha válida con formato dd/MM/yyyy");
+            }
+        }
+    }
+
+    // Leer una confirmación (s/n)
+    private static boolean leerConfirmacion(Scanner sc, String mensaje) {
+
+        while (true) {
+
+            System.out.print(mensaje);
+
+            String respuesta = sc.nextLine().trim();
+
+            if (respuesta.equalsIgnoreCase("s")) {
+                return true;
+            }
+
+            if (respuesta.equalsIgnoreCase("n")) {
+                return false;
+            }
+
+            System.out.println("❌ Error: responde 's' o 'n'.");
+        }
     }
 }
