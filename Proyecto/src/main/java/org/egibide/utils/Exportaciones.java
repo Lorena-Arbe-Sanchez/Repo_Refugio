@@ -18,7 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ExportarDatos {
+public class Exportaciones {
 
     // Exportar animales a XML
     public static void exportarAnimalesXML() {

@@ -11,7 +11,7 @@ import org.egibide.services.AdoptanteService;
 import org.egibide.services.AnimalService;
 import org.egibide.services.RefugioService;
 import org.egibide.utils.DatabaseConnection;
-import org.egibide.utils.ExportarDatos;
+import org.egibide.utils.Exportaciones;
 import org.egibide.utils.Metadatos;
 
 import java.text.ParseException;
@@ -1196,47 +1196,47 @@ public class Main {
             switch (opcion) {
 
                 case 1:
-                    ExportarDatos.exportarAnimalesXML();
+                    Exportaciones.exportarAnimalesXML();
                     break;
 
                 case 2:
-                    ExportarDatos.exportarAnimalesJSON();
+                    Exportaciones.exportarAnimalesJSON();
                     break;
 
                 case 3:
-                    ExportarDatos.exportarAdoptantesXML();
+                    Exportaciones.exportarAdoptantesXML();
                     break;
 
                 case 4:
-                    ExportarDatos.exportarAdoptantesJSON();
+                    Exportaciones.exportarAdoptantesJSON();
                     break;
 
                 case 5:
-                    ExportarDatos.exportarAdopcionesXML();
+                    Exportaciones.exportarAdopcionesXML();
                     break;
 
                 case 6:
-                    ExportarDatos.exportarAdopcionesJSON();
+                    Exportaciones.exportarAdopcionesJSON();
                     break;
 
                 case 7:
-                    ExportarDatos.exportarRefugioXML();
+                    Exportaciones.exportarRefugioXML();
                     break;
 
                 case 8:
-                    ExportarDatos.exportarRefugioJSON();
+                    Exportaciones.exportarRefugioJSON();
                     break;
 
                 case 9:
-                    ExportarDatos.exportarTodoXML();
+                    Exportaciones.exportarTodoXML();
                     break;
 
                 case 10:
-                    ExportarDatos.exportarTodoJSON();
+                    Exportaciones.exportarTodoJSON();
                     break;
 
                 case 11:
-                    ExportarDatos.exportarTodoXMLyJSON();
+                    Exportaciones.exportarTodoXMLyJSON();
                     break;
 
                 case 0:
