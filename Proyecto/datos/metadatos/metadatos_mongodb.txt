@@ -1,0 +1,80 @@
+METADATOS DE LA BASE DE DATOS
+----------------------------------------
+Nombre BBDD: bd_refugio
+
+COLECCIÓN: animales
+----------------------------------------
+Número de documentos: 15
+
+Índices:
+- {"v": 2, "key": {"_id": 1}, "name": "_id_"}
+
+Estructura de un documento de ejemplo:
+- _id | Tipo: ObjectId
+- nombre | Tipo: String
+- especie | Tipo: String
+- raza | Tipo: String
+- edad | Tipo: Integer
+- sexo | Tipo: String
+- descripcion | Tipo: String
+- fechaIngreso | Tipo: Date
+- estado | Tipo: String
+- historialMedico | Tipo: Array
+- eliminado | Tipo: Boolean
+
+COLECCIÓN: refugio
+----------------------------------------
+Número de documentos: 1
+
+Índices:
+- {"v": 2, "key": {"_id": 1}, "name": "_id_"}
+
+Estructura de un documento de ejemplo:
+- _id | Tipo: String
+- nombre | Tipo: String
+- razonSocial | Tipo: String
+- fechaApertura | Tipo: Date
+- direccion | Tipo: String
+- cif | Tipo: String
+- telefono | Tipo: String
+- correo | Tipo: String
+
+COLECCIÓN: adoptantes
+----------------------------------------
+Número de documentos: 10
+
+Índices:
+- {"v": 2, "key": {"_id": 1}, "name": "_id_"}
+
+Estructura de un documento de ejemplo:
+- _id | Tipo: String
+- nombre | Tipo: String
+- apellido1 | Tipo: String
+- apellido2 | Tipo: String
+- telefono | Tipo: String
+- direccion | Tipo: String
+- email | Tipo: String
+- fechaRegistro | Tipo: Date
+- preferenciasAdopcion | Tipo: Documento
+  - tipoAnimal | Tipo: String
+  - tamanoPreferido | Tipo: String
+- eliminado | Tipo: Boolean
+
+COLECCIÓN: adopciones
+----------------------------------------
+Número de documentos: 10
+
+Índices:
+- {"v": 2, "key": {"_id": 1}, "name": "_id_"}
+
+Estructura de un documento de ejemplo:
+- _id | Tipo: ObjectId
+- animalId | Tipo: ObjectId
+- dniAdoptante | Tipo: String
+- fechaSolicitud | Tipo: Date
+- fechaResolucion | Tipo: Date
+- estado | Tipo: String
+- observaciones | Tipo: String
+- seguimiento | Tipo: Array
+- eliminado | Tipo: Boolean
+

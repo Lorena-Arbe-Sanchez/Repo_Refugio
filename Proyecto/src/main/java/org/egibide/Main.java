@@ -12,6 +12,7 @@ import org.egibide.services.AnimalService;
 import org.egibide.services.RefugioService;
 import org.egibide.utils.DatabaseConnection;
 import org.egibide.utils.ExportarDatos;
+import org.egibide.utils.Metadatos;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +25,7 @@ public class Main {
 
     // Constantes para establecer colores a los mensajes por consola
     private static final String COLOR_AMARILLO = "\u001B[93m";
+    private static final String COLOR_AZUL = "\u001B[94m";
     private static final String RESET_COLOR = "\u001B[0m";
 
     public static void main(String[] args) {
@@ -35,7 +37,7 @@ public class Main {
             // Inicializar la conexión con MongoDB
             conexion = DatabaseConnection.getInstance();
 
-            System.out.println(COLOR_AMARILLO + "🔌 Conexión con MongoDB establecida");
+            System.out.println(COLOR_AMARILLO + "🔌 Conexión con MongoDB establecida.");
             System.out.println("Base de datos: " +
                     conexion.getDatabase().getName());
 
@@ -45,7 +47,7 @@ public class Main {
                 System.out.println("- " + nombre);
             }
 
-            System.out.println("\n✅ Aplicación inicializada correctamente" + RESET_COLOR);
+            System.out.println("\n✅ Aplicación inicializada correctamente." + RESET_COLOR);
 
             /* todo : poner colores y quitar esto
             // Colores ANSI básicos
@@ -117,12 +119,14 @@ public class Main {
                         break;
 
                     case 6:
-                        // TODO : Hacer lo que tenga "pendiente"
-                        // TODO : Poner lo de "↩️ " en las opciones de "Volver..."
-                        System.out.println("\nFuncionalidad pendiente de implementar");
+                        Metadatos.mostrarMetadatos();
+                        Metadatos.exportarMetadatos();
                         break;
 
                     case 7:
+                        // TODO : Hacer lo que tenga "pendiente"
+                        // TODO : Poner lo de "↩️ " en las opciones de "Volver..."
+                        // TODO : Poner iconos en los "System.out.print" necesarios
                         System.out.println("\nFuncionalidad pendiente de implementar");
                         break;
 
@@ -149,14 +153,14 @@ public class Main {
             // Cerrar la conexión con MongoDB
             if (conexion != null) {
                 conexion.close();
-                System.out.println(COLOR_AMARILLO + "Conexión con MongoDB cerrada" + RESET_COLOR);
+                System.out.println(COLOR_AMARILLO + "Conexión con MongoDB cerrada." + RESET_COLOR);
             }
         }
     }
 
     private static void mostrarDatosRefugio(RefugioService refugioService) {
 
-        System.out.println("\n========== DATOS DEL REFUGIO ==========");
+        System.out.println(COLOR_AZUL + "\n\n========== DATOS DEL REFUGIO ==========");
 
         try {
             Refugio refugio = refugioService.buscar();
@@ -179,7 +183,7 @@ public class Main {
             System.out.println("Error al consultar los datos del refugio: " + e.getMessage());
         }
 
-        System.out.println("=======================================\n");
+        System.out.println("=======================================\n" + RESET_COLOR);
     }
 
     // Menú de animales
