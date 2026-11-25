@@ -15,22 +15,31 @@ import org.egibide.services.AdoptanteService;
 import org.egibide.services.AnimalService;
 import org.egibide.services.RefugioService;
 import org.egibide.utils.DatabaseConnection;
+import org.egibide.utils.Exportaciones;
+import org.egibide.utils.Metadatos;
 import org.egibide.utils.Validaciones;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.mongodb.client.model.Filters.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AppTest {
 
+    // Prefijo utilizado para identificar los registros creados durante las pruebas
     private static final String PREFIJO = "TEST_";
 
+    // DNI válidos reservados para las pruebas, evitando utilizar los de los datos iniciales
     private static final List<String> TEST_DNIS = List.of(
             "11111111H",
             "22222222J",
@@ -42,15 +51,25 @@ public class AppTest {
             "88888888Y"
     );
 
+    // DAO utilizados para acceder a las colecciones
     private AnimalDao animalDao;
     private AdoptanteDao adoptanteDao;
     private AdopcionDao adopcionDao;
     private RefugioDao refugioDao;
 
+    // Datos originales del refugio para restaurarlos después de cada prueba
     private Refugio refugioAnterior;
 
+    // Base de datos utilizada durante las pruebas
     private MongoDatabase database;
 
+    // ------------------------------------------
+    // CONFIGURACIÓN Y LIMPIEZA DE LAS PRUEBAS
+    // ------------------------------------------
+
+    /**
+     * Inicializa la conexión con MongoDB y los DAO antes de cada prueba
+     */
     @BeforeEach
     public void setUp() {
 
@@ -67,6 +86,10 @@ public class AppTest {
         refugioAnterior = refugioDao.buscar();
     }
 
+    /**
+     * Elimina los datos generados durante las pruebas y restaura el estado
+     * original del refugio después de cada prueba
+     */
     @AfterEach
     public void tearDown() {
 
@@ -245,6 +268,65 @@ public class AppTest {
         assertNotNull(solicitud.getFechaResolucion());
     }
 
+    @Test
+    public void testValidacionesAnimal() {
+
+        AnimalService servicio = new AnimalService();
+
+        Animal sinNombre = crearAnimal("TEST_SIN_NOMBRE");
+        sinNombre.setNombre("");
+
+        assertThrows(IllegalArgumentException.class, () ->
+                servicio.crear(sinNombre)
+        );
+
+        Animal edadNegativa = crearAnimal("TEST_EDAD_NEGATIVA");
+        edadNegativa.setEdad(-1);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                servicio.crear(edadNegativa)
+        );
+
+        Animal sexoIncorrecto = crearAnimalConSexo(
+                "TEST_SEXO_INCORRECTO", "otro"
+        );
+
+        assertThrows(IllegalArgumentException.class, () ->
+                servicio.crear(sexoIncorrecto)
+        );
+    }
+
+    @Test
+    public void testBajaAnimalConAdopcionAprobada() {
+
+        AnimalService animalService = new AnimalService();
+        AdoptanteService adoptanteService = new AdoptanteService();
+        AdopcionService adopcionService = new AdopcionService();
+
+        Animal animal = crearAnimal("TEST_ANIMAL_ADOPTADO");
+        animalService.crear(animal);
+
+        Adoptante adoptante = crearAdoptante(TEST_DNIS.get(6));
+        adoptanteService.crear(adoptante);
+
+        Adopcion adopcion = crearAdopcion(animal, adoptante);
+        adopcionService.crear(adopcion);
+
+        assertTrue(adopcionService.aprobar(adopcion.getId()));
+
+        // No se debe poder dar de baja un animal adoptado
+        assertThrows(IllegalArgumentException.class, () ->
+                animalService.darDeBaja(animal.getId())
+        );
+
+        assertNotNull(animalService.buscarPorId(animal.getId()));
+
+        assertEquals(
+                "adoptado",
+                animalService.buscarPorId(animal.getId()).getEstado()
+        );
+    }
+
     // ------------------------------------------
     // PRUEBAS DE ADOPTANTES
     // ------------------------------------------
@@ -337,6 +419,37 @@ public class AppTest {
 
         assertThrows(IllegalArgumentException.class, () ->
                 adoptanteService.darDeBaja(adoptante.getDni())
+        );
+    }
+
+    @Test
+    public void testValidacionesYDuplicadoAdoptante() {
+
+        AdoptanteService servicio = new AdoptanteService();
+
+        Adoptante adoptante = crearAdoptante(TEST_DNIS.get(6));
+
+        servicio.crear(adoptante);
+
+        // No permitir DNI duplicado
+        assertThrows(IllegalArgumentException.class, () ->
+                servicio.crear(crearAdoptante(TEST_DNIS.get(6)))
+        );
+
+        // No permitir teléfonos incorrectos
+        Adoptante telefonoIncorrecto = crearAdoptante(TEST_DNIS.get(7));
+        telefonoIncorrecto.setTelefono("123456789");
+
+        assertThrows(IllegalArgumentException.class, () ->
+                servicio.crear(telefonoIncorrecto)
+        );
+
+        // No permitir correos incorrectos
+        Adoptante correoIncorrecto = crearAdoptante(TEST_DNIS.get(7));
+        correoIncorrecto.setEmail("correo-invalido");
+
+        assertThrows(IllegalArgumentException.class, () ->
+                servicio.crear(correoIncorrecto)
         );
     }
 
@@ -509,173 +622,6 @@ public class AppTest {
         );
     }
 
-    // ------------------------------------------
-    // PRUEBAS DEL REFUGIO
-    // ------------------------------------------
-
-    @Test
-    public void testCRUDRefugio() {
-
-        RefugioService servicio = new RefugioService();
-
-        Refugio refugio = crearRefugio();
-
-        servicio.guardar(refugio);
-
-        Refugio encontrado = servicio.buscar();
-
-        assertNotNull(encontrado);
-        assertEquals("TEST_Refugio", encontrado.getNombre());
-        assertEquals("A58818501", encontrado.getCif());
-
-        encontrado.setNombre("TEST_Refugio_Modificado");
-
-        servicio.guardar(encontrado);
-
-        assertEquals(
-                "TEST_Refugio_Modificado",
-                servicio.buscar().getNombre()
-        );
-
-        assertThrows(IllegalArgumentException.class, () ->
-                servicio.guardar(null)
-        );
-    }
-
-    // ------------------------------------------
-    // PRUEBAS DE VALIDACIONES
-    // ------------------------------------------
-
-    @Test
-    public void testValidaciones() {
-
-        assertEquals(
-                "12345678Z",
-                Validaciones.validarDni("12345678z")
-        );
-
-        assertThrows(IllegalArgumentException.class, () ->
-                Validaciones.validarDni("12345678A")
-        );
-
-        assertEquals(
-                "612345678",
-                Validaciones.validarTelefono("612345678")
-        );
-
-        assertThrows(IllegalArgumentException.class, () ->
-                Validaciones.validarTelefono("123456789")
-        );
-
-        assertEquals(
-                "test@email.com",
-                Validaciones.validarEmail("TEST@EMAIL.COM")
-        );
-
-        assertThrows(IllegalArgumentException.class, () ->
-                Validaciones.validarEmail("correo-invalido")
-        );
-
-        assertEquals(
-                "A58818501",
-                Validaciones.validarCif("a58818501")
-        );
-
-        assertThrows(IllegalArgumentException.class, () ->
-                Validaciones.validarCif("A58818502")
-        );
-    }
-
-    @Test
-    public void testValidacionesAnimal() {
-
-        AnimalService servicio = new AnimalService();
-
-        Animal sinNombre = crearAnimal("TEST_SIN_NOMBRE");
-        sinNombre.setNombre("");
-
-        assertThrows(IllegalArgumentException.class, () ->
-                servicio.crear(sinNombre)
-        );
-
-        Animal edadNegativa = crearAnimal("TEST_EDAD_NEGATIVA");
-        edadNegativa.setEdad(-1);
-
-        assertThrows(IllegalArgumentException.class, () ->
-                servicio.crear(edadNegativa)
-        );
-
-        Animal sexoIncorrecto = crearAnimalConSexo(
-                "TEST_SEXO_INCORRECTO", "otro"
-        );
-
-        assertThrows(IllegalArgumentException.class, () ->
-                servicio.crear(sexoIncorrecto)
-        );
-    }
-
-    @Test
-    public void testValidacionesYDuplicadoAdoptante() {
-
-        AdoptanteService servicio = new AdoptanteService();
-
-        Adoptante adoptante = crearAdoptante(TEST_DNIS.get(6));
-
-        servicio.crear(adoptante);
-
-        // No permitir DNI duplicado
-        assertThrows(IllegalArgumentException.class, () ->
-                servicio.crear(crearAdoptante(TEST_DNIS.get(6)))
-        );
-
-        // No permitir teléfonos incorrectos
-        Adoptante telefonoIncorrecto = crearAdoptante(TEST_DNIS.get(7));
-        telefonoIncorrecto.setTelefono("123456789");
-
-        assertThrows(IllegalArgumentException.class, () ->
-                servicio.crear(telefonoIncorrecto)
-        );
-
-        // No permitir correos incorrectos
-        Adoptante correoIncorrecto = crearAdoptante(TEST_DNIS.get(7));
-        correoIncorrecto.setEmail("correo-invalido");
-
-        assertThrows(IllegalArgumentException.class, () ->
-                servicio.crear(correoIncorrecto)
-        );
-    }
-
-    @Test
-    public void testBajaAnimalConAdopcionAprobada() {
-
-        AnimalService animalService = new AnimalService();
-        AdoptanteService adoptanteService = new AdoptanteService();
-        AdopcionService adopcionService = new AdopcionService();
-
-        Animal animal = crearAnimal("TEST_ANIMAL_ADOPTADO");
-        animalService.crear(animal);
-
-        Adoptante adoptante = crearAdoptante(TEST_DNIS.get(6));
-        adoptanteService.crear(adoptante);
-
-        Adopcion adopcion = crearAdopcion(animal, adoptante);
-        adopcionService.crear(adopcion);
-
-        assertTrue(adopcionService.aprobar(adopcion.getId()));
-
-        // No se debe poder dar de baja un animal adoptado
-        assertThrows(IllegalArgumentException.class, () ->
-                animalService.darDeBaja(animal.getId())
-        );
-
-        assertNotNull(animalService.buscarPorId(animal.getId()));
-
-        assertEquals(
-                "adoptado",
-                animalService.buscarPorId(animal.getId()).getEstado()
-        );
-    }
-
     @Test
     public void testRechazarSolicitudMantieneReserva() {
 
@@ -747,6 +693,39 @@ public class AppTest {
         assertNull(adopcionService.buscarPorId(adopcion.getId()));
     }
 
+    // ------------------------------------------
+    // PRUEBAS DEL REFUGIO
+    // ------------------------------------------
+
+    @Test
+    public void testCRUDRefugio() {
+
+        RefugioService servicio = new RefugioService();
+
+        Refugio refugio = crearRefugio();
+
+        servicio.guardar(refugio);
+
+        Refugio encontrado = servicio.buscar();
+
+        assertNotNull(encontrado);
+        assertEquals("TEST_Refugio", encontrado.getNombre());
+        assertEquals("A58818501", encontrado.getCif());
+
+        encontrado.setNombre("TEST_Refugio_Modificado");
+
+        servicio.guardar(encontrado);
+
+        assertEquals(
+                "TEST_Refugio_Modificado",
+                servicio.buscar().getNombre()
+        );
+
+        assertThrows(IllegalArgumentException.class, () ->
+                servicio.guardar(null)
+        );
+    }
+
     @Test
     public void testValidacionesRefugio() {
 
@@ -765,6 +744,135 @@ public class AppTest {
         assertThrows(IllegalArgumentException.class, () ->
                 servicio.guardar(correoIncorrecto)
         );
+    }
+
+    // ------------------------------------------
+    // PRUEBAS DE VALIDACIONES
+    // ------------------------------------------
+
+    @Test
+    public void testValidaciones() {
+
+        assertEquals(
+                "12345678Z",
+                Validaciones.validarDni("12345678z")
+        );
+
+        assertThrows(IllegalArgumentException.class, () ->
+                Validaciones.validarDni("12345678A")
+        );
+
+        assertEquals(
+                "612345678",
+                Validaciones.validarTelefono("612345678")
+        );
+
+        assertThrows(IllegalArgumentException.class, () ->
+                Validaciones.validarTelefono("123456789")
+        );
+
+        assertEquals(
+                "test@email.com",
+                Validaciones.validarEmail("TEST@EMAIL.COM")
+        );
+
+        assertThrows(IllegalArgumentException.class, () ->
+                Validaciones.validarEmail("correo-invalido")
+        );
+
+        assertEquals(
+                "A58818501",
+                Validaciones.validarCif("a58818501")
+        );
+
+        assertThrows(IllegalArgumentException.class, () ->
+                Validaciones.validarCif("A58818502")
+        );
+    }
+
+    // ------------------------------------------
+    // PRUEBAS DE METADATOS
+    // ------------------------------------------
+
+    @Test
+    public void testObtenerMetadatos() {
+
+        String metadatos = Metadatos.obtenerMetadatos();
+
+        assertNotNull(metadatos);
+
+        // Comprobar la información general de la BBDD
+        assertTrue(metadatos.contains("bd_refugio"));
+
+        // Comprobar que aparecen las colecciones
+        assertTrue(metadatos.contains("animales"));
+        assertTrue(metadatos.contains("adopciones"));
+        assertTrue(metadatos.contains("adoptantes"));
+        assertTrue(metadatos.contains("refugio"));
+
+        // Comprobar la información de los índices
+        assertTrue(metadatos.contains("ÍNDICES:"));
+        assertTrue(metadatos.contains("_id_"));
+        assertTrue(metadatos.contains("B-tree ascendente"));
+    }
+
+    @Test
+    public void testExportarMetadatos() throws IOException {
+
+        Metadatos.exportarMetadatos();
+
+        Path archivo = Paths.get("datos/metadatos/metadatos_mongodb.txt");
+
+        // Comprobar que se ha generado el archivo
+        assertTrue(Files.exists(archivo));
+
+        // Comprobar que contiene información
+        assertTrue(Files.size(archivo) > 0);
+
+        String contenido = Files.readString(archivo);
+
+        assertTrue(contenido.contains("bd_refugio"));
+        assertTrue(contenido.contains("animales"));
+        assertTrue(contenido.contains("adopciones"));
+    }
+
+    // ------------------------------------------
+    // PRUEBAS DE EXPORTACIONES
+    // ------------------------------------------
+
+    @Test
+    public void testExportacionesXMLYJSON() throws IOException {
+
+        Animal animal = crearAnimal("TEST_EXPORTACION");
+
+        animalDao.insertar(animal);
+
+        try {
+
+            // Exportar todos los datos a XML y JSON
+            Exportaciones.exportarTodoXML();
+            Exportaciones.exportarTodoJSON();
+
+            // Comprobar que el animal aparece en algún archivo XML
+            assertTrue(archivoContieneTexto(
+                    "datos/xml", ".xml", "TEST_EXPORTACION"
+            ));
+
+            // Comprobar que el animal aparece en algún archivo JSON
+            assertTrue(archivoContieneTexto(
+                    "datos/json", ".json", "TEST_EXPORTACION"
+            ));
+
+        } finally {
+
+            // Eliminar el animal de prueba de MongoDB
+            database.getCollection("animales")
+                    .deleteOne(eq("_id", animal.getId()));
+
+            // Volver a exportar los datos sin el animal de prueba
+            Exportaciones.exportarTodoXML();
+            Exportaciones.exportarTodoJSON();
+        }
     }
 
     // ------------------------------------------
@@ -854,6 +962,23 @@ public class AppTest {
 
         return refugio;
     }
-}
 
-// TODO : Añadir pruebas de exportaciones y metadatos
+    // Comprobar si algún archivo de una carpeta contiene un texto
+    private boolean archivoContieneTexto(String carpeta, String extension, String texto)
+            throws IOException {
+
+        try (Stream<Path> archivos = Files.list(Paths.get(carpeta))) {
+
+            for (Path archivo : archivos
+                    .filter(p -> p.getFileName().toString().endsWith(extension))
+                    .toList()) {
+
+                if (Files.readString(archivo).contains(texto)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+}

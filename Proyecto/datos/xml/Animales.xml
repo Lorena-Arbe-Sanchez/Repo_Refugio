@@ -1,1 +1,198 @@
-<?xml version="1.0" encoding="UTF-8"?><registros><registro><_id>6b01c7619f6d6ac06e75eebb</_id><nombre>Luna</nombre><especie>Perro</especie><raza>Labrador</raza><edad>4</edad><sexo>Hembra</sexo><descripcion>Perra cariñosa y sociable</descripcion><fechaIngreso>2025-01-09T23:00:00Z</fechaIngreso><estado>adoptado</estado><historialMedico></historialMedico><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eebc</_id><nombre>Max</nombre><especie>Perro</especie><raza>Pastor alemán</raza><edad>6</edad><sexo>Macho</sexo><descripcion>Perro tranquilo y obediente</descripcion><fechaIngreso>2025-02-14T23:00:00Z</fechaIngreso><estado>adoptado</estado><historialMedico></historialMedico><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eebd</_id><nombre>Mia</nombre><especie>Gato</especie><raza>Europeo</raza><edad>2</edad><sexo>Hembra</sexo><descripcion>Gata juguetona y sociable</descripcion><fechaIngreso>2025-03-19T23:00:00Z</fechaIngreso><estado>adoptado</estado><historialMedico></historialMedico><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eebe</_id><nombre>Rocky</nombre><especie>Perro</especie><raza>Bóxer</raza><edad>3</edad><sexo>Macho</sexo><descripcion>Perro activo y cariñoso</descripcion><fechaIngreso>2025-04-04T22:00:00Z</fechaIngreso><estado>reservado</estado><historialMedico></historialMedico><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eebf</_id><nombre>Nala</nombre><especie>Gato</especie><raza>Siamés</raza><edad>1</edad><sexo>Hembra</sexo><descripcion>Gata curiosa y juguetona</descripcion><fechaIngreso>2025-05-11T22:00:00Z</fechaIngreso><estado>reservado</estado><historialMedico></historialMedico><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eec0</_id><nombre>Toby</nombre><especie>Perro</especie><raza>Beagle</raza><edad>5</edad><sexo>Macho</sexo><descripcion>Perro sociable y alegre</descripcion><fechaIngreso>2025-06-07T22:00:00Z</fechaIngreso><estado>reservado</estado><historialMedico></historialMedico><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eec1</_id><nombre>Coco</nombre><especie>Conejo</especie><raza>Enano</raza><edad>2</edad><sexo>Macho</sexo><descripcion>Conejo tranquilo y dócil</descripcion><fechaIngreso>2025-07-17T22:00:00Z</fechaIngreso><estado>reservado</estado><historialMedico></historialMedico><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eec2</_id><nombre>Simba</nombre><especie>Gato</especie><raza>Persa</raza><edad>4</edad><sexo>Macho</sexo><descripcion>Gato independiente y tranquilo</descripcion><fechaIngreso>2025-08-01T22:00:00Z</fechaIngreso><estado>disponible</estado><historialMedico></historialMedico><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eec3</_id><nombre>Kira</nombre><especie>Perro</especie><raza>Border Collie</raza><edad>3</edad><sexo>Hembra</sexo><descripcion>Perra inteligente y activa</descripcion><fechaIngreso>2025-09-13T22:00:00Z</fechaIngreso><estado>disponible</estado><historialMedico></historialMedico><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eec4</_id><nombre>Daisy</nombre><especie>Conejo</especie><raza>Belier</raza><edad>1</edad><sexo>Hembra</sexo><descripcion>Coneja pequeña y sociable</descripcion><fechaIngreso>2025-10-20T22:00:00Z</fechaIngreso><estado>disponible</estado><historialMedico></historialMedico><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eec5</_id><nombre>Thor</nombre><especie>Perro</especie><raza>Mastín</raza><edad>7</edad><sexo>Macho</sexo><descripcion>Perro grande y tranquilo</descripcion><fechaIngreso>2025-11-02T23:00:00Z</fechaIngreso><estado>disponible</estado><historialMedico></historialMedico><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eec6</_id><nombre>Lola</nombre><especie>Gato</especie><raza>Europeo</raza><edad>5</edad><sexo>Hembra</sexo><descripcion>Gata cariñosa</descripcion><fechaIngreso>2025-12-08T23:00:00Z</fechaIngreso><estado>disponible</estado><historialMedico></historialMedico><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eec7</_id><nombre>Nico</nombre><especie>Perro</especie><raza>Podenco</raza><edad>2</edad><sexo>Macho</sexo><descripcion>Perro en recuperación</descripcion><fechaIngreso>2026-01-16T23:00:00Z</fechaIngreso><estado>tratamiento</estado><historialMedico></historialMedico><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eec8</_id><nombre>Milo</nombre><especie>Hurón</especie><raza>Doméstico</raza><edad>2</edad><sexo>Macho</sexo><descripcion>Hurón curioso y juguetón</descripcion><fechaIngreso>2026-02-10T23:00:00Z</fechaIngreso><estado>disponible</estado><historialMedico></historialMedico><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eec9</_id><nombre>Bella</nombre><especie>Perro</especie><raza>Caniche</raza><edad>8</edad><sexo>Hembra</sexo><descripcion>Perra mayor y muy tranquila</descripcion><fechaIngreso>2026-03-05T23:00:00Z</fechaIngreso><estado>disponible</estado><historialMedico></historialMedico><eliminado>false</eliminado></registro></registros>
+<?xml version="1.0" encoding="UTF-8"?>
+<registros>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb57a</_id>
+        <nombre>Luna</nombre>
+        <especie>Perro</especie>
+        <raza>Labrador</raza>
+        <edad>4</edad>
+        <sexo>Hembra</sexo>
+        <descripcion>Perra cariñosa y sociable</descripcion>
+        <fechaIngreso>2025-01-09T23:00:00Z</fechaIngreso>
+        <estado>adoptado</estado>
+        <historialMedico></historialMedico>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb57b</_id>
+        <nombre>Max</nombre>
+        <especie>Perro</especie>
+        <raza>Pastor alemán</raza>
+        <edad>6</edad>
+        <sexo>Macho</sexo>
+        <descripcion>Perro tranquilo y obediente</descripcion>
+        <fechaIngreso>2025-02-14T23:00:00Z</fechaIngreso>
+        <estado>adoptado</estado>
+        <historialMedico></historialMedico>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb57c</_id>
+        <nombre>Mia</nombre>
+        <especie>Gato</especie>
+        <raza>Europeo</raza>
+        <edad>2</edad>
+        <sexo>Hembra</sexo>
+        <descripcion>Gata juguetona y sociable</descripcion>
+        <fechaIngreso>2025-03-19T23:00:00Z</fechaIngreso>
+        <estado>adoptado</estado>
+        <historialMedico></historialMedico>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb57d</_id>
+        <nombre>Rocky</nombre>
+        <especie>Perro</especie>
+        <raza>Bóxer</raza>
+        <edad>3</edad>
+        <sexo>Macho</sexo>
+        <descripcion>Perro activo y cariñoso</descripcion>
+        <fechaIngreso>2025-04-04T22:00:00Z</fechaIngreso>
+        <estado>reservado</estado>
+        <historialMedico></historialMedico>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb57e</_id>
+        <nombre>Nala</nombre>
+        <especie>Gato</especie>
+        <raza>Siamés</raza>
+        <edad>1</edad>
+        <sexo>Hembra</sexo>
+        <descripcion>Gata curiosa y juguetona</descripcion>
+        <fechaIngreso>2025-05-11T22:00:00Z</fechaIngreso>
+        <estado>reservado</estado>
+        <historialMedico></historialMedico>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb57f</_id>
+        <nombre>Toby</nombre>
+        <especie>Perro</especie>
+        <raza>Beagle</raza>
+        <edad>5</edad>
+        <sexo>Macho</sexo>
+        <descripcion>Perro sociable y alegre</descripcion>
+        <fechaIngreso>2025-06-07T22:00:00Z</fechaIngreso>
+        <estado>reservado</estado>
+        <historialMedico></historialMedico>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb580</_id>
+        <nombre>Coco</nombre>
+        <especie>Conejo</especie>
+        <raza>Enano</raza>
+        <edad>2</edad>
+        <sexo>Macho</sexo>
+        <descripcion>Conejo tranquilo y dócil</descripcion>
+        <fechaIngreso>2025-07-17T22:00:00Z</fechaIngreso>
+        <estado>reservado</estado>
+        <historialMedico></historialMedico>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb581</_id>
+        <nombre>Simba</nombre>
+        <especie>Gato</especie>
+        <raza>Persa</raza>
+        <edad>4</edad>
+        <sexo>Macho</sexo>
+        <descripcion>Gato independiente y tranquilo</descripcion>
+        <fechaIngreso>2025-08-01T22:00:00Z</fechaIngreso>
+        <estado>disponible</estado>
+        <historialMedico></historialMedico>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb582</_id>
+        <nombre>Kira</nombre>
+        <especie>Perro</especie>
+        <raza>Border Collie</raza>
+        <edad>3</edad>
+        <sexo>Hembra</sexo>
+        <descripcion>Perra inteligente y activa</descripcion>
+        <fechaIngreso>2025-09-13T22:00:00Z</fechaIngreso>
+        <estado>disponible</estado>
+        <historialMedico></historialMedico>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb583</_id>
+        <nombre>Daisy</nombre>
+        <especie>Conejo</especie>
+        <raza>Belier</raza>
+        <edad>1</edad>
+        <sexo>Hembra</sexo>
+        <descripcion>Coneja pequeña y sociable</descripcion>
+        <fechaIngreso>2025-10-20T22:00:00Z</fechaIngreso>
+        <estado>disponible</estado>
+        <historialMedico></historialMedico>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb584</_id>
+        <nombre>Thor</nombre>
+        <especie>Perro</especie>
+        <raza>Mastín</raza>
+        <edad>7</edad>
+        <sexo>Macho</sexo>
+        <descripcion>Perro grande y tranquilo</descripcion>
+        <fechaIngreso>2025-11-02T23:00:00Z</fechaIngreso>
+        <estado>disponible</estado>
+        <historialMedico></historialMedico>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb585</_id>
+        <nombre>Lola</nombre>
+        <especie>Gato</especie>
+        <raza>Europeo</raza>
+        <edad>5</edad>
+        <sexo>Hembra</sexo>
+        <descripcion>Gata cariñosa</descripcion>
+        <fechaIngreso>2025-12-08T23:00:00Z</fechaIngreso>
+        <estado>disponible</estado>
+        <historialMedico></historialMedico>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb586</_id>
+        <nombre>Nico</nombre>
+        <especie>Perro</especie>
+        <raza>Podenco</raza>
+        <edad>2</edad>
+        <sexo>Macho</sexo>
+        <descripcion>Perro en recuperación</descripcion>
+        <fechaIngreso>2026-01-16T23:00:00Z</fechaIngreso>
+        <estado>tratamiento</estado>
+        <historialMedico></historialMedico>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb587</_id>
+        <nombre>Milo</nombre>
+        <especie>Hurón</especie>
+        <raza>Doméstico</raza>
+        <edad>2</edad>
+        <sexo>Macho</sexo>
+        <descripcion>Hurón curioso y juguetón</descripcion>
+        <fechaIngreso>2026-02-10T23:00:00Z</fechaIngreso>
+        <estado>disponible</estado>
+        <historialMedico></historialMedico>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb588</_id>
+        <nombre>Bella</nombre>
+        <especie>Perro</especie>
+        <raza>Caniche</raza>
+        <edad>8</edad>
+        <sexo>Hembra</sexo>
+        <descripcion>Perra mayor y muy tranquila</descripcion>
+        <fechaIngreso>2026-03-05T23:00:00Z</fechaIngreso>
+        <estado>disponible</estado>
+        <historialMedico></historialMedico>
+        <eliminado>false</eliminado>
+    </registro>
+</registros>

@@ -1,7 +1,62 @@
 [
   {
-    "_id": "6b01c7619f6d6ac06e75eecf",
-    "animalId": "6b01c7619f6d6ac06e75eec0",
+    "_id": "6b06afcd48deb43ba87eb589",
+    "animalId": "6b06afcd48deb43ba87eb57a",
+    "dniAdoptante": "12345678Z",
+    "fechaSolicitud": "2025-01-31T23:00:00Z",
+    "fechaResolucion": "2025-02-09T23:00:00Z",
+    "estado": "aprobada",
+    "observaciones": "Adopción completada correctamente",
+    "seguimiento": [],
+    "eliminado": false
+  },
+  {
+    "_id": "6b06afcd48deb43ba87eb58a",
+    "animalId": "6b06afcd48deb43ba87eb57b",
+    "dniAdoptante": "23456789D",
+    "fechaSolicitud": "2025-02-28T23:00:00Z",
+    "fechaResolucion": "2025-03-14T23:00:00Z",
+    "estado": "aprobada",
+    "observaciones": "Adopción aprobada tras la entrevista",
+    "seguimiento": [],
+    "eliminado": false
+  },
+  {
+    "_id": "6b06afcd48deb43ba87eb58b",
+    "animalId": "6b06afcd48deb43ba87eb57c",
+    "dniAdoptante": "34567890V",
+    "fechaSolicitud": "2025-03-31T22:00:00Z",
+    "fechaResolucion": "2025-04-11T22:00:00Z",
+    "estado": "aprobada",
+    "observaciones": "Adopción completada",
+    "seguimiento": [],
+    "eliminado": false
+  },
+  {
+    "_id": "6b06afcd48deb43ba87eb58c",
+    "animalId": "6b06afcd48deb43ba87eb57d",
+    "dniAdoptante": "45678901G",
+    "fechaSolicitud": "2026-10-09T22:00:00Z",
+    "fechaResolucion": null,
+    "estado": "pendiente",
+    "observaciones": "Pendiente de entrevista",
+    "seguimiento": [],
+    "eliminado": false
+  },
+  {
+    "_id": "6b06afcd48deb43ba87eb58d",
+    "animalId": "6b06afcd48deb43ba87eb57e",
+    "dniAdoptante": "56789012B",
+    "fechaSolicitud": "2026-10-14T22:00:00Z",
+    "fechaResolucion": null,
+    "estado": "pendiente",
+    "observaciones": "Pendiente de valoración",
+    "seguimiento": [],
+    "eliminado": false
+  },
+  {
+    "_id": "6b06afcd48deb43ba87eb58e",
+    "animalId": "6b06afcd48deb43ba87eb57f",
     "dniAdoptante": "67890123B",
     "fechaSolicitud": "2026-10-19T22:00:00Z",
     "fechaResolucion": null,
@@ -11,8 +66,8 @@
     "eliminado": false
   },
   {
-    "_id": "6b01c7619f6d6ac06e75eed0",
-    "animalId": "6b01c7619f6d6ac06e75eec1",
+    "_id": "6b06afcd48deb43ba87eb58f",
+    "animalId": "6b06afcd48deb43ba87eb580",
     "dniAdoptante": "78901234X",
     "fechaSolicitud": "2026-10-31T23:00:00Z",
     "fechaResolucion": null,
@@ -22,8 +77,8 @@
     "eliminado": false
   },
   {
-    "_id": "6b01c7619f6d6ac06e75eed1",
-    "animalId": "6b01c7619f6d6ac06e75eec2",
+    "_id": "6b06afcd48deb43ba87eb590",
+    "animalId": "6b06afcd48deb43ba87eb581",
     "dniAdoptante": "89012345E",
     "fechaSolicitud": "2026-07-31T22:00:00Z",
     "fechaResolucion": "2026-08-09T22:00:00Z",
@@ -33,8 +88,8 @@
     "eliminado": false
   },
   {
-    "_id": "6b01c7619f6d6ac06e75eed2",
-    "animalId": "6b01c7619f6d6ac06e75eec3",
+    "_id": "6b06afcd48deb43ba87eb591",
+    "animalId": "6b06afcd48deb43ba87eb582",
     "dniAdoptante": "90123456A",
     "fechaSolicitud": "2026-08-14T22:00:00Z",
     "fechaResolucion": "2026-08-19T22:00:00Z",
@@ -44,8 +99,8 @@
     "eliminado": false
   },
   {
-    "_id": "6b01c7619f6d6ac06e75eed3",
-    "animalId": "6b01c7619f6d6ac06e75eec4",
+    "_id": "6b06afcd48deb43ba87eb592",
+    "animalId": "6b06afcd48deb43ba87eb583",
     "dniAdoptante": "11223344B",
     "fechaSolicitud": "2026-08-31T22:00:00Z",
     "fechaResolucion": "2026-09-04T22:00:00Z",

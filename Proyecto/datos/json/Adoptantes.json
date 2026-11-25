@@ -1,5 +1,80 @@
 [
   {
+    "_id": "12345678Z",
+    "nombre": "Laura",
+    "apellido1": "García",
+    "apellido2": "Pérez",
+    "telefono": "600123456",
+    "direccion": "Calle Mayor 10, Vitoria-Gasteiz",
+    "email": "laura@email.com",
+    "fechaRegistro": "2026-01-09T23:00:00Z",
+    "preferenciasAdopcion": {
+      "tipoAnimal": "Perro",
+      "tamanoPreferido": "Mediano"
+    },
+    "eliminado": false
+  },
+  {
+    "_id": "23456789D",
+    "nombre": "Carlos",
+    "apellido1": "Martínez",
+    "apellido2": "López",
+    "telefono": "600234567",
+    "direccion": "Calle Rioja 25, Vitoria-Gasteiz",
+    "email": "carlos@email.com",
+    "fechaRegistro": "2026-01-09T23:00:00Z",
+    "preferenciasAdopcion": {
+      "tipoAnimal": "Gato",
+      "tamanoPreferido": "Pequeño"
+    },
+    "eliminado": false
+  },
+  {
+    "_id": "34567890V",
+    "nombre": "Marta",
+    "apellido1": "Fernández",
+    "apellido2": "Ruiz",
+    "telefono": "600345678",
+    "direccion": "Avenida Gasteiz 30, Vitoria-Gasteiz",
+    "email": "marta@email.com",
+    "fechaRegistro": "2026-01-09T23:00:00Z",
+    "preferenciasAdopcion": {
+      "tipoAnimal": "Perro",
+      "tamanoPreferido": "Grande"
+    },
+    "eliminado": false
+  },
+  {
+    "_id": "45678901G",
+    "nombre": "Javier",
+    "apellido1": "López",
+    "apellido2": "Sánchez",
+    "telefono": "600456789",
+    "direccion": "Calle Francia 12, Vitoria-Gasteiz",
+    "email": "javier@email.com",
+    "fechaRegistro": "2026-01-09T23:00:00Z",
+    "preferenciasAdopcion": {
+      "tipoAnimal": "Gato",
+      "tamanoPreferido": "Cualquiera"
+    },
+    "eliminado": false
+  },
+  {
+    "_id": "56789012B",
+    "nombre": "Elena",
+    "apellido1": "Sánchez",
+    "apellido2": "Gómez",
+    "telefono": "600567890",
+    "direccion": "Calle Paz 8, Vitoria-Gasteiz",
+    "email": "elena@email.com",
+    "fechaRegistro": "2026-01-09T23:00:00Z",
+    "preferenciasAdopcion": {
+      "tipoAnimal": "Conejo",
+      "tamanoPreferido": "Pequeño"
+    },
+    "eliminado": false
+  },
+  {
     "_id": "67890123B",
     "nombre": "David",
     "apellido1": "Ruiz",

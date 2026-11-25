@@ -1,1 +1,153 @@
-<?xml version="1.0" encoding="UTF-8"?><registros><registro><_id>67890123B</_id><nombre>David</nombre><apellido1>Ruiz</apellido1><apellido2>Martín</apellido2><telefono>600678901</telefono><direccion>Calle Florida 19, Vitoria-Gasteiz</direccion><email>david@email.com</email><fechaRegistro>2026-01-09T23:00:00Z</fechaRegistro><preferenciasAdopcion><tipoAnimal>Perro</tipoAnimal><tamanoPreferido>Grande</tamanoPreferido></preferenciasAdopcion><eliminado>false</eliminado></registro><registro><_id>78901234X</_id><nombre>Andrea</nombre><apellido1>Gómez</apellido1><apellido2>Díaz</apellido2><telefono>600789012</telefono><direccion>Calle Francia 40, Vitoria-Gasteiz</direccion><email>andrea@email.com</email><fechaRegistro>2026-01-09T23:00:00Z</fechaRegistro><preferenciasAdopcion><tipoAnimal>Gato</tipoAnimal><tamanoPreferido>Pequeño</tamanoPreferido></preferenciasAdopcion><eliminado>false</eliminado></registro><registro><_id>89012345E</_id><nombre>Pablo</nombre><apellido1>Díaz</apellido1><apellido2>Moreno</apellido2><telefono>600890123</telefono><direccion>Calle San Prudencio 5, Vitoria-Gasteiz</direccion><email>pablo@email.com</email><fechaRegistro>2026-01-09T23:00:00Z</fechaRegistro><preferenciasAdopcion><tipoAnimal>Perro</tipoAnimal><tamanoPreferido>Mediano</tamanoPreferido></preferenciasAdopcion><eliminado>false</eliminado></registro><registro><_id>90123456A</_id><nombre>Sara</nombre><apellido1>Moreno</apellido1><apellido2>Alonso</apellido2><telefono>600901234</telefono><direccion>Calle Portal del Rey 16, Vitoria-Gasteiz</direccion><email>sara@email.com</email><fechaRegistro>2026-01-09T23:00:00Z</fechaRegistro><preferenciasAdopcion><tipoAnimal>Conejo</tipoAnimal><tamanoPreferido>Pequeño</tamanoPreferido></preferenciasAdopcion><eliminado>false</eliminado></registro><registro><_id>11223344B</_id><nombre>Alberto</nombre><apellido1>Alonso</apellido1><apellido2>Castro</apellido2><telefono>600112233</telefono><direccion>Calle Dato 22, Vitoria-Gasteiz</direccion><email>alberto@email.com</email><fechaRegistro>2026-01-09T23:00:00Z</fechaRegistro><preferenciasAdopcion><tipoAnimal>Perro</tipoAnimal><tamanoPreferido>Cualquiera</tamanoPreferido></preferenciasAdopcion><eliminado>false</eliminado></registro></registros>
+<?xml version="1.0" encoding="UTF-8"?>
+<registros>
+    <registro>
+        <_id>12345678Z</_id>
+        <nombre>Laura</nombre>
+        <apellido1>García</apellido1>
+        <apellido2>Pérez</apellido2>
+        <telefono>600123456</telefono>
+        <direccion>Calle Mayor 10, Vitoria-Gasteiz</direccion>
+        <email>laura@email.com</email>
+        <fechaRegistro>2026-01-09T23:00:00Z</fechaRegistro>
+        <preferenciasAdopcion>
+            <tipoAnimal>Perro</tipoAnimal>
+            <tamanoPreferido>Mediano</tamanoPreferido>
+        </preferenciasAdopcion>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>23456789D</_id>
+        <nombre>Carlos</nombre>
+        <apellido1>Martínez</apellido1>
+        <apellido2>López</apellido2>
+        <telefono>600234567</telefono>
+        <direccion>Calle Rioja 25, Vitoria-Gasteiz</direccion>
+        <email>carlos@email.com</email>
+        <fechaRegistro>2026-01-09T23:00:00Z</fechaRegistro>
+        <preferenciasAdopcion>
+            <tipoAnimal>Gato</tipoAnimal>
+            <tamanoPreferido>Pequeño</tamanoPreferido>
+        </preferenciasAdopcion>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>34567890V</_id>
+        <nombre>Marta</nombre>
+        <apellido1>Fernández</apellido1>
+        <apellido2>Ruiz</apellido2>
+        <telefono>600345678</telefono>
+        <direccion>Avenida Gasteiz 30, Vitoria-Gasteiz</direccion>
+        <email>marta@email.com</email>
+        <fechaRegistro>2026-01-09T23:00:00Z</fechaRegistro>
+        <preferenciasAdopcion>
+            <tipoAnimal>Perro</tipoAnimal>
+            <tamanoPreferido>Grande</tamanoPreferido>
+        </preferenciasAdopcion>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>45678901G</_id>
+        <nombre>Javier</nombre>
+        <apellido1>López</apellido1>
+        <apellido2>Sánchez</apellido2>
+        <telefono>600456789</telefono>
+        <direccion>Calle Francia 12, Vitoria-Gasteiz</direccion>
+        <email>javier@email.com</email>
+        <fechaRegistro>2026-01-09T23:00:00Z</fechaRegistro>
+        <preferenciasAdopcion>
+            <tipoAnimal>Gato</tipoAnimal>
+            <tamanoPreferido>Cualquiera</tamanoPreferido>
+        </preferenciasAdopcion>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>56789012B</_id>
+        <nombre>Elena</nombre>
+        <apellido1>Sánchez</apellido1>
+        <apellido2>Gómez</apellido2>
+        <telefono>600567890</telefono>
+        <direccion>Calle Paz 8, Vitoria-Gasteiz</direccion>
+        <email>elena@email.com</email>
+        <fechaRegistro>2026-01-09T23:00:00Z</fechaRegistro>
+        <preferenciasAdopcion>
+            <tipoAnimal>Conejo</tipoAnimal>
+            <tamanoPreferido>Pequeño</tamanoPreferido>
+        </preferenciasAdopcion>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>67890123B</_id>
+        <nombre>David</nombre>
+        <apellido1>Ruiz</apellido1>
+        <apellido2>Martín</apellido2>
+        <telefono>600678901</telefono>
+        <direccion>Calle Florida 19, Vitoria-Gasteiz</direccion>
+        <email>david@email.com</email>
+        <fechaRegistro>2026-01-09T23:00:00Z</fechaRegistro>
+        <preferenciasAdopcion>
+            <tipoAnimal>Perro</tipoAnimal>
+            <tamanoPreferido>Grande</tamanoPreferido>
+        </preferenciasAdopcion>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>78901234X</_id>
+        <nombre>Andrea</nombre>
+        <apellido1>Gómez</apellido1>
+        <apellido2>Díaz</apellido2>
+        <telefono>600789012</telefono>
+        <direccion>Calle Francia 40, Vitoria-Gasteiz</direccion>
+        <email>andrea@email.com</email>
+        <fechaRegistro>2026-01-09T23:00:00Z</fechaRegistro>
+        <preferenciasAdopcion>
+            <tipoAnimal>Gato</tipoAnimal>
+            <tamanoPreferido>Pequeño</tamanoPreferido>
+        </preferenciasAdopcion>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>89012345E</_id>
+        <nombre>Pablo</nombre>
+        <apellido1>Díaz</apellido1>
+        <apellido2>Moreno</apellido2>
+        <telefono>600890123</telefono>
+        <direccion>Calle San Prudencio 5, Vitoria-Gasteiz</direccion>
+        <email>pablo@email.com</email>
+        <fechaRegistro>2026-01-09T23:00:00Z</fechaRegistro>
+        <preferenciasAdopcion>
+            <tipoAnimal>Perro</tipoAnimal>
+            <tamanoPreferido>Mediano</tamanoPreferido>
+        </preferenciasAdopcion>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>90123456A</_id>
+        <nombre>Sara</nombre>
+        <apellido1>Moreno</apellido1>
+        <apellido2>Alonso</apellido2>
+        <telefono>600901234</telefono>
+        <direccion>Calle Portal del Rey 16, Vitoria-Gasteiz</direccion>
+        <email>sara@email.com</email>
+        <fechaRegistro>2026-01-09T23:00:00Z</fechaRegistro>
+        <preferenciasAdopcion>
+            <tipoAnimal>Conejo</tipoAnimal>
+            <tamanoPreferido>Pequeño</tamanoPreferido>
+        </preferenciasAdopcion>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>11223344B</_id>
+        <nombre>Alberto</nombre>
+        <apellido1>Alonso</apellido1>
+        <apellido2>Castro</apellido2>
+        <telefono>600112233</telefono>
+        <direccion>Calle Dato 22, Vitoria-Gasteiz</direccion>
+        <email>alberto@email.com</email>
+        <fechaRegistro>2026-01-09T23:00:00Z</fechaRegistro>
+        <preferenciasAdopcion>
+            <tipoAnimal>Perro</tipoAnimal>
+            <tamanoPreferido>Cualquiera</tamanoPreferido>
+        </preferenciasAdopcion>
+        <eliminado>false</eliminado>
+    </registro>
+</registros>

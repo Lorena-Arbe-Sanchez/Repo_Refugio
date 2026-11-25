@@ -1,1 +1,113 @@
-<?xml version="1.0" encoding="UTF-8"?><registros><registro><_id>6b01c7619f6d6ac06e75eecf</_id><animalId>6b01c7619f6d6ac06e75eec0</animalId><dniAdoptante>67890123B</dniAdoptante><fechaSolicitud>2026-10-19T22:00:00Z</fechaSolicitud><fechaResolucion></fechaResolucion><estado>pendiente</estado><observaciones>Pendiente de visita al refugio</observaciones><seguimiento></seguimiento><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eed0</_id><animalId>6b01c7619f6d6ac06e75eec1</animalId><dniAdoptante>78901234X</dniAdoptante><fechaSolicitud>2026-10-31T23:00:00Z</fechaSolicitud><fechaResolucion></fechaResolucion><estado>pendiente</estado><observaciones>Solicitud pendiente de revisión</observaciones><seguimiento></seguimiento><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eed1</_id><animalId>6b01c7619f6d6ac06e75eec2</animalId><dniAdoptante>89012345E</dniAdoptante><fechaSolicitud>2026-07-31T22:00:00Z</fechaSolicitud><fechaResolucion>2026-08-09T22:00:00Z</fechaResolucion><estado>rechazada</estado><observaciones>No cumple los requisitos de adopción</observaciones><seguimiento></seguimiento><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eed2</_id><animalId>6b01c7619f6d6ac06e75eec3</animalId><dniAdoptante>90123456A</dniAdoptante><fechaSolicitud>2026-08-14T22:00:00Z</fechaSolicitud><fechaResolucion>2026-08-19T22:00:00Z</fechaResolucion><estado>rechazada</estado><observaciones>Solicitud rechazada tras la entrevista</observaciones><seguimiento></seguimiento><eliminado>false</eliminado></registro><registro><_id>6b01c7619f6d6ac06e75eed3</_id><animalId>6b01c7619f6d6ac06e75eec4</animalId><dniAdoptante>11223344B</dniAdoptante><fechaSolicitud>2026-08-31T22:00:00Z</fechaSolicitud><fechaResolucion>2026-09-04T22:00:00Z</fechaResolucion><estado>rechazada</estado><observaciones>El adoptante ha retirado su solicitud</observaciones><seguimiento></seguimiento><eliminado>false</eliminado></registro></registros>
+<?xml version="1.0" encoding="UTF-8"?>
+<registros>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb589</_id>
+        <animalId>6b06afcd48deb43ba87eb57a</animalId>
+        <dniAdoptante>12345678Z</dniAdoptante>
+        <fechaSolicitud>2025-01-31T23:00:00Z</fechaSolicitud>
+        <fechaResolucion>2025-02-09T23:00:00Z</fechaResolucion>
+        <estado>aprobada</estado>
+        <observaciones>Adopción completada correctamente</observaciones>
+        <seguimiento></seguimiento>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb58a</_id>
+        <animalId>6b06afcd48deb43ba87eb57b</animalId>
+        <dniAdoptante>23456789D</dniAdoptante>
+        <fechaSolicitud>2025-02-28T23:00:00Z</fechaSolicitud>
+        <fechaResolucion>2025-03-14T23:00:00Z</fechaResolucion>
+        <estado>aprobada</estado>
+        <observaciones>Adopción aprobada tras la entrevista</observaciones>
+        <seguimiento></seguimiento>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb58b</_id>
+        <animalId>6b06afcd48deb43ba87eb57c</animalId>
+        <dniAdoptante>34567890V</dniAdoptante>
+        <fechaSolicitud>2025-03-31T22:00:00Z</fechaSolicitud>
+        <fechaResolucion>2025-04-11T22:00:00Z</fechaResolucion>
+        <estado>aprobada</estado>
+        <observaciones>Adopción completada</observaciones>
+        <seguimiento></seguimiento>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb58c</_id>
+        <animalId>6b06afcd48deb43ba87eb57d</animalId>
+        <dniAdoptante>45678901G</dniAdoptante>
+        <fechaSolicitud>2026-10-09T22:00:00Z</fechaSolicitud>
+        <fechaResolucion></fechaResolucion>
+        <estado>pendiente</estado>
+        <observaciones>Pendiente de entrevista</observaciones>
+        <seguimiento></seguimiento>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb58d</_id>
+        <animalId>6b06afcd48deb43ba87eb57e</animalId>
+        <dniAdoptante>56789012B</dniAdoptante>
+        <fechaSolicitud>2026-10-14T22:00:00Z</fechaSolicitud>
+        <fechaResolucion></fechaResolucion>
+        <estado>pendiente</estado>
+        <observaciones>Pendiente de valoración</observaciones>
+        <seguimiento></seguimiento>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb58e</_id>
+        <animalId>6b06afcd48deb43ba87eb57f</animalId>
+        <dniAdoptante>67890123B</dniAdoptante>
+        <fechaSolicitud>2026-10-19T22:00:00Z</fechaSolicitud>
+        <fechaResolucion></fechaResolucion>
+        <estado>pendiente</estado>
+        <observaciones>Pendiente de visita al refugio</observaciones>
+        <seguimiento></seguimiento>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb58f</_id>
+        <animalId>6b06afcd48deb43ba87eb580</animalId>
+        <dniAdoptante>78901234X</dniAdoptante>
+        <fechaSolicitud>2026-10-31T23:00:00Z</fechaSolicitud>
+        <fechaResolucion></fechaResolucion>
+        <estado>pendiente</estado>
+        <observaciones>Solicitud pendiente de revisión</observaciones>
+        <seguimiento></seguimiento>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb590</_id>
+        <animalId>6b06afcd48deb43ba87eb581</animalId>
+        <dniAdoptante>89012345E</dniAdoptante>
+        <fechaSolicitud>2026-07-31T22:00:00Z</fechaSolicitud>
+        <fechaResolucion>2026-08-09T22:00:00Z</fechaResolucion>
+        <estado>rechazada</estado>
+        <observaciones>No cumple los requisitos de adopción</observaciones>
+        <seguimiento></seguimiento>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb591</_id>
+        <animalId>6b06afcd48deb43ba87eb582</animalId>
+        <dniAdoptante>90123456A</dniAdoptante>
+        <fechaSolicitud>2026-08-14T22:00:00Z</fechaSolicitud>
+        <fechaResolucion>2026-08-19T22:00:00Z</fechaResolucion>
+        <estado>rechazada</estado>
+        <observaciones>Solicitud rechazada tras la entrevista</observaciones>
+        <seguimiento></seguimiento>
+        <eliminado>false</eliminado>
+    </registro>
+    <registro>
+        <_id>6b06afcd48deb43ba87eb592</_id>
+        <animalId>6b06afcd48deb43ba87eb583</animalId>
+        <dniAdoptante>11223344B</dniAdoptante>
+        <fechaSolicitud>2026-08-31T22:00:00Z</fechaSolicitud>
+        <fechaResolucion>2026-09-04T22:00:00Z</fechaResolucion>
+        <estado>rechazada</estado>
+        <observaciones>El adoptante ha retirado su solicitud</observaciones>
+        <seguimiento></seguimiento>
+        <eliminado>false</eliminado>
+    </registro>
+</registros>

@@ -182,8 +182,7 @@ public class Exportaciones {
                 escritor.close();
             }
 
-            // TODO : Poner icono tick
-            System.out.println("Archivo XML exportado: " + archivo);
+            System.out.println("✅ Archivo XML exportado: " + archivo);
 
         } catch (Exception e) {
             System.out.println("Error al exportar XML: " + e.getMessage());
@@ -210,8 +209,7 @@ public class Exportaciones {
 
             Files.writeString(archivo, contenido);
 
-            // TODO : Poner icono tick
-            System.out.println("Archivo JSON exportado: " + archivo);
+            System.out.println("✅ Archivo JSON exportado: " + archivo);
 
         } catch (Exception e) {
             System.out.println("Error al exportar JSON: " + e.getMessage());
