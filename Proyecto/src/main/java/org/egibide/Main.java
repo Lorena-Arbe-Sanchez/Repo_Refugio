@@ -126,7 +126,7 @@ public class Main {
                     case 7:
                         // TODO : Hacer lo que tenga "pendiente"
                         // TODO : Poner lo de "↩️ " en las opciones de "Volver..."
-                        // TODO : Poner iconos en los "System.out.print" necesarios
+                        // TODO : Poner iconos en los "System.out.print" necesarios + En los "throw new" (en los 2 --> Iconos y puntos)
                         System.out.println("\nFuncionalidad pendiente de implementar");
                         break;
 
@@ -322,7 +322,7 @@ public class Main {
             System.out.print("Descripción: ");
             animal.setDescripcion(sc.nextLine().trim());
 
-            animal.setFechaIngreso(leerFecha(sc));
+            animal.setFechaIngreso(leerFecha(sc, "Fecha de ingreso (dd/MM/yyyy): "));
 
             if (animalService.actualizar(animal)) {
                 System.out.println("\n✅ Animal modificado correctamente");
@@ -341,8 +341,7 @@ public class Main {
 
             System.out.println("\n===== DAR DE BAJA UN ANIMAL =====");
 
-            System.out.print("Introduce el ID del animal: ");
-            ObjectId id = new ObjectId(sc.nextLine().trim());
+            ObjectId id = leerObjectId(sc, "Introduce el ID del animal: ");
 
             Animal animal = animalService.buscarPorId(id);
 
@@ -353,10 +352,7 @@ public class Main {
 
             mostrarAnimal(animal);
 
-            System.out.print("\n¿Quieres dar de baja este animal? (s/n): ");
-            String confirmacion = sc.nextLine().trim();
-
-            if (confirmacion.equalsIgnoreCase("s")) {
+            if (leerConfirmacion(sc, "\n¿Quieres dar de baja este animal? (s/n): ")) {
 
                 if (animalService.darDeBaja(id)) {
                     System.out.println("\n✅ Animal dado de baja correctamente");
@@ -379,8 +375,7 @@ public class Main {
 
             System.out.println("\n===== BUSCAR ANIMAL =====");
 
-            System.out.print("Introduce el ID del animal: ");
-            ObjectId id = new ObjectId(sc.nextLine().trim());
+            ObjectId id = leerObjectId(sc, "Introduce el ID del animal: ");
 
             Animal animal = animalService.buscarPorId(id);
 
@@ -489,32 +484,16 @@ public class Main {
 
             System.out.println("\n===== REGISTRAR ADOPTANTE =====");
 
-            System.out.print("DNI: ");
-            adoptante.setDni(sc.nextLine().trim());
+            adoptante.setDni(leerTexto(sc, "DNI: "));
+            adoptante.setNombre(leerTexto(sc, "Nombre: "));
+            adoptante.setApellido1(leerTexto(sc, "Primer apellido: "));
+            adoptante.setApellido2(leerTexto(sc, "Segundo apellido: "));
+            adoptante.setTelefono(leerTexto(sc, "Teléfono: "));
+            adoptante.setDireccion(leerTexto(sc, "Dirección: "));
+            adoptante.setEmail(leerTexto(sc, "Correo electrónico: "));
 
-            System.out.print("Nombre: ");
-            adoptante.setNombre(sc.nextLine().trim());
-
-            System.out.print("Primer apellido: ");
-            adoptante.setApellido1(sc.nextLine().trim());
-
-            System.out.print("Segundo apellido: ");
-            adoptante.setApellido2(sc.nextLine().trim());
-
-            System.out.print("Teléfono: ");
-            adoptante.setTelefono(sc.nextLine().trim());
-
-            System.out.print("Dirección: ");
-            adoptante.setDireccion(sc.nextLine().trim());
-
-            System.out.print("Correo electrónico: ");
-            adoptante.setEmail(sc.nextLine().trim());
-
-            System.out.print("Tipo de animal preferido: ");
-            String tipoAnimal = sc.nextLine().trim();
-
-            System.out.print("Tamaño preferido: ");
-            String tamanoPreferido = sc.nextLine().trim();
+            String tipoAnimal = leerTexto(sc, "Tipo de animal preferido: ");
+            String tamanoPreferido = leerTexto(sc, "Tamaño preferido: ");
 
             Document preferencias = new Document()
                     .append("tipoAnimal", tipoAnimal)
@@ -537,8 +516,7 @@ public class Main {
 
             System.out.println("\n===== MODIFICAR ADOPTANTE =====");
 
-            System.out.print("Introduce el DNI del adoptante: ");
-            String dni = sc.nextLine().trim();
+            String dni = leerTexto(sc, "Introduce el DNI del adoptante: ");
 
             Adoptante adoptante = adoptanteService.buscarPorDni(dni);
 
@@ -551,29 +529,15 @@ public class Main {
 
             System.out.println("\nIntroduce los nuevos datos:");
 
-            System.out.print("Nombre: ");
-            adoptante.setNombre(sc.nextLine().trim());
+            adoptante.setNombre(leerTexto(sc, "Nombre: "));
+            adoptante.setApellido1(leerTexto(sc, "Primer apellido: "));
+            adoptante.setApellido2(leerTexto(sc, "Segundo apellido: "));
+            adoptante.setTelefono(leerTexto(sc, "Teléfono: "));
+            adoptante.setDireccion(leerTexto(sc, "Dirección: "));
+            adoptante.setEmail(leerTexto(sc, "Correo electrónico: "));
 
-            System.out.print("Primer apellido: ");
-            adoptante.setApellido1(sc.nextLine().trim());
-
-            System.out.print("Segundo apellido: ");
-            adoptante.setApellido2(sc.nextLine().trim());
-
-            System.out.print("Teléfono: ");
-            adoptante.setTelefono(sc.nextLine().trim());
-
-            System.out.print("Dirección: ");
-            adoptante.setDireccion(sc.nextLine().trim());
-
-            System.out.print("Correo electrónico: ");
-            adoptante.setEmail(sc.nextLine().trim());
-
-            System.out.print("Tipo de animal preferido: ");
-            String tipoAnimal = sc.nextLine().trim();
-
-            System.out.print("Tamaño preferido: ");
-            String tamanoPreferido = sc.nextLine().trim();
+            String tipoAnimal = leerTexto(sc, "Tipo de animal preferido: ");
+            String tamanoPreferido = leerTexto(sc, "Tamaño preferido: ");
 
             Document preferencias = new Document()
                     .append("tipoAnimal", tipoAnimal)
@@ -582,9 +546,9 @@ public class Main {
             adoptante.setPreferenciasAdopcion(preferencias);
 
             if (adoptanteService.actualizar(dni, adoptante)) {
-                System.out.println("\n✅ Adoptante modificado correctamente");
+                System.out.println("\n✅ Adoptante modificado correctamente.");
             } else {
-                System.out.println("\n⚠️ No se ha podido modificar el adoptante");
+                System.out.println("\n⚠️ No se ha podido modificar el adoptante.");
             }
 
         } catch (Exception e) {
@@ -598,8 +562,7 @@ public class Main {
 
             System.out.println("\n===== DAR DE BAJA ADOPTANTE =====");
 
-            System.out.print("Introduce el DNI del adoptante: ");
-            String dni = sc.nextLine().trim();
+            String dni = leerTexto(sc, "Introduce el DNI del adoptante: ");
 
             Adoptante adoptante = adoptanteService.buscarPorDni(dni);
 
@@ -610,15 +573,12 @@ public class Main {
 
             mostrarAdoptante(adoptante);
 
-            System.out.print("\n¿Quieres dar de baja este adoptante? (s/n): ");
-            String confirmacion = sc.nextLine().trim();
-
-            if (confirmacion.equalsIgnoreCase("s")) {
+            if (leerConfirmacion(sc, "\n¿Quieres dar de baja este adoptante? (s/n): ")) {
 
                 if (adoptanteService.darDeBaja(dni)) {
-                    System.out.println("\n✅ Adoptante dado de baja correctamente");
+                    System.out.println("\n✅ Adoptante dado de baja correctamente.");
                 } else {
-                    System.out.println("\n⚠️ No se ha podido dar de baja el adoptante");
+                    System.out.println("\n⚠️ No se ha podido dar de baja el adoptante.");
                 }
 
             } else {
@@ -636,8 +596,7 @@ public class Main {
 
             System.out.println("\n===== BUSCAR ADOPTANTE =====");
 
-            System.out.print("Introduce el DNI: ");
-            String dni = sc.nextLine().trim();
+            String dni = leerTexto(sc, "Introduce el DNI del adoptante: ");
 
             Adoptante adoptante = adoptanteService.buscarPorDni(dni);
 
@@ -764,11 +723,8 @@ public class Main {
 
             System.out.println("\n===== NUEVA SOLICITUD DE ADOPCIÓN =====");
 
-            System.out.print("ID del animal: ");
-            adopcion.setAnimalId(new ObjectId(sc.nextLine().trim()));
-
-            System.out.print("DNI del adoptante: ");
-            adopcion.setDniAdoptante(sc.nextLine().trim());
+            adopcion.setAnimalId(leerObjectId(sc, "ID del animal: "));
+            adopcion.setDniAdoptante(leerTexto(sc, "DNI del adoptante: "));
 
             System.out.print("Observaciones: ");
             adopcion.setObservaciones(sc.nextLine().trim());
@@ -792,6 +748,7 @@ public class Main {
 
             System.out.println("\n===== BUSCAR ADOPCIÓN =====");
 
+            // TODO : Poner "leerObjectId"
             System.out.print("ID de la adopción: ");
             ObjectId id = new ObjectId(sc.nextLine().trim());
 
@@ -816,6 +773,7 @@ public class Main {
 
             System.out.println("\n===== ADOPCIONES DE UN ANIMAL =====");
 
+            // TODO : Poner "leerObjectId"
             System.out.print("ID del animal: ");
             ObjectId id = new ObjectId(sc.nextLine().trim());
 
@@ -843,8 +801,7 @@ public class Main {
 
             System.out.println("\n===== ADOPCIONES DE UN ADOPTANTE =====");
 
-            System.out.print("DNI del adoptante: ");
-            String dni = sc.nextLine().trim();
+            String dni = leerTexto(sc, "DNI del adoptante: ");
 
             List<Adopcion> adopciones = adopcionService.buscarPorAdoptante(dni);
 
@@ -868,6 +825,7 @@ public class Main {
 
             System.out.println("\n===== APROBAR SOLICITUD =====");
 
+            // TODO : Poner "leerObjectId"
             System.out.print("ID de la adopción: ");
             ObjectId id = new ObjectId(sc.nextLine().trim());
 
@@ -880,15 +838,16 @@ public class Main {
 
             mostrarAdopcion(adopcion);
 
+            // TODO : Lo de "leerConfirmacion"
             System.out.print("\n¿Quieres aprobar esta solicitud? (s/n): ");
             String confirmacion = sc.nextLine().trim();
 
             if (confirmacion.equalsIgnoreCase("s")) {
 
                 if (adopcionService.aprobar(id)) {
-                    System.out.println("\n✅ Solicitud aprobada correctamente");
-                    System.out.println("El animal pasa a estar adoptado");
-                    System.out.println("Las demás solicitudes pendientes se rechazan automáticamente");
+                    System.out.println("\n✅ Solicitud aprobada correctamente.");
+                    System.out.println("El animal pasa a estar adoptado.");
+                    System.out.println("Las demás solicitudes pendientes se rechazan automáticamente.");
                 } else {
                     System.out.println("\n⚠️ No se ha podido aprobar la solicitud");
                 }
@@ -908,6 +867,7 @@ public class Main {
 
             System.out.println("\n===== RECHAZAR SOLICITUD =====");
 
+            // TODO : Poner "leerObjectId"
             System.out.print("ID de la adopción: ");
             ObjectId id = new ObjectId(sc.nextLine().trim());
 
@@ -920,16 +880,17 @@ public class Main {
 
             mostrarAdopcion(adopcion);
 
+            // TODO : Lo de "leerConfirmacion"
             System.out.print("\n¿Quieres rechazar esta solicitud? (s/n): ");
             String confirmacion = sc.nextLine().trim();
 
             if (confirmacion.equalsIgnoreCase("s")) {
 
                 if (adopcionService.rechazar(id)) {
-                    System.out.println("\n✅ Solicitud rechazada correctamente");
-                    System.out.println("Si no quedan más solicitudes pendientes, el animal vuelve a estar disponible");
+                    System.out.println("\n✅ Solicitud rechazada correctamente.");
+                    System.out.println("Si no quedan más solicitudes pendientes, el animal vuelve a estar disponible.");
                 } else {
-                    System.out.println("\n⚠️ No se ha podido rechazar la solicitud");
+                    System.out.println("\n⚠️ No se ha podido rechazar la solicitud.");
                 }
 
             } else {
@@ -949,6 +910,7 @@ public class Main {
 
             System.out.println("\n===== MODIFICAR OBSERVACIONES =====");
 
+            // TODO : Poner "leerObjectId"
             System.out.print("ID de la adopción: ");
             ObjectId id = new ObjectId(sc.nextLine().trim());
 
@@ -961,6 +923,7 @@ public class Main {
 
             mostrarAdopcion(adopcion);
 
+            // TODO : Revisar lo de "En modificarObservacionesAdopcion(), puedes mantener la lectura directa si las observaciones pueden quedar vacías."
             System.out.print("\nNuevas observaciones: ");
             adopcion.setObservaciones(sc.nextLine().trim());
 
@@ -983,6 +946,7 @@ public class Main {
 
             System.out.println("\n===== DAR DE BAJA UNA ADOPCIÓN =====");
 
+            // TODO : Poner "leerObjectId"
             System.out.print("ID de la adopción: ");
             ObjectId id = new ObjectId(sc.nextLine().trim());
 
@@ -995,6 +959,7 @@ public class Main {
 
             mostrarAdopcion(adopcion);
 
+            // TODO : Lo de "leerConfirmacion"
             System.out.print("\n¿Quieres dar de baja esta solicitud? (s/n): ");
             String confirmacion = sc.nextLine().trim();
 
@@ -1108,25 +1073,13 @@ public class Main {
 
             System.out.println("\nIntroduce los nuevos datos:");
 
-            System.out.print("Nombre: ");
-            refugio.setNombre(sc.nextLine().trim());
-
-            System.out.print("Razón social: ");
-            refugio.setRazonSocial(sc.nextLine().trim());
-
-            refugio.setFechaApertura(leerFecha(sc));
-
-            System.out.print("Dirección: ");
-            refugio.setDireccion(sc.nextLine().trim());
-
-            System.out.print("CIF: ");
-            refugio.setCif(sc.nextLine().trim());
-
-            System.out.print("Teléfono: ");
-            refugio.setTelefono(sc.nextLine().trim());
-
-            System.out.print("Correo electrónico: ");
-            refugio.setCorreo(sc.nextLine().trim());
+            refugio.setNombre(leerTexto(sc, "Nombre: "));
+            refugio.setRazonSocial(leerTexto(sc, "Razón social: "));
+            refugio.setFechaApertura(leerFecha(sc, "Fecha de apertura (dd/MM/yyyy): "));
+            refugio.setDireccion(leerTexto(sc, "Dirección: "));
+            refugio.setCif(leerTexto(sc, "CIF: "));
+            refugio.setTelefono(leerTexto(sc, "Teléfono: "));
+            refugio.setCorreo(leerTexto(sc, "Correo electrónico: "));
 
             refugioService.guardar(refugio);
 

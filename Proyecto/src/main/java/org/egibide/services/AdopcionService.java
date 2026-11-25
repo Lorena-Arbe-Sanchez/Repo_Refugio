@@ -55,7 +55,7 @@ public class AdopcionService {
                 !estadoAnimal.equals("reservado")) {
 
             throw new IllegalArgumentException(
-                    "El animal no está disponible para recibir solicitudes"
+                    "El animal no está disponible para recibir solicitudes."
             );
         }
 
@@ -69,7 +69,7 @@ public class AdopcionService {
                     "pendiente".equalsIgnoreCase(otra.getEstado())) {
 
                 throw new IllegalArgumentException(
-                        "El adoptante ya tiene una solicitud pendiente para este animal"
+                        "El adoptante ya tiene una solicitud pendiente para este animal."
                 );
             }
 
@@ -183,7 +183,7 @@ public class AdopcionService {
         }
 
         if (!"pendiente".equalsIgnoreCase(adopcion.getEstado())) {
-            throw new IllegalArgumentException("La adopción no está pendiente");
+            throw new IllegalArgumentException("La adopción no está pendiente.");
         }
 
         Animal animal = animalDao.buscarPorId(adopcion.getAnimalId());
@@ -284,7 +284,7 @@ public class AdopcionService {
         }
 
         if (!"pendiente".equalsIgnoreCase(adopcion.getEstado())) {
-            throw new IllegalArgumentException("La adopción no está pendiente");
+            throw new IllegalArgumentException("La adopción no está pendiente.");
         }
 
         Animal animal = animalDao.buscarPorId(adopcion.getAnimalId());
