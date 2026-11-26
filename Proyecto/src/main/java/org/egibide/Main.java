@@ -107,7 +107,7 @@ public class Main {
                         break;
 
                     case 3:
-                        menuAdopciones(sc, adopcionService);
+                        menuAdopciones(sc, adopcionService, animalService);
                         break;
 
                     case 4:
@@ -124,9 +124,7 @@ public class Main {
                         break;
 
                     case 7:
-                        // TODO : Hacer lo que tenga "pendiente"
-                        // TODO : Poner lo de "↩️ " en las opciones de "Volver..."
-                        // TODO : Poner iconos en los "System.out.print" necesarios + En los "throw new" (en los 2 --> Iconos y puntos)
+                        // TODO : Hacer (igual hay que renombrar la opción del menú y organizar las opciones)
                         System.out.println("\nFuncionalidad pendiente de implementar");
                         break;
 
@@ -167,6 +165,7 @@ public class Main {
 
             if (refugio == null) {
                 System.out.println("No hay datos del refugio registrados.");
+                System.out.println("=======================================\n" + RESET_COLOR);
                 return;
             }
 
@@ -186,6 +185,8 @@ public class Main {
         System.out.println("=======================================\n" + RESET_COLOR);
     }
 
+    // TODO : Poner iconos en los "System.out.print" necesarios + En los "throw new" puntos tambn (en los 2 --> Iconos y puntos)
+
     // Menú de animales
     private static void menuAnimales(Scanner sc, AnimalService animalService) {
 
@@ -199,7 +200,7 @@ public class Main {
             System.out.println("3. Modificar un animal");
             System.out.println("4. Dar de baja un animal");
             System.out.println("5. Buscar animales");
-            System.out.println("0. Volver al menú principal");
+            System.out.println("0. ↩️ Volver al menú principal");
 
             opcion = leerEntero(sc, "\nElige una opción: ");
 
@@ -235,7 +236,6 @@ public class Main {
         } while (opcion != 0);
     }
 
-    // TODO : Revisar y probar a partir de aquí
     private static void listarAnimales(AnimalService animalService) {
 
         List<Animal> animales = animalService.listar();
@@ -265,8 +265,7 @@ public class Main {
             animal.setEspecie(leerTexto(sc, "Especie: "));
             animal.setRaza(leerTexto(sc, "Raza: "));
             animal.setEdad(leerEdad(sc));
-            // TODO : En todas las veces q haya q ponerlo, q se guarde en CamelCase
-            animal.setSexo(leerTexto(sc, "Sexo (macho/hembra/desconocido): "));
+            animal.setSexo(leerSexo(sc));
             animal.setDescripcion(leerTexto(sc, "Descripción: "));
             animal.setFechaIngreso(leerFecha(sc, "Fecha de ingreso (dd/MM/yyyy): "));
 
@@ -275,7 +274,7 @@ public class Main {
 
             animalService.crear(animal);
 
-            System.out.println("\n✅ Animal registrado correctamente");
+            System.out.println("\n✅ Animal registrado correctamente.");
             System.out.println("ID asignado: " + animal.getId());
 
         } catch (Exception e) {
@@ -283,14 +282,20 @@ public class Main {
         }
     }
 
-    // TODO : En las funciones de modificar hacer q saque la info actual + Lo de q si se da al Enter q se queden los datos actuales
+    // TODO : En las funciones de modificar hacer q saque la info actual + Lo de q si se da al Enter q se queden los datos actuales (falta en adoptantes y refugio)
     private static void modificarAnimal(Scanner sc, AnimalService animalService) {
+
+        // TODO : En las de modificar, primero habrá q comprobar q exista algún animal (por ejemplo usando la funcion de listar)
 
         try {
 
             System.out.println("\n===== MODIFICAR ANIMAL =====");
 
-            // TODO : Antes de pedir el ID, que saque un listado de los IDs con sus nombres+especies+razas
+            // TODO : Antes de pedir el ID, que saque un listado de los IDs con algunos datos
+            if (!listarAnimalesParaSeleccion(animalService)) {
+                return;
+            }
+
             ObjectId id = leerObjectId(sc, "Introduce el ID del animal: ");
 
             Animal animal = animalService.buscarPorId(id);
@@ -300,32 +305,19 @@ public class Main {
                 return;
             }
 
-            System.out.println("\nDatos actuales:");
-            mostrarAnimal(animal);
-
-            System.out.println("\nIntroduce los nuevos datos:");
-
-            System.out.print("Nombre: ");
-            animal.setNombre(sc.nextLine().trim());
-
-            System.out.print("Especie: ");
-            animal.setEspecie(sc.nextLine().trim());
-
-            System.out.print("Raza: ");
-            animal.setRaza(sc.nextLine().trim());
-
-            animal.setEdad(leerEdad(sc));
-
-            System.out.print("Sexo (macho/hembra/desconocido): ");
-            animal.setSexo(sc.nextLine().trim());
-
-            System.out.print("Descripción: ");
-            animal.setDescripcion(sc.nextLine().trim());
-
-            animal.setFechaIngreso(leerFecha(sc, "Fecha de ingreso (dd/MM/yyyy): "));
+            System.out.println("\nIntroduce los nuevos datos (pulsa Enter para mantener el valor actual):");
+            animal.setNombre(leerTextoActual(sc, "Nombre (" + animal.getNombre() + "): ", animal.getNombre()));
+            animal.setEspecie(leerTextoActual(sc,
+                    "Especie (" + animal.getEspecie() + "): ", animal.getEspecie()));
+            animal.setRaza(leerTextoActual(sc, "Raza (" + animal.getRaza() + "): ", animal.getRaza()));
+            animal.setEdad(leerEdadActual(sc, animal.getEdad()));
+            animal.setSexo(leerSexoActual(sc, animal.getSexo()));
+            animal.setDescripcion(leerTextoActual(sc,
+                    "Descripción (" + animal.getDescripcion() + "): ", animal.getDescripcion()));
+            animal.setFechaIngreso(leerFechaActual(sc, animal.getFechaIngreso()));
 
             if (animalService.actualizar(animal)) {
-                System.out.println("\n✅ Animal modificado correctamente");
+                System.out.println("\n✅ Animal modificado correctamente.");
             } else {
                 System.out.println("\n⚠️ No se ha podido modificar el animal");
             }
@@ -333,6 +325,35 @@ public class Main {
         } catch (Exception e) {
             System.out.println("\n❌ Error. No se ha podido modificar el animal: " + e.getMessage());
         }
+    }
+
+    // Mostrar los animales disponibles para seleccionar
+    private static boolean listarAnimalesParaSeleccion(AnimalService animalService) {
+
+        List<Animal> animales = animalService.listar();
+
+        if (animales.isEmpty()) {
+            System.out.println("\nNo hay animales registrados.");
+            return false;
+        }
+
+        System.out.println("\n===== ANIMALES REGISTRADOS =====");
+
+        // TODO : Hacer esto de mostrar los datos así tambn en "mostrarAdopcion"
+        System.out.println("ID ~ Nombre ~ Especie ~ Raza");
+        System.out.println("------------------------------------------------------------");
+
+        for (Animal animal : animales) {
+            System.out.println(
+                    animal.getId() + " ~ " +
+                            animal.getNombre() + " ~ " +
+                            animal.getEspecie() + " ~ " +
+                            animal.getRaza()
+            );
+        }
+
+        System.out.println("------------------------------------------------------------");
+        return true;
     }
 
     private static void darDeBajaAnimal(Scanner sc, AnimalService animalService) {
@@ -355,7 +376,7 @@ public class Main {
             if (leerConfirmacion(sc, "\n¿Quieres dar de baja este animal? (s/n): ")) {
 
                 if (animalService.darDeBaja(id)) {
-                    System.out.println("\n✅ Animal dado de baja correctamente");
+                    System.out.println("\n✅ Animal dado de baja correctamente.");
                 } else {
                     System.out.println("\n⚠️ No se ha podido dar de baja el animal");
                 }
@@ -424,7 +445,7 @@ public class Main {
             System.out.println("3. Modificar un adoptante");
             System.out.println("4. Dar de baja un adoptante");
             System.out.println("5. Buscar adoptantes");
-            System.out.println("0. Volver al menú principal");
+            System.out.println("0. ↩️ Volver al menú principal");
 
             opcion = leerEntero(sc, "\nElige una opción: ");
 
@@ -503,8 +524,8 @@ public class Main {
 
             adoptanteService.crear(adoptante);
 
-            System.out.println("\n✅ Adoptante registrado correctamente");
-
+            System.out.println("\n✅ Adoptante registrado correctamente.");
+            System.out.println("DNI registrado: " + adoptante.getDni());
         } catch (Exception e) {
             System.out.println("\n❌ No se ha podido registrar el adoptante: " + e.getMessage());
         }
@@ -631,7 +652,7 @@ public class Main {
     }
 
     // Menú de adopciones
-    private static void menuAdopciones(Scanner sc, AdopcionService adopcionService) {
+    private static void menuAdopciones(Scanner sc, AdopcionService adopcionService, AnimalService animalService) {
 
         int opcion;
 
@@ -647,14 +668,14 @@ public class Main {
             System.out.println("7. Rechazar solicitud");
             System.out.println("8. Modificar observaciones");
             System.out.println("9. Dar de baja una solicitud rechazada");
-            System.out.println("0. Volver al menú principal");
+            System.out.println("0. ↩️ Volver al menú principal");
 
             opcion = leerEntero(sc, "\nElige una opción: ");
 
             switch (opcion) {
 
                 case 1:
-                    listarAdopciones(adopcionService);
+                    listarAdopciones(adopcionService, animalService);
                     break;
 
                 case 2:
@@ -662,31 +683,31 @@ public class Main {
                     break;
 
                 case 3:
-                    buscarAdopcion(sc, adopcionService);
+                    buscarAdopcion(sc, adopcionService, animalService);
                     break;
 
                 case 4:
-                    buscarAdopcionesPorAnimal(sc, adopcionService);
+                    buscarAdopcionesPorAnimal(sc, adopcionService, animalService);
                     break;
 
                 case 5:
-                    buscarAdopcionesPorAdoptante(sc, adopcionService);
+                    buscarAdopcionesPorAdoptante(sc, adopcionService, animalService);
                     break;
 
                 case 6:
-                    aprobarAdopcion(sc, adopcionService);
+                    aprobarAdopcion(sc, adopcionService, animalService);
                     break;
 
                 case 7:
-                    rechazarAdopcion(sc, adopcionService);
+                    rechazarAdopcion(sc, adopcionService, animalService);
                     break;
 
                 case 8:
-                    modificarObservacionesAdopcion(sc, adopcionService);
+                    modificarObservacionesAdopcion(sc, adopcionService, animalService);
                     break;
 
                 case 9:
-                    darDeBajaAdopcion(sc, adopcionService);
+                    darDeBajaAdopcion(sc, adopcionService, animalService);
                     break;
 
                 case 0:
@@ -699,7 +720,7 @@ public class Main {
         } while (opcion != 0);
     }
 
-    private static void listarAdopciones(AdopcionService adopcionService) {
+    private static void listarAdopciones(AdopcionService adopcionService, AnimalService animalService) {
 
         List<Adopcion> adopciones = adopcionService.listar();
 
@@ -711,7 +732,7 @@ public class Main {
         System.out.println("\n===== LISTADO DE ADOPCIONES =====");
 
         for (Adopcion adopcion : adopciones) {
-            mostrarAdopcion(adopcion);
+            mostrarAdopcion(adopcion, animalService);
         }
     }
 
@@ -733,7 +754,7 @@ public class Main {
 
             adopcionService.crear(adopcion);
 
-            System.out.println("\n✅ Solicitud registrada correctamente");
+            System.out.println("\n✅ Solicitud registrada correctamente.");
             System.out.println("ID de la solicitud: " + adopcion.getId());
             System.out.println("Estado: pendiente");
 
@@ -742,22 +763,20 @@ public class Main {
         }
     }
 
-    private static void buscarAdopcion(Scanner sc, AdopcionService adopcionService) {
+    private static void buscarAdopcion(Scanner sc, AdopcionService adopcionService, AnimalService animalService) {
 
         try {
 
             System.out.println("\n===== BUSCAR ADOPCIÓN =====");
 
-            // TODO : Poner "leerObjectId"
-            System.out.print("ID de la adopción: ");
-            ObjectId id = new ObjectId(sc.nextLine().trim());
+            ObjectId id = leerObjectId(sc, "ID de la adopción: ");
 
             Adopcion adopcion = adopcionService.buscarPorId(id);
 
             if (adopcion == null) {
                 System.out.println("\nNo existe ninguna adopción con ese ID.");
             } else {
-                mostrarAdopcion(adopcion);
+                mostrarAdopcion(adopcion, animalService);
             }
 
         } catch (Exception e) {
@@ -765,17 +784,14 @@ public class Main {
         }
     }
 
-    private static void buscarAdopcionesPorAnimal(
-            Scanner sc,
-            AdopcionService adopcionService) {
+    private static void buscarAdopcionesPorAnimal(Scanner sc, AdopcionService adopcionService,
+                                                  AnimalService animalService) {
 
         try {
 
             System.out.println("\n===== ADOPCIONES DE UN ANIMAL =====");
 
-            // TODO : Poner "leerObjectId"
-            System.out.print("ID del animal: ");
-            ObjectId id = new ObjectId(sc.nextLine().trim());
+            ObjectId id = leerObjectId(sc, "ID del animal: ");
 
             List<Adopcion> adopciones = adopcionService.buscarPorAnimal(id);
 
@@ -785,7 +801,7 @@ public class Main {
             }
 
             for (Adopcion adopcion : adopciones) {
-                mostrarAdopcion(adopcion);
+                mostrarAdopcion(adopcion, animalService);
             }
 
         } catch (Exception e) {
@@ -793,9 +809,8 @@ public class Main {
         }
     }
 
-    private static void buscarAdopcionesPorAdoptante(
-            Scanner sc,
-            AdopcionService adopcionService) {
+    private static void buscarAdopcionesPorAdoptante(Scanner sc, AdopcionService adopcionService,
+                                                     AnimalService animalService) {
 
         try {
 
@@ -811,7 +826,7 @@ public class Main {
             }
 
             for (Adopcion adopcion : adopciones) {
-                mostrarAdopcion(adopcion);
+                mostrarAdopcion(adopcion, animalService);
             }
 
         } catch (Exception e) {
@@ -819,15 +834,13 @@ public class Main {
         }
     }
 
-    private static void aprobarAdopcion(Scanner sc, AdopcionService adopcionService) {
+    private static void aprobarAdopcion(Scanner sc, AdopcionService adopcionService, AnimalService animalService) {
 
         try {
 
             System.out.println("\n===== APROBAR SOLICITUD =====");
 
-            // TODO : Poner "leerObjectId"
-            System.out.print("ID de la adopción: ");
-            ObjectId id = new ObjectId(sc.nextLine().trim());
+            ObjectId id = leerObjectId(sc, "ID de la adopción: ");
 
             Adopcion adopcion = adopcionService.buscarPorId(id);
 
@@ -836,13 +849,9 @@ public class Main {
                 return;
             }
 
-            mostrarAdopcion(adopcion);
+            mostrarAdopcion(adopcion, animalService);
 
-            // TODO : Lo de "leerConfirmacion"
-            System.out.print("\n¿Quieres aprobar esta solicitud? (s/n): ");
-            String confirmacion = sc.nextLine().trim();
-
-            if (confirmacion.equalsIgnoreCase("s")) {
+            if (leerConfirmacion(sc, "\n¿Quieres aprobar esta solicitud? (s/n): ")) {
 
                 if (adopcionService.aprobar(id)) {
                     System.out.println("\n✅ Solicitud aprobada correctamente.");
@@ -861,15 +870,13 @@ public class Main {
         }
     }
 
-    private static void rechazarAdopcion(Scanner sc, AdopcionService adopcionService) {
+    private static void rechazarAdopcion(Scanner sc, AdopcionService adopcionService, AnimalService animalService) {
 
         try {
 
             System.out.println("\n===== RECHAZAR SOLICITUD =====");
 
-            // TODO : Poner "leerObjectId"
-            System.out.print("ID de la adopción: ");
-            ObjectId id = new ObjectId(sc.nextLine().trim());
+            ObjectId id = leerObjectId(sc, "ID de la adopción: ");
 
             Adopcion adopcion = adopcionService.buscarPorId(id);
 
@@ -878,13 +885,9 @@ public class Main {
                 return;
             }
 
-            mostrarAdopcion(adopcion);
+            mostrarAdopcion(adopcion, animalService);
 
-            // TODO : Lo de "leerConfirmacion"
-            System.out.print("\n¿Quieres rechazar esta solicitud? (s/n): ");
-            String confirmacion = sc.nextLine().trim();
-
-            if (confirmacion.equalsIgnoreCase("s")) {
+            if (leerConfirmacion(sc, "\n¿Quieres rechazar esta solicitud? (s/n): ")) {
 
                 if (adopcionService.rechazar(id)) {
                     System.out.println("\n✅ Solicitud rechazada correctamente.");
@@ -902,17 +905,14 @@ public class Main {
         }
     }
 
-    private static void modificarObservacionesAdopcion(
-            Scanner sc,
-            AdopcionService adopcionService) {
+    private static void modificarObservacionesAdopcion(Scanner sc, AdopcionService adopcionService,
+                                                       AnimalService animalService) {
 
         try {
 
             System.out.println("\n===== MODIFICAR OBSERVACIONES =====");
 
-            // TODO : Poner "leerObjectId"
-            System.out.print("ID de la adopción: ");
-            ObjectId id = new ObjectId(sc.nextLine().trim());
+            ObjectId id = leerObjectId(sc, "ID de la adopción: ");
 
             Adopcion adopcion = adopcionService.buscarPorId(id);
 
@@ -921,14 +921,13 @@ public class Main {
                 return;
             }
 
-            mostrarAdopcion(adopcion);
+            mostrarAdopcion(adopcion, animalService);
 
-            // TODO : Revisar lo de "En modificarObservacionesAdopcion(), puedes mantener la lectura directa si las observaciones pueden quedar vacías."
             System.out.print("\nNuevas observaciones: ");
             adopcion.setObservaciones(sc.nextLine().trim());
 
             if (adopcionService.actualizar(adopcion)) {
-                System.out.println("\n✅ Observaciones modificadas correctamente");
+                System.out.println("\n✅ Observaciones modificadas correctamente.");
             } else {
                 System.out.println("\n⚠️ No se han podido modificar las observaciones");
             }
@@ -938,17 +937,14 @@ public class Main {
         }
     }
 
-    private static void darDeBajaAdopcion(
-            Scanner sc,
-            AdopcionService adopcionService) {
+    private static void darDeBajaAdopcion(Scanner sc, AdopcionService adopcionService,
+                                          AnimalService animalService) {
 
         try {
 
             System.out.println("\n===== DAR DE BAJA UNA ADOPCIÓN =====");
 
-            // TODO : Poner "leerObjectId"
-            System.out.print("ID de la adopción: ");
-            ObjectId id = new ObjectId(sc.nextLine().trim());
+            ObjectId id = leerObjectId(sc, "ID de la adopción: ");
 
             Adopcion adopcion = adopcionService.buscarPorId(id);
 
@@ -957,16 +953,12 @@ public class Main {
                 return;
             }
 
-            mostrarAdopcion(adopcion);
+            mostrarAdopcion(adopcion, animalService);
 
-            // TODO : Lo de "leerConfirmacion"
-            System.out.print("\n¿Quieres dar de baja esta solicitud? (s/n): ");
-            String confirmacion = sc.nextLine().trim();
-
-            if (confirmacion.equalsIgnoreCase("s")) {
+            if (leerConfirmacion(sc, "\n¿Quieres dar de baja esta solicitud? (s/n): ")) {
 
                 if (adopcionService.darDeBaja(id)) {
-                    System.out.println("\n✅ Solicitud dada de baja correctamente");
+                    System.out.println("\n✅ Solicitud dada de baja correctamente.");
                 } else {
                     System.out.println("\n⚠️ No se ha podido dar de baja la solicitud");
                 }
@@ -980,13 +972,22 @@ public class Main {
         }
     }
 
-    private static void mostrarAdopcion(Adopcion adopcion) {
+    private static void mostrarAdopcion(Adopcion adopcion, AnimalService animalService) {
 
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
         System.out.println("ID de adopción: " + adopcion.getId());
-        // TODO : A parte de sacar el ID del animal, sería mejor sacra tambn el nombre, especie y raza
-        System.out.println("ID del animal: " + adopcion.getAnimalId());
+
+        Animal animal = animalService.buscarPorId(adopcion.getAnimalId());
+
+        if (animal != null) {
+            System.out.println("Animal: " + animal.getNombre());
+            System.out.println("Especie: " + animal.getEspecie());
+            System.out.println("Raza: " + animal.getRaza());
+        } else {
+            System.out.println("ID del animal: " + adopcion.getAnimalId());
+        }
+
         System.out.println("DNI del adoptante: " + adopcion.getDniAdoptante());
 
         if (adopcion.getFechaSolicitud() != null) {
@@ -1014,7 +1015,7 @@ public class Main {
             System.out.println("\n===== GESTIÓN DEL REFUGIO =====");
             System.out.println("1. Consultar datos del refugio");
             System.out.println("2. Modificar datos del refugio");
-            System.out.println("0. Volver al menú principal");
+            System.out.println("0. ↩️ Volver al menú principal");
 
             opcion = leerEntero(sc, "\nElige una opción: ");
 
@@ -1083,7 +1084,7 @@ public class Main {
 
             refugioService.guardar(refugio);
 
-            System.out.println("\n✅ Datos del refugio modificados correctamente");
+            System.out.println("\n✅ Datos del refugio modificados correctamente.");
 
         } catch (Exception e) {
             System.out.println("\n❌ No se han podido modificar los datos: " + e.getMessage());
@@ -1204,7 +1205,6 @@ public class Main {
         System.out.println("0. Salir de la aplicación");
     }
 
-    // TODO : Poner más, y las q hay ponerles bucle y de todo bien (buscar por "sc.next")
     /*
     FUNCIONES AUXILIARES
      */
@@ -1219,7 +1219,7 @@ public class Main {
             try {
                 return Integer.parseInt(sc.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("❌ Error: debes introducir un número entero válido");
+                System.out.println("❌ Error: debes introducir un número entero válido.");
             }
         }
     }
@@ -1286,9 +1286,14 @@ public class Main {
             String texto = sc.nextLine().trim();
 
             try {
+                if (!texto.matches("\\d{2}/\\d{2}/\\d{4}")) {
+                    System.out.println("❌ Error: introduce una fecha válida con formato 'dd/MM/yyyy'.");
+                    continue;
+                }
+
                 return formato.parse(texto);
             } catch (ParseException e) {
-                System.out.println("❌ Error: introduce una fecha válida con formato dd/MM/yyyy");
+                System.out.println("❌ Error: introduce una fecha válida con formato 'dd/MM/yyyy'.");
             }
         }
     }
@@ -1311,6 +1316,132 @@ public class Main {
             }
 
             System.out.println("❌ Error: responde 's' o 'n'.");
+        }
+    }
+
+    // Leer y normalizar el sexo del animal
+    private static String leerSexo(Scanner sc) {
+
+        while (true) {
+
+            System.out.print("Sexo (macho/hembra/desconocido): ");
+
+            String sexo = sc.nextLine().trim();
+
+            if (sexo.equalsIgnoreCase("macho")) {
+                return "Macho";
+            }
+
+            if (sexo.equalsIgnoreCase("hembra")) {
+                return "Hembra";
+            }
+
+            if (sexo.equalsIgnoreCase("desconocido")) {
+                return "Desconocido";
+            }
+
+            System.out.println("❌ Error: introduce 'macho', 'hembra' o 'desconocido'.");
+        }
+    }
+
+    // Leer un texto y mantener el valor actual si se pulsa Enter
+    private static String leerTextoActual(Scanner sc, String mensaje, String valorActual) {
+
+        System.out.print(mensaje);
+
+        String texto = sc.nextLine().trim();
+
+        if (texto.isEmpty()) {
+            return valorActual;
+        }
+
+        return texto;
+    }
+
+    // Leer una edad y mantener la actual si se pulsa Enter
+    private static Integer leerEdadActual(Scanner sc, Integer edadActual) {
+
+        while (true) {
+
+            System.out.print("Edad (" + edadActual + "): ");
+
+            String texto = sc.nextLine().trim();
+
+            if (texto.isEmpty()) {
+                return edadActual;
+            }
+
+            try {
+
+                int edad = Integer.parseInt(texto);
+
+                if (edad >= 0) {
+                    return edad;
+                }
+
+                System.out.println("❌ Error: la edad no puede ser negativa.");
+
+            } catch (NumberFormatException e) {
+                System.out.println("❌ Error: debes introducir un número entero válido.");
+            }
+        }
+    }
+
+    // Leer el sexo y mantener el actual si se pulsa Enter
+    private static String leerSexoActual(Scanner sc, String sexoActual) {
+
+        while (true) {
+
+            System.out.print("Sexo (" + sexoActual + ") (macho/hembra/desconocido): ");
+
+            String sexo = sc.nextLine().trim();
+
+            if (sexo.isEmpty()) {
+                return sexoActual;
+            }
+
+            if (sexo.equalsIgnoreCase("macho")) {
+                return "Macho";
+            }
+
+            if (sexo.equalsIgnoreCase("hembra")) {
+                return "Hembra";
+            }
+
+            if (sexo.equalsIgnoreCase("desconocido")) {
+                return "Desconocido";
+            }
+
+            System.out.println("❌ Error: introduce 'macho', 'hembra' o 'desconocido'.");
+        }
+    }
+
+    // Leer una fecha y mantener la actual si se pulsa Enter
+    private static Date leerFechaActual(Scanner sc, Date fechaActual) {
+
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        formato.setLenient(false);
+
+        while (true) {
+
+            System.out.print("Fecha de ingreso (" + formato.format(fechaActual) + "): ");
+
+            String texto = sc.nextLine().trim();
+
+            if (texto.isEmpty()) {
+                return fechaActual;
+            }
+
+            try {
+                if (!texto.matches("\\d{2}/\\d{2}/\\d{4}")) {
+                    System.out.println("❌ Error: introduce una fecha válida con formato 'dd/MM/yyyy'.");
+                    continue;
+                }
+
+                return formato.parse(texto);
+            } catch (ParseException e) {
+                System.out.println("❌ Error: introduce una fecha válida con formato 'dd/MM/yyyy'.");
+            }
         }
     }
 }
