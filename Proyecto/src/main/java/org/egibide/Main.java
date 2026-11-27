@@ -13,6 +13,7 @@ import org.egibide.services.RefugioService;
 import org.egibide.utils.DatabaseConnection;
 import org.egibide.utils.Exportaciones;
 import org.egibide.utils.Metadatos;
+import org.egibide.utils.Validaciones;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -258,7 +259,7 @@ public class Main {
         }
     }
 
-    // TODO : En las funciones de modificar hacer q saque la info actual + Lo de q si se da al Enter q se queden los datos actuales (falta en adoptantes y refugio)
+    // TODO : En las funciones de modificar hacer q saque la info actual + Lo de q si se da al Enter q se queden los datos actuales (falta en modificarAdoptante y modificarRefugio)
     private static void modificarAnimal(Scanner sc, AnimalService animalService) {
 
         // TODO : En las de modificar, primero habrá q comprobar q exista algún animal (por ejemplo usando la funcion de listar)
@@ -481,13 +482,13 @@ public class Main {
 
             System.out.println("\n===== REGISTRAR ADOPTANTE =====");
 
-            adoptante.setDni(leerTexto(sc, "DNI: "));
+            adoptante.setDni(leerDni(sc, "DNI: "));
             adoptante.setNombre(leerTexto(sc, "Nombre: "));
             adoptante.setApellido1(leerTexto(sc, "Primer apellido: "));
             adoptante.setApellido2(leerTexto(sc, "Segundo apellido: "));
-            adoptante.setTelefono(leerTexto(sc, "Teléfono: "));
+            adoptante.setTelefono(leerTelefono(sc));
             adoptante.setDireccion(leerTexto(sc, "Dirección: "));
-            adoptante.setEmail(leerTexto(sc, "Correo electrónico: "));
+            adoptante.setEmail(leerEmail(sc));
 
             String tipoAnimal = leerTexto(sc, "Tipo de animal preferido: ");
             String tamanoPreferido = leerTexto(sc, "Tamaño preferido: ");
@@ -513,7 +514,7 @@ public class Main {
 
             System.out.println("\n===== MODIFICAR ADOPTANTE =====");
 
-            String dni = leerTexto(sc, "Introduce el DNI del adoptante: ");
+            String dni = leerDni(sc, "Introduce el DNI del adoptante: ");
 
             Adoptante adoptante = adoptanteService.buscarPorDni(dni);
 
@@ -529,9 +530,9 @@ public class Main {
             adoptante.setNombre(leerTexto(sc, "Nombre: "));
             adoptante.setApellido1(leerTexto(sc, "Primer apellido: "));
             adoptante.setApellido2(leerTexto(sc, "Segundo apellido: "));
-            adoptante.setTelefono(leerTexto(sc, "Teléfono: "));
+            adoptante.setTelefono(leerTelefono(sc));
             adoptante.setDireccion(leerTexto(sc, "Dirección: "));
-            adoptante.setEmail(leerTexto(sc, "Correo electrónico: "));
+            adoptante.setEmail(leerEmail(sc));
 
             String tipoAnimal = leerTexto(sc, "Tipo de animal preferido: ");
             String tamanoPreferido = leerTexto(sc, "Tamaño preferido: ");
@@ -559,7 +560,7 @@ public class Main {
 
             System.out.println("\n===== DAR DE BAJA ADOPTANTE =====");
 
-            String dni = leerTexto(sc, "Introduce el DNI del adoptante: ");
+            String dni = leerDni(sc, "Introduce el DNI del adoptante: ");
 
             Adoptante adoptante = adoptanteService.buscarPorDni(dni);
 
@@ -593,7 +594,7 @@ public class Main {
 
             System.out.println("\n===== BUSCAR ADOPTANTE =====");
 
-            String dni = leerTexto(sc, "Introduce el DNI del adoptante: ");
+            String dni = leerDni(sc, "Introduce el DNI del adoptante: ");
 
             Adoptante adoptante = adoptanteService.buscarPorDni(dni);
 
@@ -721,7 +722,7 @@ public class Main {
             System.out.println("\n===== NUEVA SOLICITUD DE ADOPCIÓN =====");
 
             adopcion.setAnimalId(leerObjectId(sc, "ID del animal: "));
-            adopcion.setDniAdoptante(leerTexto(sc, "DNI del adoptante: "));
+            adopcion.setDniAdoptante(leerDni(sc, "DNI del adoptante: "));
 
             System.out.print("Observaciones: ");
             adopcion.setObservaciones(sc.nextLine().trim());
@@ -792,7 +793,7 @@ public class Main {
 
             System.out.println("\n===== ADOPCIONES DE UN ADOPTANTE =====");
 
-            String dni = leerTexto(sc, "DNI del adoptante: ");
+            String dni = leerDni(sc, "DNI del adoptante: ");
 
             List<Adopcion> adopciones = adopcionService.buscarPorAdoptante(dni);
 
@@ -1054,9 +1055,9 @@ public class Main {
             refugio.setRazonSocial(leerTexto(sc, "Razón social: "));
             refugio.setFechaApertura(leerFecha(sc, "Fecha de apertura (dd/MM/yyyy): "));
             refugio.setDireccion(leerTexto(sc, "Dirección: "));
-            refugio.setCif(leerTexto(sc, "CIF: "));
-            refugio.setTelefono(leerTexto(sc, "Teléfono: "));
-            refugio.setCorreo(leerTexto(sc, "Correo electrónico: "));
+            refugio.setCif(leerCif(sc));
+            refugio.setTelefono(leerTelefono(sc));
+            refugio.setCorreo(leerEmail(sc));
 
             refugioService.guardar(refugio);
 
@@ -1232,6 +1233,70 @@ public class Main {
         }
     }
 
+    // Leer y validar un DNI
+    private static String leerDni(Scanner sc, String mensaje) {
+
+        while (true) {
+
+            System.out.print(mensaje);
+            String dni = sc.nextLine();
+
+            try {
+                return Validaciones.validarDni(dni);
+            } catch (IllegalArgumentException e) {
+                System.out.println("❌ " + e.getMessage());
+            }
+        }
+    }
+
+    // Leer y validar un teléfono
+    private static String leerTelefono(Scanner sc) {
+
+        while (true) {
+
+            System.out.print("Teléfono: ");
+            String telefono = sc.nextLine();
+
+            try {
+                return Validaciones.validarTelefono(telefono);
+            } catch (IllegalArgumentException e) {
+                System.out.println("❌ " + e.getMessage());
+            }
+        }
+    }
+
+    // Leer y validar un correo electrónico
+    private static String leerEmail(Scanner sc) {
+
+        while (true) {
+
+            System.out.print("Correo electrónico: ");
+            String email = sc.nextLine();
+
+            try {
+                return Validaciones.validarEmail(email);
+            } catch (IllegalArgumentException e) {
+                System.out.println("❌ " + e.getMessage());
+            }
+        }
+    }
+
+    // Leer y validar un CIF
+    private static String leerCif(Scanner sc) {
+
+        while (true) {
+
+            System.out.print("CIF: ");
+            String cif = sc.nextLine();
+
+            try {
+                return Validaciones.validarCif(cif);
+            } catch (IllegalArgumentException e) {
+                System.out.println("❌ " + e.getMessage());
+            }
+        }
+    }
+
     // Leer un ObjectId válido de MongoDB
     private static ObjectId leerObjectId(Scanner sc, String mensaje) {
 
@@ -1267,9 +1332,11 @@ public class Main {
                     continue;
                 }
 
-                return formato.parse(texto);
-            } catch (ParseException e) {
-                System.out.println("❌ Error: introduce una fecha válida con formato 'dd/MM/yyyy'.");
+                Date fecha = formato.parse(texto);
+                Validaciones.validarFecha(fecha, "La fecha");
+                return fecha;
+            } catch (ParseException | IllegalArgumentException e) {
+                System.out.println("❌ " + e.getMessage());
             }
         }
     }
@@ -1414,9 +1481,11 @@ public class Main {
                     continue;
                 }
 
-                return formato.parse(texto);
-            } catch (ParseException e) {
-                System.out.println("❌ Error: introduce una fecha válida con formato 'dd/MM/yyyy'.");
+                Date fecha = formato.parse(texto);
+                Validaciones.validarFecha(fecha, "La fecha");
+                return fecha;
+            } catch (ParseException | IllegalArgumentException e) {
+                System.out.println("❌ " + e.getMessage());
             }
         }
     }
