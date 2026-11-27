@@ -49,28 +49,6 @@ public class Main {
 
             System.out.println("\n✅ Aplicación inicializada correctamente." + RESET_COLOR);
 
-            /* todo : poner colores y quitar esto
-            // Colores ANSI básicos
-            System.out.println("\u001B[30mNegro\u001B[0m");
-            System.out.println("\u001B[31mRojo\u001B[0m");
-            System.out.println("\u001B[32mVerde\u001B[0m");
-            System.out.println("\u001B[33mAmarillo\u001B[0m");
-            System.out.println("\u001B[34mAzul\u001B[0m");
-            System.out.println("\u001B[35mMorado\u001B[0m");
-            System.out.println("\u001B[36mCian\u001B[0m");
-            System.out.println("\u001B[37mBlanco\u001B[0m");
-
-            // Tonalidades claras e intensas
-            System.out.println("\u001B[90mGris\u001B[0m");
-            System.out.println("\u001B[91mRojo brillante\u001B[0m");
-            System.out.println("\u001B[92mVerde brillante\u001B[0m");
-            System.out.println("\u001B[93mAmarillo brillante\u001B[0m");
-            System.out.println("\u001B[94mAzul brillante\u001B[0m");
-            System.out.println("\u001B[95mMorado brillante\u001B[0m");
-            System.out.println("\u001B[96mCian brillante\u001B[0m");
-            System.out.println("\u001B[97mBlanco brillante\u001B[0m");
-            */
-
             AnimalService animalService = new AnimalService();
             AdoptanteService adoptanteService = new AdoptanteService();
             AdopcionService adopcionService = new AdopcionService();
@@ -125,7 +103,7 @@ public class Main {
 
                     case 7:
                         // TODO : Hacer (igual hay que renombrar la opción del menú y organizar las opciones)
-                        System.out.println("\nFuncionalidad pendiente de implementar");
+                        System.out.println("\nFuncionalidad pendiente de implementar.");
                         break;
 
                     case 8:
@@ -137,7 +115,7 @@ public class Main {
                         break;
 
                     default:
-                        System.out.println("⚠️ Opción no válida");
+                        System.out.println("⚠️ Opción no válida.");
                 }
 
             } while (opcion != 0);
@@ -164,7 +142,7 @@ public class Main {
             Refugio refugio = refugioService.buscar();
 
             if (refugio == null) {
-                System.out.println("No hay datos del refugio registrados.");
+                System.out.println("⚠️ No hay datos del refugio registrados.");
                 System.out.println("=======================================\n" + RESET_COLOR);
                 return;
             }
@@ -179,13 +157,11 @@ public class Main {
             System.out.println("Correo electrónico: " + refugio.getCorreo());
 
         } catch (Exception e) {
-            System.out.println("Error al consultar los datos del refugio: " + e.getMessage());
+            System.out.println("❌ Error al consultar los datos del refugio: " + e.getMessage());
         }
 
         System.out.println("=======================================\n" + RESET_COLOR);
     }
-
-    // TODO : Poner iconos en los "System.out.print" necesarios + En los "throw new" puntos tambn (en los 2 --> Iconos y puntos)
 
     // Menú de animales
     private static void menuAnimales(Scanner sc, AnimalService animalService) {
@@ -230,7 +206,7 @@ public class Main {
                     break;
 
                 default:
-                    System.out.println("⚠️ Opción no válida");
+                    System.out.println("⚠️ Opción no válida.");
             }
 
         } while (opcion != 0);
@@ -241,7 +217,7 @@ public class Main {
         List<Animal> animales = animalService.listar();
 
         if (animales.isEmpty()) {
-            System.out.println("\nNo hay animales registrados.");
+            System.out.println("\n⚠️ No hay animales registrados.");
             return;
         }
 
@@ -301,7 +277,7 @@ public class Main {
             Animal animal = animalService.buscarPorId(id);
 
             if (animal == null) {
-                System.out.println("\nNo existe ningún animal con ese ID.");
+                System.out.println("\n⚠️ No existe ningún animal con ese ID.");
                 return;
             }
 
@@ -319,7 +295,7 @@ public class Main {
             if (animalService.actualizar(animal)) {
                 System.out.println("\n✅ Animal modificado correctamente.");
             } else {
-                System.out.println("\n⚠️ No se ha podido modificar el animal");
+                System.out.println("\n⚠️ No se ha podido modificar el animal.");
             }
 
         } catch (Exception e) {
@@ -333,7 +309,7 @@ public class Main {
         List<Animal> animales = animalService.listar();
 
         if (animales.isEmpty()) {
-            System.out.println("\nNo hay animales registrados.");
+            System.out.println("\n⚠️ No hay animales registrados.");
             return false;
         }
 
@@ -367,7 +343,7 @@ public class Main {
             Animal animal = animalService.buscarPorId(id);
 
             if (animal == null) {
-                System.out.println("\nNo existe ningún animal con ese ID.");
+                System.out.println("\n⚠️ No existe ningún animal con ese ID.");
                 return;
             }
 
@@ -378,7 +354,7 @@ public class Main {
                 if (animalService.darDeBaja(id)) {
                     System.out.println("\n✅ Animal dado de baja correctamente.");
                 } else {
-                    System.out.println("\n⚠️ No se ha podido dar de baja el animal");
+                    System.out.println("\n⚠️ No se ha podido dar de baja el animal.");
                 }
 
             } else {
@@ -401,7 +377,7 @@ public class Main {
             Animal animal = animalService.buscarPorId(id);
 
             if (animal == null) {
-                System.out.println("\nNo existe ningún animal con ese ID.");
+                System.out.println("\n⚠️ No existe ningún animal con ese ID.");
             } else {
                 mostrarAnimal(animal);
             }
@@ -475,7 +451,7 @@ public class Main {
                     break;
 
                 default:
-                    System.out.println("⚠️ Opción no válida");
+                    System.out.println("⚠️ Opción no válida.");
             }
 
         } while (opcion != 0);
@@ -486,7 +462,7 @@ public class Main {
         List<Adoptante> adoptantes = adoptanteService.listar();
 
         if (adoptantes.isEmpty()) {
-            System.out.println("\nNo hay adoptantes registrados.");
+            System.out.println("\n⚠️ No hay adoptantes registrados.");
             return;
         }
 
@@ -542,7 +518,7 @@ public class Main {
             Adoptante adoptante = adoptanteService.buscarPorDni(dni);
 
             if (adoptante == null) {
-                System.out.println("\nNo existe ningún adoptante con ese DNI.");
+                System.out.println("\n⚠️ No existe ningún adoptante con ese DNI.");
                 return;
             }
 
@@ -588,7 +564,7 @@ public class Main {
             Adoptante adoptante = adoptanteService.buscarPorDni(dni);
 
             if (adoptante == null) {
-                System.out.println("\nNo existe ningún adoptante con ese DNI.");
+                System.out.println("\n⚠️ No existe ningún adoptante con ese DNI.");
                 return;
             }
 
@@ -622,7 +598,7 @@ public class Main {
             Adoptante adoptante = adoptanteService.buscarPorDni(dni);
 
             if (adoptante == null) {
-                System.out.println("\nNo existe ningún adoptante con ese DNI.");
+                System.out.println("\n⚠️ No existe ningún adoptante con ese DNI.");
             } else {
                 mostrarAdoptante(adoptante);
             }
@@ -714,7 +690,7 @@ public class Main {
                     break;
 
                 default:
-                    System.out.println("⚠️ Opción no válida");
+                    System.out.println("⚠️ Opción no válida.");
             }
 
         } while (opcion != 0);
@@ -725,7 +701,7 @@ public class Main {
         List<Adopcion> adopciones = adopcionService.listar();
 
         if (adopciones.isEmpty()) {
-            System.out.println("\nNo hay adopciones registradas.");
+            System.out.println("\n⚠️ No hay adopciones registradas.");
             return;
         }
 
@@ -756,7 +732,7 @@ public class Main {
 
             System.out.println("\n✅ Solicitud registrada correctamente.");
             System.out.println("ID de la solicitud: " + adopcion.getId());
-            System.out.println("Estado: pendiente");
+            System.out.println("Estado: pendiente.");
 
         } catch (Exception e) {
             System.out.println("\n❌ No se ha podido crear la solicitud: " + e.getMessage());
@@ -774,7 +750,7 @@ public class Main {
             Adopcion adopcion = adopcionService.buscarPorId(id);
 
             if (adopcion == null) {
-                System.out.println("\nNo existe ninguna adopción con ese ID.");
+                System.out.println("\n⚠️ No existe ninguna adopción con ese ID.");
             } else {
                 mostrarAdopcion(adopcion, animalService);
             }
@@ -796,7 +772,7 @@ public class Main {
             List<Adopcion> adopciones = adopcionService.buscarPorAnimal(id);
 
             if (adopciones.isEmpty()) {
-                System.out.println("\nEl animal no tiene solicitudes de adopción");
+                System.out.println("\n⚠️ El animal no tiene solicitudes de adopción.");
                 return;
             }
 
@@ -821,7 +797,7 @@ public class Main {
             List<Adopcion> adopciones = adopcionService.buscarPorAdoptante(dni);
 
             if (adopciones.isEmpty()) {
-                System.out.println("\nEl adoptante no tiene solicitudes de adopción");
+                System.out.println("\n⚠️ El adoptante no tiene solicitudes de adopción.");
                 return;
             }
 
@@ -845,7 +821,7 @@ public class Main {
             Adopcion adopcion = adopcionService.buscarPorId(id);
 
             if (adopcion == null) {
-                System.out.println("\nNo existe ninguna adopción con ese ID.");
+                System.out.println("\n⚠️ No existe ninguna adopción con ese ID.");
                 return;
             }
 
@@ -858,7 +834,7 @@ public class Main {
                     System.out.println("El animal pasa a estar adoptado.");
                     System.out.println("Las demás solicitudes pendientes se rechazan automáticamente.");
                 } else {
-                    System.out.println("\n⚠️ No se ha podido aprobar la solicitud");
+                    System.out.println("\n⚠️ No se ha podido aprobar la solicitud.");
                 }
 
             } else {
@@ -881,7 +857,7 @@ public class Main {
             Adopcion adopcion = adopcionService.buscarPorId(id);
 
             if (adopcion == null) {
-                System.out.println("\nNo existe ninguna adopción con ese ID.");
+                System.out.println("\n⚠️ No existe ninguna adopción con ese ID.");
                 return;
             }
 
@@ -917,7 +893,7 @@ public class Main {
             Adopcion adopcion = adopcionService.buscarPorId(id);
 
             if (adopcion == null) {
-                System.out.println("\nNo existe ninguna adopción con ese ID.");
+                System.out.println("\n⚠️ No existe ninguna adopción con ese ID.");
                 return;
             }
 
@@ -929,7 +905,7 @@ public class Main {
             if (adopcionService.actualizar(adopcion)) {
                 System.out.println("\n✅ Observaciones modificadas correctamente.");
             } else {
-                System.out.println("\n⚠️ No se han podido modificar las observaciones");
+                System.out.println("\n⚠️ No se han podido modificar las observaciones.");
             }
 
         } catch (Exception e) {
@@ -949,7 +925,7 @@ public class Main {
             Adopcion adopcion = adopcionService.buscarPorId(id);
 
             if (adopcion == null) {
-                System.out.println("\nNo existe ninguna adopción con ese ID.");
+                System.out.println("\n⚠️ No existe ninguna adopción con ese ID.");
                 return;
             }
 
@@ -960,7 +936,7 @@ public class Main {
                 if (adopcionService.darDeBaja(id)) {
                     System.out.println("\n✅ Solicitud dada de baja correctamente.");
                 } else {
-                    System.out.println("\n⚠️ No se ha podido dar de baja la solicitud");
+                    System.out.println("\n⚠️ No se ha podido dar de baja la solicitud.");
                 }
 
             } else {
@@ -1033,7 +1009,7 @@ public class Main {
                     break;
 
                 default:
-                    System.out.println("⚠️ Opción no válida");
+                    System.out.println("⚠️ Opción no válida.");
             }
 
         } while (opcion != 0);
@@ -1046,7 +1022,7 @@ public class Main {
             Refugio refugio = refugioService.buscar();
 
             if (refugio == null) {
-                System.out.println("\nNo hay datos registrados del refugio.");
+                System.out.println("\n⚠️ No hay datos registrados del refugio.");
                 return;
             }
 
@@ -1066,7 +1042,7 @@ public class Main {
             Refugio refugio = refugioService.buscar();
 
             if (refugio == null) {
-                System.out.println("\nNo hay datos del refugio que modificar.");
+                System.out.println("\n⚠️ No hay datos del refugio que modificar.");
                 return;
             }
 
@@ -1185,7 +1161,7 @@ public class Main {
                     break;
 
                 default:
-                    System.out.println("⚠️ Opción no válida");
+                    System.out.println("⚠️ Opción no válida.");
             }
 
         } while (opcion != 0);

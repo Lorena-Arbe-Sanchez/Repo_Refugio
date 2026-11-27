@@ -30,7 +30,7 @@ public class RefugioService {
     private void validar(Refugio refugio) {
 
         if (refugio == null) {
-            throw new IllegalArgumentException("El refugio no puede ser nulo");
+            throw new IllegalArgumentException("⚠️ El refugio no puede ser nulo.");
         }
 
         Validaciones.validarTexto(refugio.getNombre(), "El nombre");

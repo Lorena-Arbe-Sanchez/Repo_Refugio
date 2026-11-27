@@ -185,7 +185,7 @@ public class Exportaciones {
             System.out.println("✅ Archivo XML exportado: " + archivo);
 
         } catch (Exception e) {
-            System.out.println("Error al exportar XML: " + e.getMessage());
+            System.out.println("❌ Error al exportar XML: " + e.getMessage());
         }
     }
 
@@ -212,7 +212,7 @@ public class Exportaciones {
             System.out.println("✅ Archivo JSON exportado: " + archivo);
 
         } catch (Exception e) {
-            System.out.println("Error al exportar JSON: " + e.getMessage());
+            System.out.println("❌ Error al exportar JSON: " + e.getMessage());
         }
     }
 

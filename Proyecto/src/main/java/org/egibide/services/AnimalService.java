@@ -42,7 +42,7 @@ public class AnimalService {
     public Animal buscarPorId(ObjectId id) {
 
         if (id == null) {
-            throw new IllegalArgumentException("El ID del animal es obligatorio");
+            throw new IllegalArgumentException("⚠️ El ID del animal es obligatorio.");
         }
 
         return animalDao.buscarPorId(id);
@@ -59,13 +59,13 @@ public class AnimalService {
         validar(animal);
 
         if (animal.getId() == null) {
-            throw new IllegalArgumentException("El ID del animal es obligatorio");
+            throw new IllegalArgumentException("⚠️ El ID del animal es obligatorio.");
         }
 
         Animal actual = animalDao.buscarPorId(animal.getId());
 
         if (actual == null) {
-            throw new IllegalArgumentException("El animal no existe o está eliminado");
+            throw new IllegalArgumentException("⚠️ El animal no existe o está eliminado.");
         }
 
         animal.setEstado(actual.getEstado());
@@ -78,13 +78,13 @@ public class AnimalService {
     public boolean darDeBaja(ObjectId id) {
 
         if (id == null) {
-            throw new IllegalArgumentException("El ID del animal es obligatorio");
+            throw new IllegalArgumentException("⚠️ El ID del animal es obligatorio.");
         }
 
         Animal animal = animalDao.buscarPorId(id);
 
         if (animal == null) {
-            throw new IllegalArgumentException("El animal no existe o está eliminado");
+            throw new IllegalArgumentException("⚠️ El animal no existe o está eliminado.");
         }
 
         List<Adopcion> solicitudes = adopcionDao.buscarPorAnimal(id);
@@ -95,7 +95,7 @@ public class AnimalService {
 
             if ("aprobada".equalsIgnoreCase(adopcion.getEstado())) {
                 throw new IllegalArgumentException(
-                        "No se puede dar de baja un animal con una adopción aprobada"
+                        "⚠️ No se puede dar de baja un animal con una adopción aprobada."
                 );
             }
         }
@@ -120,7 +120,7 @@ public class AnimalService {
 
                 if (!adopcionDao.actualizar(adopcion)) {
                     throw new IllegalStateException(
-                            "No se han podido cancelar todas las solicitudes del animal"
+                            "❌ No se han podido cancelar todas las solicitudes del animal."
                     );
                 }
             }
@@ -133,7 +133,7 @@ public class AnimalService {
     private void validar(Animal animal) {
 
         if (animal == null) {
-            throw new IllegalArgumentException("El animal no puede ser nulo");
+            throw new IllegalArgumentException("⚠️ El animal no puede ser nulo.");
         }
 
         Validaciones.validarTexto(animal.getNombre(), "El nombre");
@@ -146,14 +146,14 @@ public class AnimalService {
         Validaciones.validarLongitud(animal.getDescripcion(), "La descripción", 1000);
 
         if (animal.getEdad() == null || animal.getEdad() < 0) {
-            throw new IllegalArgumentException("La edad debe ser igual o superior a cero");
+            throw new IllegalArgumentException("⚠️ La edad debe ser igual o superior a cero.");
         }
 
         if (animal.getSexo() == null ||
                 !Set.of("macho", "hembra", "desconocido")
                         .contains(animal.getSexo().trim().toLowerCase(Locale.ROOT))) {
 
-            throw new IllegalArgumentException("El sexo no es válido");
+            throw new IllegalArgumentException("⚠️ El sexo no es válido.");
         }
 
         animal.setSexo(animal.getSexo().trim().toLowerCase(Locale.ROOT));
@@ -165,7 +165,7 @@ public class AnimalService {
     private String validarEstado(String estado) {
 
         if (estado == null || estado.isBlank()) {
-            throw new IllegalArgumentException("El estado es obligatorio");
+            throw new IllegalArgumentException("⚠️ El estado es obligatorio.");
         }
 
         estado = estado.trim().toLowerCase(Locale.ROOT);
@@ -178,7 +178,7 @@ public class AnimalService {
         );
 
         if (!estados.contains(estado)) {
-            throw new IllegalArgumentException("El estado del animal no es válido");
+            throw new IllegalArgumentException("⚠️ El estado del animal no es válido.");
         }
 
         return estado;

@@ -39,7 +39,7 @@ public class Metadatos {
 
         } catch (IOException e) {
 
-            System.out.println("Error al exportar los metadatos: " + e.getMessage());
+            System.out.println("❌ Error al exportar los metadatos: " + e.getMessage());
         }
     }
 
@@ -149,7 +149,7 @@ public class Metadatos {
 
         } catch (Exception e) {
 
-            texto.append("Error al obtener los metadatos: ")
+            texto.append("❌ Error al obtener los metadatos: ")
                     .append(e.getMessage())
                     .append("\n");
         }

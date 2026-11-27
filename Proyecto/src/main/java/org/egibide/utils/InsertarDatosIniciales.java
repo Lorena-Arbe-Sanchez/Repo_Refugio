@@ -34,8 +34,8 @@ public class InsertarDatosIniciales {
                     adopciones.countDocuments() > 0 ||
                     refugio.countDocuments() > 0) {
 
-                System.out.println("⚠️ Ya existen datos en las colecciones");
-                System.out.println("No se han insertado nuevos documentos");
+                System.out.println("⚠️ Ya existen datos en las colecciones.");
+                System.out.println("⚠️ No se han insertado nuevos documentos.");
                 return;
             }
 
@@ -234,7 +234,7 @@ public class InsertarDatosIniciales {
 
             adopciones.insertMany(listaAdopciones);
 
-            System.out.println("✅ 10 adopciones insertadas");
+            System.out.println("✅ 10 adopciones insertadas.");
 
             // Resumen
             System.out.println("\n===== RESUMEN DE INSERCIÓN =====");
@@ -243,7 +243,7 @@ public class InsertarDatosIniciales {
             System.out.println("Adoptantes: " + adoptantes.countDocuments());
             System.out.println("Adopciones: " + adopciones.countDocuments());
 
-            System.out.println("\n✅ Datos iniciales insertados correctamente");
+            System.out.println("\n✅ Datos iniciales insertados correctamente.");
 
         } catch (Exception e) {
 

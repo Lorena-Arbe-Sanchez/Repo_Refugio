@@ -25,7 +25,7 @@ public class AdoptanteService {
         validar(adoptante);
 
         if (adoptanteDao.buscarPorDni(adoptante.getDni()) != null) {
-            throw new IllegalArgumentException("Ya existe un adoptante con ese DNI");
+            throw new IllegalArgumentException("⚠️ Ya existe un adoptante con ese DNI.");
         }
 
         adoptante.setFechaRegistro(new Date());
@@ -61,13 +61,13 @@ public class AdoptanteService {
         validar(adoptante);
 
         if (!dniOriginal.equals(adoptante.getDni())) {
-            throw new IllegalArgumentException("No se puede modificar el DNI del adoptante");
+            throw new IllegalArgumentException("⚠️ No se puede modificar el DNI del adoptante.");
         }
 
         Adoptante actual = adoptanteDao.buscarPorDni(dniOriginal);
 
         if (actual == null || Boolean.TRUE.equals(actual.getEliminado())) {
-            throw new IllegalArgumentException("El adoptante no existe o está eliminado");
+            throw new IllegalArgumentException("⚠️ El adoptante no existe o está eliminado.");
         }
 
         adoptante.setFechaRegistro(actual.getFechaRegistro());
@@ -95,7 +95,7 @@ public class AdoptanteService {
 
         if (tienePendientes) {
             throw new IllegalArgumentException(
-                    "No se puede dar de baja un adoptante con solicitudes pendientes"
+                    "⚠️ No se puede dar de baja un adoptante con solicitudes pendientes."
             );
         }
 
@@ -106,7 +106,7 @@ public class AdoptanteService {
     private void validar(Adoptante adoptante) {
 
         if (adoptante == null) {
-            throw new IllegalArgumentException("El adoptante no puede ser nulo");
+            throw new IllegalArgumentException("⚠️ El adoptante no puede ser nulo.");
         }
 
         adoptante.setDni(Validaciones.validarDni(adoptante.getDni()));

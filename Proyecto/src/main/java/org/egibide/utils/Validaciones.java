@@ -9,13 +9,13 @@ public class Validaciones {
     public static String validarDni(String dni) {
 
         if (dni == null || dni.isBlank()) {
-            throw new IllegalArgumentException("El DNI es obligatorio");
+            throw new IllegalArgumentException("⚠️ El DNI es obligatorio.");
         }
 
         dni = dni.trim().toUpperCase(Locale.ROOT);
 
         if (!dni.matches("[0-9]{8}[A-Z]")) {
-            throw new IllegalArgumentException("El DNI debe tener 8 números y una letra");
+            throw new IllegalArgumentException("⚠️ El DNI debe tener 8 números y una letra.");
         }
 
         // Comprobar la letra correspondiente al número
@@ -24,7 +24,7 @@ public class Validaciones {
         char letraCorrecta = letras.charAt(numero % 23);
 
         if (dni.charAt(8) != letraCorrecta) {
-            throw new IllegalArgumentException("La letra del DNI no es correcta");
+            throw new IllegalArgumentException("⚠️ La letra del DNI no es correcta.");
         }
 
         return dni;
@@ -34,13 +34,13 @@ public class Validaciones {
     public static String validarTelefono(String telefono) {
 
         if (telefono == null || telefono.isBlank()) {
-            throw new IllegalArgumentException("El teléfono es obligatorio");
+            throw new IllegalArgumentException("⚠️ El teléfono es obligatorio.");
         }
 
         telefono = telefono.trim().replaceAll("[\\s-]", "");
 
         if (!telefono.matches("(\\+34)?[6789][0-9]{8}")) {
-            throw new IllegalArgumentException("El teléfono no tiene un formato válido");
+            throw new IllegalArgumentException("⚠️ El teléfono no tiene un formato válido.");
         }
 
         return telefono;
@@ -50,7 +50,7 @@ public class Validaciones {
     public static String validarEmail(String email) {
 
         if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("El correo electrónico es obligatorio");
+            throw new IllegalArgumentException("⚠️ El correo electrónico es obligatorio.");
         }
 
         email = email.trim().toLowerCase(Locale.ROOT);
@@ -59,7 +59,7 @@ public class Validaciones {
                 !email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
 
             throw new IllegalArgumentException(
-                    "El correo electrónico no tiene un formato válido"
+                    "⚠️ El correo electrónico no tiene un formato válido."
             );
         }
 
@@ -70,13 +70,13 @@ public class Validaciones {
     public static String validarCif(String cif) {
 
         if (cif == null || cif.isBlank()) {
-            throw new IllegalArgumentException("El CIF es obligatorio");
+            throw new IllegalArgumentException("⚠️ El CIF es obligatorio.");
         }
 
         cif = cif.trim().toUpperCase(Locale.ROOT);
 
         if (!cif.matches("[ABCDEFGHJNPQRSUVW][0-9]{7}[0-9A-J]")) {
-            throw new IllegalArgumentException("El CIF no tiene un formato válido");
+            throw new IllegalArgumentException("⚠️ El CIF no tiene un formato válido.");
         }
 
         int suma = 0;
@@ -114,7 +114,7 @@ public class Validaciones {
         }
 
         if (!correcto) {
-            throw new IllegalArgumentException("El carácter de control del CIF no es correcto");
+            throw new IllegalArgumentException("⚠️ El carácter de control del CIF no es correcto.");
         }
 
         return cif;
@@ -124,11 +124,11 @@ public class Validaciones {
     public static void validarFecha(Date fecha, String nombre) {
 
         if (fecha == null) {
-            throw new IllegalArgumentException(nombre + " es obligatoria");
+            throw new IllegalArgumentException("⚠️ " + nombre + " es obligatoria.");
         }
 
         if (fecha.after(new Date())) {
-            throw new IllegalArgumentException(nombre + " no puede ser futura");
+            throw new IllegalArgumentException("⚠️ " + nombre + " no puede ser futura.");
         }
     }
 
@@ -136,7 +136,7 @@ public class Validaciones {
     public static void validarTexto(String texto, String nombre) {
 
         if (texto == null || texto.isBlank()) {
-            throw new IllegalArgumentException(nombre + " es obligatorio");
+            throw new IllegalArgumentException("⚠️ " + nombre + " es obligatorio.");
         }
     }
 
@@ -144,9 +144,7 @@ public class Validaciones {
     public static void validarLongitud(String texto, String nombre, int maximo) {
 
         if (texto != null && texto.length() > maximo) {
-            throw new IllegalArgumentException(
-                    nombre + " no puede superar los " + maximo + " caracteres"
-            );
+            throw new IllegalArgumentException("⚠️ " + nombre + " no puede superar los " + maximo + " caracteres.");
         }
     }
 }
